@@ -34,3 +34,6 @@ printf {return tPRINTF;}
 {INT} {yylval.num=atoi(yytext);return tINTVAL;}
 {NAME} {strcpy(yylval.str, yytext);return tID;}
 {STRING} {return tSTRING;}
+
+" "
+"\n"
