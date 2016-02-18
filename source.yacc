@@ -1,7 +1,8 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	#include <string.h>
+    #include <string.h>
+    #include "tableSymboles.h"
 %}
 
 
@@ -76,7 +77,7 @@ Decla: 		Type SDecl
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
 		 			
-Decl: 		tID
+Decl: 		tID {printf("id: %s \n", $1);}
 					| Affect
 
 ExpAri: 	tINTVAL { printf("%d!!!\n", $1);}
