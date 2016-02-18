@@ -2,7 +2,7 @@
 	#include <stdio.h>
 	#include <stdlib.h>
     #include <string.h>
-    #include "tableSymboles.h"
+    #include "tableSymbols.h"
 %}
 
 
@@ -11,6 +11,7 @@
 	char tmpChar;
 	char* paramName;
 	char** fctTab;
+    tableSymbols table;
 %}
 
 // l'union permet d'utiliser les types sans avoir à les caster
