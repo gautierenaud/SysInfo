@@ -1,9 +1,10 @@
 YSOURCE = source.yacc
 FSOURCE = source.lex
-INCLUDE = tableSymboles.h
+INCSRC	= symbols.h tableSymbols.h
+CSRC	= y.tab.c lex.yy.c tableSymbols.c
 OUTPUT = out
 
 all: $(YSOURCE)
 	yacc -d $(YSOURCE)
 	flex $(FSOURCE)
-	gcc y.tab.c lex.yy.c $(INCLUDE) -ll -o $(OUTPUT)
+	gcc $(CSRC) $(INCSRC) -ll -o $(OUTPUT)
