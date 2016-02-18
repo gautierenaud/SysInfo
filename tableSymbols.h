@@ -7,22 +7,30 @@
 typedef struct{
     symbol *symbolArray;
     int size; // number of elements inside
-
+    int capacity; // number of element it can hold
+    int step;   // step by which we will increase the size of the array
 
     int actualDepth;
 } tableSymbols;
 
 // initialise la table des symboles
-void initTable(tableSymbols *table, int length);
+void initTable(tableSymbols *table, int capacity);
 
 // ajoute un élément à la table
 void addSymbol(tableSymbols *table, symbol symb);
 
 // entre dans une nouvelle profondeur 
-void enter(tableSymbols *table);
+void enterTable(tableSymbols *table);
 
+// sort d'une profondeur, et efface les variables de la profondeur sortante
+void exitTable(tableSymbols *table);
 
-// sort d'une profondeur
-void exit();
+// efface le tableau
+void freeTable(tableSymbols *table);
+
+// return -1 if absent and the index otherwise
+int containsSymbol(tableSymbols *table, char* name);
+
+symbol getSymbol(tableSymbols *table, int index);
 
 #endif
