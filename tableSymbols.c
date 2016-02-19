@@ -89,6 +89,7 @@ int addTmp(tableSymbols *table, symbol tmpSymb){
 }
 
 symbol rmTmp(tableSymbols *table){
+    // peut être vérifier qu'on essaye pas de suprimer alors qu'il n'y a rien
    return table->symbolArray[table->capacity - table->sizeTmp--].symb;
 }
 
