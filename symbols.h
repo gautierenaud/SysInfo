@@ -5,7 +5,6 @@
 
 typedef struct {
     char name[256];
-    int depth;
     int address;
     bool initialized;
     bool constant;

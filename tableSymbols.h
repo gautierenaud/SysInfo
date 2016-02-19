@@ -5,7 +5,12 @@
 #include "symbols.h"
 
 typedef struct{
-    symbol *symbolArray;
+    symbol symb;
+    int depth;
+}data;
+
+typedef struct{
+    data *symbolArray;
     int size; // number of elements inside
     int capacity; // number of element it can hold
     int step;   // step by which we will increase the size of the array

@@ -6,7 +6,7 @@
 #define STEP 10;
 
 void initTable(tableSymbols *table, int capacity){
-    table->symbolArray = (symbol*) malloc(sizeof(symbol) * capacity);
+    table->symbolArray = (data*) malloc(sizeof(data) * capacity);
     table->actualDepth = 0;
     table->size = 0;
     table->capacity = capacity;
@@ -16,11 +16,11 @@ void initTable(tableSymbols *table, int capacity){
 void addSymbol(tableSymbols *table, symbol symb){
     if (table->capacity == table->size){ // if the array is full
         table->capacity += table->step;
-        table->symbolArray = realloc(table->symbolArray, sizeof(symbol) * table->capacity);
+        table->symbolArray = realloc(table->symbolArray, sizeof(data) * table->capacity);
     }
 
     // append the symbol at the end of the array
-    table->symbolArray[table->size++] = symb;
+    table->symbolArray[table->size++].symb = symb;
     table->symbolArray[table->size - 1].depth = table->actualDepth;
 }
 
@@ -43,7 +43,7 @@ int containsSymbol(tableSymbols *table, char *name){
     bool found = false;
 
     while (!found && index < table->size){
-        if (strcmp(table->symbolArray[index].name, name) != 0)
+        if (strcmp(table->symbolArray[index].symb.name, name) != 0)
             index++;
         else
             found = true;
@@ -53,7 +53,7 @@ int containsSymbol(tableSymbols *table, char *name){
 }
 
 symbol getSymbol(tableSymbols *table, int index){
-    return table->symbolArray[index];
+    return table->symbolArray[index].symb;
 }
 
 void freeTable(tableSymbols *table){
