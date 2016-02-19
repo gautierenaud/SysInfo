@@ -8,3 +8,6 @@ all: $(YSOURCE)
 	yacc -v -d $(YSOURCE)
 	flex $(FSOURCE)
 	gcc $(CSRC) $(INCSRC) -ll -o $(OUTPUT)
+
+test:
+	cat test.pr | ./out

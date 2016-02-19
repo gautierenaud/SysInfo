@@ -1,8 +1,10 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-	#include <string.h>
- 	#include "tableSymbols.h"
+    #include <string.h>
+    #include <stdbool.h>
+    #include "tableSymbols.h"
+
 %}
 
 
@@ -85,7 +87,7 @@ Decla: 		Type { tmpSymbol.type = $1; } SDecl
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
 		 			
-Decl: 		tID { strncpy(tmpSymbol.name, $1, strlen($1)); printf("id: %s \n", tmpSymbol.name);}
+Decl: 		tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false; addSymbol(&tableVar, tmpSymbol); }
 					| Affect
 
 ExpAri: 	tINTVAL { printf("%d!!!\n", $1);}
