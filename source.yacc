@@ -9,7 +9,8 @@
 
 
 %{
-	int paramNum, symbIndex;
+	int paramNum; 
+	int symbIndex;
 	char tmpChar;
   	symbol tmpSymbol;
 	char* paramName;
@@ -90,13 +91,13 @@ SDecl: 		Decl tVIR SDecl
 		 			| Decl
 		 			
 Decl: 		        tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false; addSymbol(&tableVar, tmpSymbol); }
-					| tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false;} SAffect { tmpSymbol.initialized = true; symbIndex = addSymbol(&tableVar, tmpSymbol); fputs("AFC %d %d\n", tableVar[symbIndex].address, $3, output); }
+					| tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false;} SAffect { tmpSymbol.initialized = true; symbIndex = addSymbol(&tableVar, tmpSymbol); fprintf(output, "AFC %d %d\n", tableVar->symbolArray[symbIndex].address, 3); }
 					
 Affect: 	        tID SAffect
 
-SAffect:            tEGAL ExpAri { $$ = $2; }
+SAffect:            tEGAL ExpAri { $$ = 2; }
 
-ExpAri: 	tINTVAL { $$ = $1; } 
+ExpAri: 	tINTVAL { $$ = 1; } 
                     | tID
 					| IFct 
 					| ExpAri tPLUS ExpAri
