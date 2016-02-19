@@ -1,8 +1,8 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-    #include <string.h>
-    #include "tableSymbols.h"
+  #include <string.h>
+  #include "tableSymbols.h"
 %}
 
 
@@ -35,9 +35,15 @@
 
 %type <type> Type
 
+//gerer les priorités
+%right tEGAL
+%left tPLUS tMOINS
+%left tFOIS tDIV
+
+
 %%
 
-Prg: 		DFct Prg 
+Prg: 			DFct Prg 
 					| DFct
 					
 Type: 		tINT {$$ = 'i';}
@@ -47,7 +53,10 @@ DFct: 		{
 						paramNum = 0;
 						paramName = (char*) malloc(sizeof(char));
 					} 
-					Type { tmpChar = $2; printf("function type: %c ", tmpChar); } tID { printf("%s ", $4); fputs($4, output); fputs(":\n", output);} tPO Param { printf("param num: %d, params: %s\n", paramNum, paramName); } tPF Bloc
+					Type { tmpChar = $2; printf("function type: %c ", tmpChar); } 
+					tID { printf("%s ", $4); fputs($4, output); fputs(":\n", output);} 
+					tPO Param { printf("param num: %d, params: %s\n", paramNum, paramName); } 
+					tPF Bloc
 					{
 						free(paramName);
 					}
@@ -92,9 +101,11 @@ Return: 	tRETURN ExpAri
 
 IFct: 		tID tPO IParam tPF
 
-IParam: 	ExpAri
-					| IParam tVIR IParam
+IParam:   ExpAri IParams
 					|
+
+IParams:  tVIR ExpAri
+					|					
 					
 If:				tIF Condition
 
