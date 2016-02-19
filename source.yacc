@@ -36,10 +36,7 @@
 
 %%
 
-Test: Prg
-	| DFct
-
-Prg: 			DFct Prg 
+Prg: 		DFct Prg 
 					| DFct
 					
 Type: 		tINT {$$ = 'i';}
@@ -120,7 +117,9 @@ yyerror(char *s){
 
 void main (void) {
 	output = fopen("source.asm", "w");
-	fputs("# made by Paul and Renaud\n", output);
+    fputs("# made by Paul and Renaud\n", output);
+    initTable(&table, 10);
+    printTable(&table);
 	yyparse();
 	fclose(output);
 }
