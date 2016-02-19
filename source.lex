@@ -1,5 +1,5 @@
 %{
-	#include "y.tab.h" //t
+	#include "y.tab.h" 
 %}
 
 NAME [a-z|_|A-Z][a-z|_|A-Z|0-9]*
