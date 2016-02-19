@@ -9,8 +9,8 @@
 
 
 %{
-	int paramNum;
-    int symbIndex;
+	int paramNum; 
+	int symbIndex;
 	char tmpChar;
   	symbol tmpSymbol;
 	char* paramName;
