@@ -1,15 +1,15 @@
 %{
 	#include <stdio.h>
 	#include <stdlib.h>
-  #include <string.h>
-  #include "tableSymbols.h"
+	#include <string.h>
+ 	#include "tableSymbols.h"
 %}
 
 
 %{
 	int paramNum;
 	char tmpChar;
-    symbol tmpSymbol;
+  	symbol tmpSymbol;
 	char* paramName;
 	char** fctTab;
     tableSymbols tableVar;
@@ -19,9 +19,9 @@
 // quand on veut utiliser un $i, yacc connait le type
 %union 
 {
-        int num;
-        char type;
-        char str[16];
+   	int num;
+   	char type;
+    char str[16];
 }
 
 %{
@@ -43,34 +43,34 @@
 
 %%
 
-Prg: 			DFct Prg 
-					| DFct
+Prg: 		DFct Prg 
+			| DFct
 					
 Type: 		tINT {$$ = 'i';}
-					| tVOID {$$ = 'v';}
+			| tVOID {$$ = 'v';}
 
 DFct: 		{
-						paramNum = 0;
-						paramName = (char*) malloc(sizeof(char));
-					} 
-					Type { tmpChar = $2; printf("function type: %c ", tmpChar); } 
-					tID { printf("%s ", $4); fputs($4, output); fputs(":\n", output);} 
-					tPO Param { printf("param num: %d, params: %s\n", paramNum, paramName); } 
-					tPF Bloc
-					{
-						free(paramName);
-					}
+				paramNum = 0;
+				paramName = (char*) malloc(sizeof(char));
+			} 
+			Type { tmpChar = $2; printf("function type: %c ", tmpChar); } 
+			tID { printf("%s ", $4); fputs($4, output); fputs(":\n", output);} 
+			tPO Param { printf("param num: %d, params: %s\n", paramNum, paramName); } 
+			tPF Bloc
+			{
+				free(paramName);
+			}
 
 Param: 		ParamVar tVIR Param
-		 			| ParamVar
-		 			|
+		 	| ParamVar
+		 	|
 
 ParamVar:	Type { tmpChar = $1; strncat(paramName, &tmpChar, 1);} tID { paramNum++;}
 		 			
 Bloc: 		tACO Expr tACF
 
 Expr: 		Ligne Expr 
-					| 
+			| 
 					
 Ligne: 		Return tPOINTVIR 
      			| Decla tPOINTVIR
