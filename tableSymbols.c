@@ -23,6 +23,7 @@ void addSymbol(tableSymbols *table, symbol symb){
     table->symbolArray[table->size++].symb = symb;
     table->symbolArray[table->size - 1].symb.address = table->size;
     table->symbolArray[table->size - 1].depth = table->actualDepth;
+    printf("address: %d\n", table->symbolArray[table->size - 1].symb.address);
 }
 
 void enterTable(tableSymbols *table){
