@@ -9,7 +9,7 @@
 
 
 %{
-	int paramNum;
+	int paramNum, symbIndex;
 	char tmpChar;
   	symbol tmpSymbol;
 	char* paramName;
@@ -36,6 +36,8 @@
 %token <num> tINTVAL
 
 %type <type> Type
+%type <num> SAffect
+%type <num> ExpAri
 
 //gerer les priorités
 %right tEGAL
@@ -87,11 +89,15 @@ Decla: 		Type { tmpSymbol.type = $1; } SDecl
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
 		 			
-Decl: 		tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false; addSymbol(&tableVar, tmpSymbol); }
-					| Affect
+Decl: 		        tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false; addSymbol(&tableVar, tmpSymbol); }
+					| tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false;} SAffect { tmpSymbol.initialized = true; symbIndex = addSymbol(&tableVar, tmpSymbol); fputs("AFC %d %d\n", tableVar[symbIndex].address, $3, output); }
+					
+Affect: 	        tID SAffect
 
-ExpAri: 	tINTVAL { printf("%d!!!\n", $1);}
-					| tID
+SAffect:            tEGAL ExpAri { $$ = $2; }
+
+ExpAri: 	tINTVAL { $$ = $1; } 
+                    | tID
 					| IFct 
 					| ExpAri tPLUS ExpAri
 					| ExpAri tMOINS ExpAri
@@ -117,9 +123,6 @@ Condition: tPO Cond tPF Bloc
 
 Cond: 		ExpAri tEGAL tEGAL ExpAri
 					| ExpAri
-					
-Affect: 	tID tEGAL ExpAri { printf(">>> %s\n", $1); }
-
 Print: 		tPRINTF tPO tSTRING tPF
 
 %%

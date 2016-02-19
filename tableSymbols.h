@@ -22,7 +22,7 @@ typedef struct{
 void initTable(tableSymbols *table, int capacity);
 
 // ajoute un élément à la table
-void addSymbol(tableSymbols *table, symbol symb);
+int addSymbol(tableSymbols *table, symbol symb);
 
 // entre dans une nouvelle profondeur 
 void enterTable(tableSymbols *table);

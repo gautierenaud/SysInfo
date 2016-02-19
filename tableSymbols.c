@@ -13,7 +13,7 @@ void initTable(tableSymbols *table, int capacity){
     table->step = STEP;
 }
 
-void addSymbol(tableSymbols *table, symbol symb){
+int addSymbol(tableSymbols *table, symbol symb){
     if (table->capacity == table->size){ // if the array is full
         table->capacity += table->step;
         table->symbolArray = realloc(table->symbolArray, sizeof(data) * table->capacity);
@@ -23,7 +23,9 @@ void addSymbol(tableSymbols *table, symbol symb){
     table->symbolArray[table->size++].symb = symb;
     table->symbolArray[table->size - 1].symb.address = table->size;
     table->symbolArray[table->size - 1].depth = table->actualDepth;
-    printf("address: %d\n", table->symbolArray[table->size - 1].symb.address);
+    printf("var: %s, address: %d\n", table->symbolArray[table->size - 1].symb.name, table->symbolArray[table->size - 1].symb.address);
+
+    return table->size - 1;
 }
 
 void enterTable(tableSymbols *table){
