@@ -21,6 +21,7 @@ void addSymbol(tableSymbols *table, symbol symb){
 
     // append the symbol at the end of the array
     table->symbolArray[table->size++].symb = symb;
+    table->symbolArray[table->size - 1].symb.address = table->size;
     table->symbolArray[table->size - 1].depth = table->actualDepth;
 }
 

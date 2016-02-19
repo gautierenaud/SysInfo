@@ -9,9 +9,10 @@
 %{
 	int paramNum;
 	char tmpChar;
+    symbol tmpSymbol;
 	char* paramName;
 	char** fctTab;
-    tableSymbols table;
+    tableSymbols tableVar;
 %}
 
 // l'union permet d'utiliser les types sans avoir à les caster
@@ -70,12 +71,12 @@ Ligne: 		Return tPOINTVIR
      			| Affect tPOINTVIR
      			| Print tPOINTVIR
      
-Decla: 		Type SDecl 
+Decla: 		Type { tmpSymbol.type = $1; } SDecl 
 
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
 		 			
-Decl: 		tID {printf("id: %s \n", $1);}
+Decl: 		tID { strncpy(tmpSymbol.name, $1, strlen($1)); printf("id: %s \n", tmpSymbol.name);}
 					| Affect
 
 ExpAri: 	tINTVAL { printf("%d!!!\n", $1);}
@@ -118,8 +119,8 @@ yyerror(char *s){
 void main (void) {
 	output = fopen("source.asm", "w");
     fputs("# made by Paul and Renaud\n", output);
-    initTable(&table, 10);
-    printTable(&table);
+    initTable(&tableVar, 10);
+    printTable(&tableVar);
 	yyparse();
 	fclose(output);
 }
