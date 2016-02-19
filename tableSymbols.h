@@ -10,16 +10,18 @@ typedef struct{
 }data;
 
 typedef struct{
-    data *symbolArray;
+    data symbolArray[256];
     int size; // number of elements inside
-    int capacity; // number of element it can hold
-    int step;   // step by which we will increase the size of the array
+    // int capacity; // number of element it can hold
+    // int step;   // step by which we will increase the size of the array
 
     int actualDepth;
+
+    int tmpNum; // number of temporary variables
 } tableSymbols;
 
 // initialise la table des symboles
-void initTable(tableSymbols *table, int capacity);
+void initTable(tableSymbols *table);
 
 // ajoute un élément à la table
 int addSymbol(tableSymbols *table, symbol symb);
@@ -39,5 +41,7 @@ int containsSymbol(tableSymbols *table, char* name);
 symbol getSymbol(tableSymbols *table, int index);
 
 void printTable(tableSymbols *table);
+
+//int addTmp(tableSymbols *table, 
 
 #endif
