@@ -56,6 +56,10 @@ symbol getSymbol(tableSymbols *table, int index){
     return table->symbolArray[index].symb;
 }
 
+void printTable(tableSymbols *table){
+    printf("Size: %d, Capacity: %d, Step: %d\n", table->size, table->capacity, table->step);
+}
+
 void freeTable(tableSymbols *table){
     free(table->symbolArray);
     table->size = table->actualDepth = table->capacity = 0;

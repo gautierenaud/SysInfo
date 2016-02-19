@@ -39,6 +39,7 @@
 %left tPLUS tMOINS
 %left tFOIS tDIV
 
+
 %%
 
 Prg: 			DFct Prg 
@@ -127,7 +128,9 @@ yyerror(char *s){
 
 void main (void) {
 	output = fopen("source.asm", "w");
-	fputs("# made by Paul and Renaud\n", output);
+    fputs("# made by Paul and Renaud\n", output);
+    initTable(&table, 10);
+    printTable(&table);
 	yyparse();
 	fclose(output);
 }

@@ -38,4 +38,6 @@ int containsSymbol(tableSymbols *table, char* name);
 
 symbol getSymbol(tableSymbols *table, int index);
 
+void printTable(tableSymbols *table);
+
 #endif
