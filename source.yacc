@@ -12,7 +12,8 @@
 	int paramNum; 
 	int symbIndex;
 	char tmpChar;
-  	symbol tmpSymbol;
+  	symbol varSymbol;
+    symbol tmpSymbol;
 	char* paramName;
 	char** fctTab;
     tableSymbols tableVar;
@@ -83,13 +84,13 @@ Ligne: 		Return tPOINTVIR
      			| Affect tPOINTVIR
      			| Print tPOINTVIR
      
-Decla: 		TType { tmpSymbol.type = $1; } SDecl 
+Decla: 		TType { varSymbol.type = $1; } SDecl 
 
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
 		 			
-Decl: 		        tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false; addSymbol(&tableVar, tmpSymbol); }
-					| tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false;} SAffect { /*tmpSymbol.initialized = true;*/ symbIndex = addSymbol(&tableVar, tmpSymbol); fprintf(output, "AFC %d %d\n", tableVar.symbolArray[symbIndex].symb.address, 3); }
+Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
+					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { /*varSymbol.initialized = true;*/ symbIndex = addSymbol(&tableVar, varSymbol); fprintf(output, "AFC %d %d\n", tableVar.symbolArray[symbIndex].symb.address, 3); }
 					
 Affect: 	        tID SAffect
 
@@ -135,7 +136,12 @@ void main (void) {
 	output = fopen("source.asm", "w");
     fputs("# made by Paul and Renaud\n", output);
     initTable(&tableVar);
-    printTable(&tableVar);
+    strncpy(tmpSymbol.name, "lolo", 4);
+    printf("insert tmp symbol, index: %d\n", addTmp(&tableVar, tmpSymbol));
+    strncpy(tmpSymbol.name, "lalo", 4);
+    printf("insert tmp symbol, index: %d\n", addTmp(&tableVar, tmpSymbol));
+    rmTmp(&tableVar);
+    printf("remove tmp symbol, tmpSize: %d\n", tableVar.sizeTmp);
 	yyparse();
 	fclose(output);
 }

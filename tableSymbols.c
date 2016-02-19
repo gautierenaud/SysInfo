@@ -3,30 +3,44 @@
 #include <stdbool.h>
 #include "tableSymbols.h"
 
-#define STEP 10
 
 void initTable(tableSymbols *table){
-//  table->symbolArray = (data*) malloc(sizeof(data) * capacity);
+    table->symbolArray = (data*) malloc(sizeof(data) * CAPACITY);
     table->actualDepth = 0;
-    table->size = 0;
-//  table->capacity = capacity;
+    table->sizeData= 0;
+    table->sizeTmp = 0;
+    table->capacity = CAPACITY;
 //  table->step = STEP;
+}
+
+void initTableCapacity(tableSymbols *table, int capacity){
+    table->symbolArray = (data*) malloc(sizeof(data) * capacity);
+    table->actualDepth = 0;
+    table->sizeData = 0;
+    table->sizeTmp = 0;
+    table->capacity = capacity;
 }
 
 int addSymbol(tableSymbols *table, symbol symb){
     /* pour le moment on dit qu'on a pas besoin de redimensionner le tableau
-    if (table->capacity == table->size){ // if the array is full
+    if (table->capacity == table->sizeData){ // if the array is full
         table->capacity += table->step;
-        table->symbolArray = realloc(table->symbolArray, sizeof(data) * table->capacity);
+        table->symbolArray = realloc(table->symbolArray, sizeDataof(data) * table->capacity);
     }
     */
 
-    // append the symbol at the end of the array
-    table->symbolArray[table->size++].symb = symb;
-    table->symbolArray[table->size - 1].symb.address = table->size;
-    table->symbolArray[table->size - 1].depth = table->actualDepth;
-
-    return table->size - 1;
+    // if we have the space to append the symbol
+    if (table->sizeData + table->sizeTmp < table->capacity){
+        // append the symbol at the end of the array
+        table->symbolArray[table->sizeData].symb = symb;
+        table->symbolArray[table->sizeData].symb.address = table->sizeData;
+        table->symbolArray[table->sizeData].depth = table->actualDepth;
+        printf("symbol address: %d\n", table->symbolArray[table->sizeData].symb.address);
+        table->sizeData++;
+    }else{
+        printf("no more place in the array to insert element");
+    }
+    return table->sizeData - 1;
 }
 
 void enterTable(tableSymbols *table){
@@ -38,8 +52,8 @@ void exitTable(tableSymbols *table){
     if (table->actualDepth > 0)
         table->actualDepth--;
     
-    while (table->size > 0 && table->symbolArray[table->size - 1].depth > table->actualDepth){
-        table->size--; // les anciennes entrées ne sont pas vraiment effacées :p
+    while (table->sizeData > 0 && table->symbolArray[table->sizeData - 1].depth > table->actualDepth){
+        table->sizeData--; // les anciennes entrées ne sont pas vraiment effacées :p
     }
 }
 
@@ -47,7 +61,7 @@ int containsSymbol(tableSymbols *table, char *name){
     int index = 0;
     bool found = false;
 
-    while (!found && index < table->size){
+    while (!found && index < table->sizeData){
         if (strcmp(table->symbolArray[index].symb.name, name) != 0)
             index++;
         else
@@ -61,10 +75,27 @@ symbol getSymbol(tableSymbols *table, int index){
     return table->symbolArray[index].symb;
 }
 
+int addTmp(tableSymbols *table, symbol tmpSymb){
+    symbol tmp = tmpSymb;
+    if (table->sizeData + table->sizeTmp < table->capacity){
+        tmp.address = table->capacity - table->sizeTmp - 1;
+        table->symbolArray[table->capacity - table->sizeTmp++ - 1].symb = tmp;
+        printf("tmp address: %d\n", table->symbolArray[table->capacity - table->sizeTmp].symb.address);
+    }else{
+        printf("no more space for symbol");
+    }
+
+    return table->capacity - table->sizeTmp;
+}
+
+symbol rmTmp(tableSymbols *table){
+   return table->symbolArray[table->capacity - table->sizeTmp--].symb;
+}
+
 void printTable(tableSymbols *table){
-    printf("Size: %d\n", table->size);
+    printf("sizeData: %d\n", table->sizeData);
 }
 
 void freeTable(tableSymbols *table){
-    table->size = table->actualDepth = 0;
+    table->sizeData = table->actualDepth = table->sizeTmp = 0;
 }

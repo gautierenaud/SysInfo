@@ -4,29 +4,33 @@
 #include <string.h>
 #include "symbols.h"
 
+#define CAPACITY 256
+
 typedef struct{
     symbol symb;
     int depth;
 }data;
 
+// append declared variables at the beginning of the array, temporary variables at the end
 typedef struct{
-    data symbolArray[256];
-    int size; // number of elements inside
-    // int capacity; // number of element it can hold
+    data *symbolArray;
+    int sizeData; // number of elements inside
+    int sizeTmp; // number of temporary variables
+    int actualDepth;
+    int capacity; // number of element it can hold
+
     // int step;   // step by which we will increase the size of the array
 
-    int actualDepth;
-
-    int tmpNum; // number of temporary variables
 } tableSymbols;
 
 // initialise la table des symboles
 void initTable(tableSymbols *table);
+void initTableCapacity(tableSymbols *table, int capacity);
 
-// ajoute un élément à la table
+// add an element in the table
 int addSymbol(tableSymbols *table, symbol symb);
 
-// entre dans une nouvelle profondeur 
+// we must go deeper
 void enterTable(tableSymbols *table);
 
 // sort d'une profondeur, et efface les variables de la profondeur sortante
@@ -42,6 +46,10 @@ symbol getSymbol(tableSymbols *table, int index);
 
 void printTable(tableSymbols *table);
 
-//int addTmp(tableSymbols *table, 
+// ajoute un symbole temporaire à la fin de la liste
+int addTmp(tableSymbols *table, symbol tmpSymb);
+
+// remove the last temporary variable
+symbol rmTmp(tableSymbols *table);
 
 #endif
