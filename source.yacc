@@ -16,6 +16,7 @@
 	char* paramName;
 	char** fctTab;
     tableSymbols tableVar;
+    FILE *output;
 %}
 
 // l'union permet d'utiliser les types sans avoir à les caster
@@ -27,18 +28,15 @@
     char str[16];
 }
 
-%{
- FILE *output;
-%}
-
 %token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tIF tWHILE tERROR
 
 %token <str> tID
 %token <num> tINTVAL
 
-%type <type> Type
-%type <num> SAffect
+%type <type> TType
 %type <num> ExpAri
+%type <num> SAffect
+
 
 //gerer les priorités
 %right tEGAL
@@ -51,14 +49,14 @@
 Prg: 		DFct Prg 
 			| DFct
 					
-Type: 		tINT {$$ = 'i';}
+TType: 		tINT {$$ = 'i';}
 			| tVOID {$$ = 'v';}
 
 DFct: 		{
 				paramNum = 0;
 				paramName = (char*) malloc(sizeof(char));
 			} 
-			Type { tmpChar = $2; printf("function type: %c ", tmpChar); } 
+			TType { tmpChar = $2; printf("function type: %c ", tmpChar); } 
 			tID { printf("%s ", $4); fputs($4, output); fputs(":\n", output);} 
 			tPO Param { printf("param num: %d, params: %s\n", paramNum, paramName); } 
 			tPF Bloc
@@ -70,7 +68,7 @@ Param: 		ParamVar tVIR Param
 		 	| ParamVar
 		 	|
 
-ParamVar:	Type { tmpChar = $1; strncat(paramName, &tmpChar, 1);} tID { paramNum++;}
+ParamVar:	TType { tmpChar = $1; strncat(paramName, &tmpChar, 1);} tID { paramNum++;}
 		 			
 Bloc: 		tACO Expr tACF
 
@@ -85,26 +83,26 @@ Ligne: 		Return tPOINTVIR
      			| Affect tPOINTVIR
      			| Print tPOINTVIR
      
-Decla: 		Type { tmpSymbol.type = $1; } SDecl 
+Decla: 		TType { tmpSymbol.type = $1; } SDecl 
 
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
 		 			
 Decl: 		        tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false; addSymbol(&tableVar, tmpSymbol); }
-					| tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false;} SAffect { tmpSymbol.initialized = true; symbIndex = addSymbol(&tableVar, tmpSymbol); fprintf(output, "AFC %d %d\n", tableVar->symbolArray[symbIndex].address, 3); }
+					| tID { strncpy(tmpSymbol.name, $1, strlen($1)); tmpSymbol.initialized = false;} SAffect { /*tmpSymbol.initialized = true;*/ symbIndex = addSymbol(&tableVar, tmpSymbol); fprintf(output, "AFC %d %d\n", tableVar.symbolArray[symbIndex].symb.address, 3); }
 					
 Affect: 	        tID SAffect
 
-SAffect:            tEGAL ExpAri { $$ = 2; }
+SAffect:            tEGAL ExpAri { $$ = 1; } 
 
-ExpAri: 	tINTVAL { $$ = 1; } 
-                    | tID
-					| IFct 
+ExpAri: 	tINTVAL
+                    | tID { $$ = 1;}
+					| IFct { $$ = 1; } 
 					| ExpAri tPLUS ExpAri
 					| ExpAri tMOINS ExpAri
 					| ExpAri tFOIS ExpAri
 					| ExpAri tDIV ExpAri
-					| tPO ExpAri tPF
+					| tPO ExpAri tPF { $$ = $2; }
 
 Return: 	tRETURN ExpAri
 
@@ -136,7 +134,7 @@ yyerror(char *s){
 void main (void) {
 	output = fopen("source.asm", "w");
     fputs("# made by Paul and Renaud\n", output);
-    initTable(&tableVar, 10);
+    initTable(&tableVar);
     printTable(&tableVar);
 	yyparse();
 	fclose(output);
