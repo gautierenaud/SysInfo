@@ -1,7 +1,7 @@
 YSOURCE = source.yacc
 FSOURCE = source.lex
-INCSRC	= symbols.h tableSymbols.h
-CSRC	= y.tab.c lex.yy.c tableSymbols.c
+INCSRC	= symbols.h tableSymbols.h tableFonctions.h
+CSRC	= y.tab.c lex.yy.c tableSymbols.c tableFonctions.c
 OUTPUT = out
 
 all: $(YSOURCE)
