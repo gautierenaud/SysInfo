@@ -4,6 +4,7 @@
     #include <string.h>
     #include <stdbool.h>
     #include "tableSymbols.h"
+    #include "tableFonctions.h"
 
 %}
 
@@ -14,9 +15,11 @@
 	char tmpChar;
   	symbol varSymbol;
     symbol tmpSymbol;
+    symbFct tmpFctSymbol;
 	char* paramName;
 	char** fctTab;
     tableSymbols tableVar;
+    tableSymbFcts tableFct;
     FILE *output;
 %}
 
@@ -29,7 +32,7 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tIF tWHILE tERROR
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tIF tWHILE tERROR tOR tAND
 
 %token <str> tID
 %token <num> tINTVAL
@@ -57,10 +60,12 @@ DFct: 		{
 				paramNum = 0;
 				paramName = (char*) malloc(sizeof(char));
 			} 
-			TType { tmpChar = $2; printf("function type: %c ", tmpChar); } 
-			tID { printf("%s ", $4); fputs($4, output); fputs(":\n", output);} 
-			tPO Param { printf("param num: %d, params: %s\n", paramNum, paramName); } 
-			tPF Bloc
+			TType { tmpFctSymbol.type = $2; } 
+			tID { tmpFctSymbol.name = $4; } 
+			tPO 
+            Param { tmpFctSymbol.params = paramName; } 
+			tPF { addSymbFct(&tableFct, tmpFctSymbol); printFctTable(&tableFct); fprintf(output, "%s:\n", tmpFctSymbol.name);}
+            Bloc
 			{
 				free(paramName);
 			}
@@ -90,19 +95,19 @@ SDecl: 		Decl tVIR SDecl
 		 			| Decl
 		 			
 Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
-					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { /*varSymbol.initialized = true;*/ symbIndex = addSymbol(&tableVar, varSymbol); fprintf(output, "AFC %d %d\n", tableVar.symbolArray[symbIndex].symb.address, 3); }
+					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); fprintf(output, "AFC %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $3); }
 					
 Affect: 	        tID SAffect
 
-SAffect:            tEGAL ExpAri { $$ = 1; } 
+SAffect:            tEGAL ExpAri { $$ = $2; }
 
 ExpAri: 	tINTVAL
-                    | tID { $$ = 1;}
-					| IFct { $$ = 1; } 
-					| ExpAri tPLUS ExpAri
-					| ExpAri tMOINS ExpAri
-					| ExpAri tFOIS ExpAri
-					| ExpAri tDIV ExpAri
+                    | tID { $$ = 1; }
+					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
+					| ExpAri tPLUS ExpAri { fprintf(output, "ADD %d %d %d\n", $1, $1, $3); $$ = $1; /* dépiler la variable temporaire de $3 */ }
+					| ExpAri tMOINS ExpAri { fprintf(output, "SOU %d %d %d\n", $1, $1, $3); $$ = $1; /* dépiler la var temp de $3 */ }
+					| ExpAri tFOIS ExpAri { fprintf(output, "MUL %d %d %d\n", $1, $1, $3); $$ = $1; /* et on dépile! */ }
+					| ExpAri tDIV ExpAri { fprintf(output, "DIV %d %d %d\n", $1, $1, $3); $$ = $1; /* et on dépile! */ }
 					| tPO ExpAri tPF { $$ = $2; }
 
 Return: 	tRETURN ExpAri
@@ -119,10 +124,17 @@ If:				tIF Condition
 
 While: 		tWHILE Condition
 
-Condition: tPO Cond tPF Bloc
+Condition: tPO SCond tPF Bloc
 
-Cond: 		ExpAri tEGAL tEGAL ExpAri
+SCond:      Cond
+            | Cond ConnectLogi Cond
+
+Cond: 		ExpAri tEGAL tEGAL ExpAri {  }
 					| ExpAri
+
+ConnectLogi:    tAND
+                | tOR
+
 Print: 		tPRINTF tPO tSTRING tPF
 
 %%
@@ -136,12 +148,7 @@ void main (void) {
 	output = fopen("source.asm", "w");
     fputs("# made by Paul and Renaud\n", output);
     initTable(&tableVar);
-    strncpy(tmpSymbol.name, "lolo", 4);
-    printf("insert tmp symbol, index: %d\n", addTmp(&tableVar, tmpSymbol));
-    strncpy(tmpSymbol.name, "lalo", 4);
-    printf("insert tmp symbol, index: %d\n", addTmp(&tableVar, tmpSymbol));
-    rmTmp(&tableVar);
-    printf("remove tmp symbol, tmpSize: %d\n", tableVar.sizeTmp);
+    initFctTable(&tableFct);
 	yyparse();
 	fclose(output);
 }
