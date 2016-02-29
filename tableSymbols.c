@@ -75,8 +75,9 @@ symbol getSymbol(tableSymbols *table, int index){
     return table->symbolArray[index].symb;
 }
 
-int addTmp(tableSymbols *table, symbol tmpSymb){
-    symbol tmp = tmpSymb;
+int addTmp(tableSymbols *table, char type){
+    symbol tmp;
+    tmp.type = type;
     if (table->sizeData + table->sizeTmp < table->capacity){
         tmp.address = table->capacity - table->sizeTmp - 1;
         table->symbolArray[table->capacity - table->sizeTmp++ - 1].symb = tmp;
@@ -85,12 +86,17 @@ int addTmp(tableSymbols *table, symbol tmpSymb){
         printf("no more space for symbol");
     }
 
-    return table->capacity - table->sizeTmp;
+    return tmp.address;
 }
 
-symbol rmTmp(tableSymbols *table){
+symbol popTmp(tableSymbols *table){
     // peut être vérifier qu'on essaye pas de suprimer alors qu'il n'y a rien
    return table->symbolArray[table->capacity - table->sizeTmp--].symb;
+}
+
+symbol peekTmp(tableSymbols *table){
+    // peut être vérifier qu'on essaye pas de suprimer alors qu'il n'y a rien
+   return table->symbolArray[table->capacity - table->sizeTmp + 1].symb;
 }
 
 void printTable(tableSymbols *table){
