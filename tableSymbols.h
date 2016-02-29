@@ -45,10 +45,13 @@ symbol getSymbol(tableSymbols *table, int index);
 void printTable(tableSymbols *table);
 
 // ajoute un symbole temporaire à la fin de la liste
-int addTmp(tableSymbols *table, symbol tmpSymb);
+int addTmp(tableSymbols *table, char type);
 
 // remove the last temporary variable
-symbol rmTmp(tableSymbols *table);
+symbol popTmp(tableSymbols *table);
+
+// return the last tmp variable
+symbol peekTmp(tableSymbols *table);
 
 //we must go deeper
 int increaseActualDepth(tableSymbols *table);
