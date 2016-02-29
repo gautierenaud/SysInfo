@@ -45,8 +45,8 @@
 
 //gerer les priorités
 %right tEGAL
-%left tPLUS tMOINS
-%left tFOIS tDIV
+%right tPLUS tMOINS
+%right tFOIS tDIV
 
 
 %%
@@ -95,11 +95,11 @@ Decla: 		TType { varSymbol.type = $1; } SDecl
 
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
-		 			
+
 Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
 					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $3); popTmp(&tableVar); }
 					
-Affect: 	        tID SAffect
+Affect: 	tID  SAffect { if (containsSymbol(&tableVar, $1)>-1) { fprintf(output, "AFC %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $2); } else {printf("undef variable\n"); } }
 
 SAffect:            tEGAL ExpAri { $$ = $2; }
 
@@ -122,7 +122,7 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:				tIF Condition
+If:				tIF Condition {}
 
 While: 		tWHILE Condition
 

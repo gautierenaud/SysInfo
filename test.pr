@@ -3,5 +3,7 @@ int test(){
 }
 
 int main(int i, int j, void k){
-    int lala, lolo;
+    int lala, lolo=5;
+		lala = 8;
+		t = 15;
 }

@@ -16,7 +16,8 @@ typedef struct{
     data *symbolArray;
     int sizeData; // number of elements inside
     int sizeTmp; // number of temporary variables
-    int actualDepth;
+    int actualDepth; //depth of the actual bloc
+		int fctDepth; //depth of the actual function according to the bloc number
     int capacity; // number of element it can hold
 
     // int step;   // step by which we will increase the size of the array
@@ -29,9 +30,6 @@ void initTableCapacity(tableSymbols *table, int capacity);
 
 // add an element in the table
 int addSymbol(tableSymbols *table, symbol symb);
-
-// we must go deeper
-void enterTable(tableSymbols *table);
 
 // sort d'une profondeur, et efface les variables de la profondeur sortante
 void exitTable(tableSymbols *table);
@@ -55,4 +53,9 @@ symbol popTmp(tableSymbols *table);
 // return the last tmp variable
 symbol peekTmp(tableSymbols *table);
 
+//we must go deeper
+int increaseActualDepth(tableSymbols *table);
+
+//we must go deeper in a other dimension
+int increaseFctDepth(tableSymbols *table);
 #endif
