@@ -43,10 +43,6 @@ int addSymbol(tableSymbols *table, symbol symb){
     return table->sizeData - 1;
 }
 
-void enterTable(tableSymbols *table){
-    table->actualDepth++;
-}
-
 void exitTable(tableSymbols *table){
     
     if (table->actualDepth > 0)
@@ -62,7 +58,7 @@ int containsSymbol(tableSymbols *table, char *name){
     bool found = false;
 
     while (!found && index < table->sizeData){
-        if (strcmp(table->symbolArray[index].symb.name, name) != 0)
+        if ((strcmp(table->symbolArray[index].symb.name, name) != 0) && (table->symbolArray[index].depth >= table->fctDepth || table->symbolArray[index].depth == 0))
             index++;
         else
             found = true;
@@ -99,4 +95,12 @@ void printTable(tableSymbols *table){
 
 void freeTable(tableSymbols *table){
     table->sizeData = table->actualDepth = table->sizeTmp = 0;
+}
+
+int increaseFctDepth(tableSymbols *table) {
+		table->fctDepth = ++(table->actualDepth);
+}
+
+int increaseActualDepth(tableSymbols *table) {
+		table->actualDepth++;
 }
