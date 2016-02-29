@@ -45,8 +45,8 @@
 
 //gerer les priorités
 %right tEGAL
-%right tPLUS tMOINS
-%right tFOIS tDIV
+%left tPLUS tMOINS
+%left tFOIS tDIV
 
 
 %%

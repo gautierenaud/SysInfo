@@ -1,5 +1,5 @@
 int test(){
-    int a = 2 + 5, b = a * 9;
+    int a = 2 + 5 - 8 + 6, b = a * 9;
 }
 
 int main(int i, int j, void k){
