@@ -40,6 +40,7 @@
 %type <type> TType
 %type <num> ExpAri
 %type <num> SAffect
+%type <num> Return
 
 
 //gerer les priorités
@@ -111,7 +112,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "AFC %d %
 					| ExpAri tDIV ExpAri { fprintf(output, "DIV %d %d %d\n", $1, $1, $3); $$ = $1; popTmp(&tableVar); }
 					| tPO ExpAri tPF { $$ = $2; }
 
-Return: 	tRETURN ExpAri
+Return: 	tRETURN ExpAri { $$ = $2; }
 
 IFct: 		tID tPO IParam tPF
 
