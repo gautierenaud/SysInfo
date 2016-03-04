@@ -103,7 +103,18 @@ SDecl: 		Decl tVIR SDecl
 Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
 					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $3); popTmp(&tableVar); }
 					
-Affect: 	tID  SAffect {printf("ID : %s\n",$1); symbIndex = containsSymbol(&tableVar, $1); printf("Index : %d\n",symbIndex); if (symbIndex>-1) { printf("name : %s; index: %d\n",tableVar.symbolArray[symbIndex].symb.name, symbIndex); fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $2); } else {printf("undef variable\n"); } }
+
+Affect: 	 tID  SAffect 
+                {
+                    printTable(&tableVar); 
+                    symbIndex = containsSymbol(&tableVar, $1); 
+                    if (symbIndex > -1) { 
+                        fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $2); 
+                    } else {
+                            printf("undef variable\n"); 
+                    } 
+                }
+
 
 SAffect:  tEGAL ExpAri { $$ = $2; }
 
