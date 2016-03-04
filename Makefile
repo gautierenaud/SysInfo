@@ -1,13 +1,23 @@
 YSOURCE = source.yacc
+YINTESRC= inter.yacc
 FSOURCE = source.lex
+FINTESRC= inter.lex
 INCSRC	= symbols.h tableSymbols.h tableFonctions.h
+INCINTE = symbols.h tableSymbols.h tableFonctions.h exprTree.h
 CSRC	= y.tab.c lex.yy.c tableSymbols.c tableFonctions.c
-OUTPUT = out
+CINTESRC= y.tab.c lex.yy.c tableSymbols.c tableFonctions.c exprTree.c
+OUTPUT 	= out
+INTEOUT = interpret
 
 all: $(YSOURCE)
 	yacc -v -d $(YSOURCE)
 	flex $(FSOURCE)
 	gcc $(CSRC) $(INCSRC) -ll -o $(OUTPUT)
+
+inter: $(YINTESRC)
+	yacc -v -d $(YINTESRC)
+	flex $(FINTESRC)
+	gcc $(CINTESRC) $(INCINTE) -ll -o $(INTEOUT)
 
 test:
 	cat test.pr | ./out

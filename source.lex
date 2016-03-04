@@ -16,6 +16,7 @@ const  {return tCONST;}
 int {return tINT;}
 void {return tVOID;}
 \if {return tIF;}
+\else {return tELSE;}
 \while {return tWHILE;}
 \return {return tRETURN;} 
 \" {return tGUIL;}

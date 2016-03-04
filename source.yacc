@@ -64,7 +64,7 @@ DFct: 		{
 			TType { tmpFctSymbol.type = $2; } 
 			tID { tmpFctSymbol.name = $4; } 
 			tPO 
-            Param { tmpFctSymbol.params = paramName; } 
+            Params { tmpFctSymbol.params = paramName; } 
 			tPF { addSymbFct(&tableFct, tmpFctSymbol); printFctTable(&tableFct); fprintf(output, "%s:\n", tmpFctSymbol.name);}
             Bloc
 			{
@@ -72,9 +72,11 @@ DFct: 		{
 				free(paramName);
 			}
 
+Params:     Param
+            |
+
 Param: 		ParamVar tVIR Param
 		 	| ParamVar
-		 	|
 
 ParamVar:	TType { tmpChar = $1; strncat(paramName, &tmpChar, 1);} tID { paramNum++;}
 		 			
