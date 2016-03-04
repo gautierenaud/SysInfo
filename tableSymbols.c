@@ -35,7 +35,7 @@ int addSymbol(tableSymbols *table, symbol symb){
         table->symbolArray[table->sizeData].symb = symb;
         table->symbolArray[table->sizeData].symb.address = table->sizeData;
         table->symbolArray[table->sizeData].depth = table->actualDepth;
-        printf("symbol address: %d\n", table->symbolArray[table->sizeData].symb.address);
+        //printf("symbol address: %d\n", table->symbolArray[table->sizeData].symb.address);
         table->sizeData++;
     }else{
         printf("no more place in the array to insert element");
@@ -77,7 +77,7 @@ int addTmp(tableSymbols *table, char type){
     if (table->sizeData + table->sizeTmp < table->capacity){
         tmp.address = table->capacity - table->sizeTmp - 1;
         table->symbolArray[table->capacity - table->sizeTmp++ - 1].symb = tmp;
-        printf("tmp address: %d\n", table->symbolArray[table->capacity - table->sizeTmp].symb.address);
+        //printf("tmp address: %d\n", table->symbolArray[table->capacity - table->sizeTmp].symb.address);
     }else{
         printf("no more space for symbol");
     }
@@ -96,7 +96,15 @@ symbol peekTmp(tableSymbols *table){
 }
 
 void printTable(tableSymbols *table){
-    printf("sizeData: %d\n", table->sizeData);
+    int index = 0;
+    symbol tmpSymb;
+    printf("print Table, sizeData: %d; ", table->sizeData);
+    while (index < table->sizeData){
+        tmpSymb = table->symbolArray[index].symb;
+        printf("name: %s; addr: %d; ", tmpSymb.name, index);
+        index++;
+    }
+    printf("\n");
 }
 
 void freeTable(tableSymbols *table){

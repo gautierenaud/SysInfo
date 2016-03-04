@@ -37,3 +37,4 @@ printf {return tPRINTF;}
 {STRING} {return tSTRING;}
 " "
 "\n"
+"\t"
