@@ -21,6 +21,7 @@
     tableSymbols tableVar;
     tableSymbFcts tableFct;
     FILE *output;
+	
 %}
 
 // l'union permet d'utiliser les types sans avoir à les caster
@@ -32,7 +33,7 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tIF tWHILE tERROR tOR tAND
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tIF tELSE tWHILE tERROR tOR tAND
 
 %token <str> tID
 %token <num> tINTVAL
@@ -70,6 +71,7 @@ DFct: 		{
 			{
                 // TO DO: vérifier si on a besoin d'une ligne return
 				free(paramName);
+				freeTable(&tableVar);
 			}
 
 Param: 		ParamVar tVIR Param
@@ -99,12 +101,12 @@ SDecl: 		Decl tVIR SDecl
 Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
 					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $3); popTmp(&tableVar); }
 					
-Affect: 	tID  SAffect { if (containsSymbol(&tableVar, $1)>-1) { fprintf(output, "AFC %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $2); } else {printf("undef variable\n"); } }
+Affect: 	tID  SAffect {printf("ID : %s\n",$1); if (symbIndex = containsSymbol(&tableVar, $1)>-1) { printf("name : %s; index: %d\n",tableVar.symbolArray[symbIndex].symb.name, symbIndex); fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $2); } else {printf("undef variable\n"); } }
 
-SAffect:            tEGAL ExpAri { $$ = $2; }
+SAffect:  tEGAL ExpAri { $$ = $2; }
 
 ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "AFC %d %d\n", symbIndex, $1); $$ = symbIndex; }
-                    | tID { symbIndex = containsSymbol(&tableVar, $1); if (symbIndex == -1) printf("la variable n'existe pas dans ce contexte"); else { tmpSymbol = getSymbol(&tableVar, symbIndex); symbIndex = addTmp(&tableVar, tmpSymbol.type); fprintf(output, "COP %d %d\n", symbIndex, tmpSymbol.address); $$ = symbIndex; } }
+                    | tID { symbIndex = containsSymbol(&tableVar, $1); if (symbIndex == -1) printf("la variable n'existe pas dans ce contexte\n"); else { tmpSymbol = getSymbol(&tableVar, symbIndex); symbIndex = addTmp(&tableVar, tmpSymbol.type); fprintf(output, "COP %d %d\n", symbIndex, tmpSymbol.address); $$ = symbIndex; } }
 					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
 					| ExpAri tPLUS ExpAri { fprintf(output, "ADD %d %d %d\n", $1, $1, $3); $$ = $1; popTmp(&tableVar);}
 					| ExpAri tMOINS ExpAri { fprintf(output, "SOU %d %d %d\n", $1, $1, $3); $$ = $1; popTmp(&tableVar); }
@@ -114,7 +116,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "AFC %d %
 
 Return: 	tRETURN ExpAri { $$ = $2; }
 
-IFct: 		tID tPO IParam tPF
+IFct: 		tID tPO IParam tPF { fprintf(output, "JMP %s\n", $1);}
 
 IParam:   ExpAri IParams
 					|
@@ -122,11 +124,15 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:				tIF Condition {}
+If:			  tIF { fprintf(output, "if:\n");} Condition Bloc SIf { fprintf(output, "fi:\n");}				
 
-While: 		tWHILE Condition
+					
+SIf: 			tELSE { fprintf(output, "else:\n");} Bloc 
+					| 		
 
-Condition: tPO SCond tPF Bloc
+While: 		tWHILE Condition Bloc
+
+Condition: tPO SCond tPF  
 
 SCond:      Cond
             | Cond ConnectLogi Cond
@@ -137,7 +143,7 @@ Cond: 		ExpAri tEGAL tEGAL ExpAri {  }
 ConnectLogi:    tAND
                 | tOR
 
-Print: 		tPRINTF tPO tSTRING tPF
+Print: 		tPRINTF tPO ExpAri tPF { fprintf(output, "PRI %d\n", $3);}
 
 %%
 

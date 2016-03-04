@@ -10,4 +10,4 @@ all: $(YSOURCE)
 	gcc $(CSRC) $(INCSRC) -ll -o $(OUTPUT)
 
 test:
-	cat test.pr | ./out
+	cat test.pr | ./$(OUTPUT)
