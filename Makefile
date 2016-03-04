@@ -20,4 +20,4 @@ inter: $(YINTESRC)
 	gcc $(CINTESRC) $(INCINTE) -ll -o $(INTEOUT)
 
 test:
-	cat test.pr | ./out
+	cat test.pr | ./$(OUTPUT)

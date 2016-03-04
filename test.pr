@@ -5,5 +5,12 @@ int test(){
 int main(int i, int j, void k){
     int lala, lolo=5;
 		lala = 8;
+		lolo = 16;
 		t = 15;
+		test();
+		if (a) {
+				lolo = 9;
+	  } else {
+				
+		}
 }
