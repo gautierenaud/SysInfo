@@ -7,7 +7,8 @@
 
 typedef struct{
     // capacité de 5 car 1 pour le code, 3 pour les paramètres et 1 pour le nombre de paramètres
-    int instructions[INSTRUCTION_CAPACITY][5];
+    //int instructions[INSTRUCTION_CAPACITY][5];
+    int **instructions;
     int size; // number of elements
     int capacity;
 }tableInstruction;
