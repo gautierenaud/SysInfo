@@ -3,7 +3,7 @@
 
 #include <stdio.h>
 
-#define INSTRUCTION_CAPACITY 1
+#define INSTRUCTION_CAPACITY 300
 
 typedef struct{
     // capacité de 5 car 1 pour le code, 3 pour les paramètres et 1 pour le nombre de paramètres

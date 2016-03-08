@@ -34,6 +34,10 @@ void initInstructionTable(tableInstruction *table){
 }
 
 void freeInstructionTable(tableInstruction *table){
+    int i;
+    for (i = 0; i < table->size; i++){
+        free(table->instructions[i]);
+    }
     free(table->instructions);
     free(table);
 }
@@ -80,5 +84,6 @@ void printInstructsToFile(tableInstruction *table, FILE *output){
         for(j = 1; j <= table->instructions[i][4]; j++){
             fprintf(output, " %d", table->instructions[i][j]);
         }
+        fprintf(output, "\n");
     }
 }
