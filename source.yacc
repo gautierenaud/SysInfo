@@ -4,6 +4,7 @@
     #include <string.h>
     #include <stdbool.h>
     #include "tableSymbols.h"
+    #include "tableInstructions.h" 
     #include "tableFonctions.h"
 
 %}
@@ -20,6 +21,7 @@
 	char** fctTab;
     tableSymbols tableVar;
     tableSymbFcts tableFct;
+    tableInstruction tableInstruct;
     FILE *output;
 	
 %}
@@ -165,6 +167,13 @@ yyerror(char *s){
 }
 
 void main (void) {
+    initInstructionTable(&tableInstruct);
+    addInstructParams1(&tableInstruct, 4, 5);
+
+    addInstructParams1(&tableInstruct, 4, 5);
+    addInstructParams3(&tableInstruct, 11, 5, 5, 7);
+    printInstructionTable(&tableInstruct);
+
 	output = fopen("source.asm", "w");
     fputs("# made by Paul and Renaud\n", output);
     initTable(&tableVar);
