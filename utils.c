@@ -3,9 +3,9 @@
 #include <stdlib.h>
 
 char intToHex(int i){
-    char result;
-    sprintf(&result, "%X", i);
-    return result;
+    char result[2];
+    sprintf(result, "%X", i);
+    return result[0];
 }
 
 int hexToInt(char c){
