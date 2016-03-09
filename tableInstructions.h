@@ -2,6 +2,7 @@
 #define _TABLE_INSTRUCTIONS_
 
 #include <stdio.h>
+#include "tableLabels.h"
 
 #define INSTRUCTION_CAPACITY 300
 
@@ -21,6 +22,9 @@ void printInstructionTable(tableInstruction *table);
 int addInstructParams1(tableInstruction *table, int action, int param1);
 int addInstructParams2(tableInstruction *table, int action, int param1, int param2);
 int addInstructParams3(tableInstruction *table, int action, int param1, int param2, int param3);
+
+// complete the second arguments of the jump instruction
+void completeFromLabel(tableInstruction *table, tableLabels *tableLbl);
 
 void printInstructsToFile(tableInstruction *table, FILE *output);
 #endif

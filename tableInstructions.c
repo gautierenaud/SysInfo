@@ -15,7 +15,7 @@ void printInstructionTable(tableInstruction *table){
     printf("size of the instruct table: %d\n", table->size);
     int i, j;
     for (i = 0; i < table->size; i++){
-        printf("%c", intToHex(table->instructions[i][0]));
+        printf("\t%c", intToHex(table->instructions[i][0]));
         for (j = 1; j <= table->instructions[i][4]; j++){
             printf(" %d", table->instructions[i][j]);
         }
@@ -27,10 +27,6 @@ void initInstructionTable(tableInstruction *table){
     table->size = 0;
     table->capacity = INSTRUCTION_CAPACITY;
     table->instructions = (int **) malloc(table->capacity * sizeof(int));
-    int i;
-    for (i = 0; i < table->capacity; i++){
-        table->instructions[i] = (int *) malloc(5 * sizeof(int));
-    }
 }
 
 void freeInstructionTable(tableInstruction *table){
@@ -73,8 +69,14 @@ int addInstructLine(tableInstruction *table, int instruct[5]){
         table->instructions[table->size][i] = instruct[i];
     }
     printf("%d\n", table->instructions[table->size][0]);
-    table->size++;
-    return table->size;
+    return table->size++;
+}
+
+void completeFromLabel(tableInstruction *table, tableLabels *tableLbl){
+   int i;
+   for (i = 0; i < tableLbl->size; i++){
+       table->instructions[tableLbl->labels[i][0]][2] = tableLbl->labels[i][1];
+   }
 }
 
 void printInstructsToFile(tableInstruction *table, FILE *output){
