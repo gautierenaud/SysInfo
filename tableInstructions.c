@@ -15,7 +15,7 @@ void printInstructionTable(tableInstruction *table){
     printf("size of the instruct table: %d\n", table->size);
     int i, j, lim = table->size;
     for (i = 0; i < lim; i++){
-        printf("\t%c", intToHex(table->instructions[i][0]));
+        printf("\t%s", intToCode(table->instructions[i][0]));
         for (j = 1; j <= table->instructions[i][4]; j++){
             printf(" %d", table->instructions[i][j]);
         }
