@@ -8,9 +8,9 @@ int main(int i, int j, void k){
 		lolo = 16;
 		t = 15;
 		test();
-		if (a) {
+		if (lala == 16) {
 				lolo = 9;
 	  } else {
-				
+				lala = 65;
 		}
 }
