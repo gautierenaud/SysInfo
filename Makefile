@@ -23,3 +23,6 @@ inter: $(YINTESRC)
 
 test:
 	cat test.pr | ./$(OUTPUT)
+
+itest:
+	./$(INTEOUT) < testinter.asm

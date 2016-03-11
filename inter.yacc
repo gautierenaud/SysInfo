@@ -8,8 +8,8 @@
     char letter;
 }
 
+%token tADD tMUL tSOU tDIV tCOP tAFC tJMP tJMF tINF tSUP tEQU tPRI
 %token <num> tINT
-%token <letter> tLETTER
 
 %%
 
@@ -17,7 +17,18 @@ Prg:    Line Lines
 Lines:  Line Lines
         |
 
-Line:   tINT tINT tINT tINT
+Line:   tADD tINT tINT tINT
+        | tMUL tINT tINT tINT
+        | tSOU tINT tINT tINT
+        | tDIV tINT tINT tINT
+        | tCOP tINT tINT
+        | tAFC tINT tINT
+        | tJMP tINT
+        | tJMF tINT tINT
+        | tINF tINT tINT tINT
+        | tSUP tINT tINT tINT
+        | tEQU tINT tINT tINT
+        | tPRI tINT {printf("%d\n", $2);}
 
 %%
 

@@ -6,3 +6,4 @@ lex.yy.c
 *~
 y.output
 source.asm
+testinter.asm
