@@ -5,9 +5,13 @@ int main(int i, int j, void k){
     t = 15;
     if (lala == 16) {
         lolo = 9;
-    } else {
+				if (lolo == 17) {
+        		lala = 19;
+    		}
+				lala = 26;
+    }
         printf(lolo);
         lala = 65;
-    }
+
     printf(lala);
 }
