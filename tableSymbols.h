@@ -25,8 +25,8 @@ typedef struct{
 } tableSymbols;
 
 // initialise la table des symboles
-void initTable(tableSymbols *table);
-void initTableCapacity(tableSymbols *table, int capacity);
+void initSymbTable(tableSymbols *table);
+void initSymbTableCapacity(tableSymbols *table, int capacity);
 
 // add an element in the table
 int addSymbol(tableSymbols *table, symbol symb);

@@ -13,8 +13,8 @@ void resizeInstructionTable(tableInstruction *table){
 
 void printInstructionTable(tableInstruction *table){
     printf("size of the instruct table: %d\n", table->size);
-    int i, j;
-    for (i = 0; i < table->size; i++){
+    int i, j, lim = table->size;
+    for (i = 0; i < lim; i++){
         printf("\t%c", intToHex(table->instructions[i][0]));
         for (j = 1; j <= table->instructions[i][4]; j++){
             printf(" %d", table->instructions[i][j]);
@@ -68,7 +68,6 @@ int addInstructLine(tableInstruction *table, int instruct[5]){
     for (i = 0; i < 5; i++){
         table->instructions[table->size][i] = instruct[i];
     }
-    printf("%d\n", table->instructions[table->size][0]);
     return table->size++;
 }
 

@@ -4,7 +4,7 @@
 #include "tableSymbols.h"
 
 
-void initTable(tableSymbols *table){
+void initSymbTable(tableSymbols *table){
     table->symbolArray = (data*) malloc(sizeof(data) * CAPACITY);
     table->actualDepth = 0;
     table->sizeData= 0;
@@ -13,7 +13,7 @@ void initTable(tableSymbols *table){
 //  table->step = STEP;
 }
 
-void initTableCapacity(tableSymbols *table, int capacity){
+void initSymbTableCapacity(tableSymbols *table, int capacity){
     table->symbolArray = (data*) malloc(sizeof(data) * capacity);
     table->actualDepth = 0;
     table->sizeData = 0;
