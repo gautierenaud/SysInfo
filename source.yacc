@@ -75,7 +75,7 @@ DFct: 		{
 			tID { tmpFctSymbol.name = $4; } 
 			tPO 
             Params { tmpFctSymbol.params = paramName; } 
-			tPF { addSymbFct(&tableFct, tmpFctSymbol); fprintf(output, "%s:\n", tmpFctSymbol.name);}
+			tPF { addSymbFct(&tableFct, tmpFctSymbol); /*fprintf(output, "%s:\n", tmpFctSymbol.name);*/}
             Bloc
 			{
                 // TO DO: vérifier si on a besoin d'une ligne return
@@ -151,7 +151,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
 
 Return: 	tRETURN ExpAri { $$ = $2; }
 
-IFct: 		tID tPO IParam tPF { fprintf(output, "JMP %s\n", $1);}
+IFct: 		tID tPO IParam tPF { /*fprintf(output, "JMP %s\n", $1);*/}
 
 IParam:   ExpAri IParams
 					|
@@ -159,7 +159,7 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size-1); }				
+If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size); }				
 					
 
 SIf: 			tELSE Bloc 
@@ -169,8 +169,8 @@ While: 		tWHILE Condition Bloc
 
 Condition: tPO SCond tPF { $$ = $2; } 
 
-SCond:      Cond
-            | Cond ConnectLogi Cond
+SCond:      Cond { $$ = $1; }
+            | Cond ConnectLogi Cond { $$ = $2; }
 
 Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
 					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }
@@ -193,12 +193,14 @@ int main (void) {
     initInstructionTable(&tableInstruct);
     initSymbTable(&tableVar);
     initFctTable(&tableFct);
-   	output = fopen("source.asm", "w");
+   	
 
 	yyparse();
-
+		completeFromLabel(&tableInstruct, tableLbl);
     printInstructionTable(&tableInstruct);
     printLabelTable(tableLbl);
+		output = fopen("source.asm", "w");
+		printInstructsToFile(&tableInstruct, output);
 
 	fclose(output);
     freeLabelTable(&tableLbl);
