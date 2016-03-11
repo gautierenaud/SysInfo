@@ -170,7 +170,7 @@ While: 		tWHILE Condition Bloc
 Condition: tPO SCond tPF { $$ = $2; } 
 
 SCond:      Cond { $$ = $1; }
-            | Cond ConnectLogi Cond { $$ = $2; }
+            | Cond ConnectLogi Cond 
 
 Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
 					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }
