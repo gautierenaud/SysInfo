@@ -2,10 +2,11 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-void initLabelTable(tableLabels *table){
-    table->size = 0;
-    table->capacity = LABEL_CAPACITY;
-    table->labels = malloc(sizeof(int*) * table->capacity);
+void initLabelTable(tableLabels **table){
+    *table = malloc(sizeof(tableLabels));
+    (*table)->size = 0;
+    (*table)->capacity = LABEL_CAPACITY;
+    (*table)->labels = malloc(sizeof(int*) * (*table)->capacity);
 }
 
 void resizeLabelTable(tableLabels *table){
@@ -13,13 +14,15 @@ void resizeLabelTable(tableLabels *table){
     table->labels = (int**) realloc(table->labels, table->capacity * sizeof(*table->labels));   
 }
 
-void freeLabelTable(tableLabels *table){
+void freeLabelTable(tableLabels **table){
     int i;
+    /*
     for (i = 0; i < table->size; i++){
         free(table->labels[i]);
-    }
-    free(table->labels);
-    free(table);
+    }*/
+    //free(table->labels);
+    free((*table)->labels);
+    free(*table);
 }
 
 void printLabelTable(tableLabels *table){

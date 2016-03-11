@@ -9,8 +9,8 @@ typedef struct{
     int capacity;
 }tableLabels;
 
-void initLabelTable(tableLabels *table);
-void freeLabelTable(tableLabels *table);
+void initLabelTable(tableLabels **table);
+void freeLabelTable(tableLabels **table);
 void resizeLabelTable(tableLabels *table);
 void printLabelTable(tableLabels *table);
 

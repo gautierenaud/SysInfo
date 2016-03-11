@@ -22,9 +22,10 @@
 	char** fctTab;
     tableSymbols tableVar;
     tableSymbFcts tableFct;
-    tableLabels tableLbl;
+    tableLabels *tableLbl;
     tableInstruction tableInstruct;
     FILE *output;
+    bool compilationError;
 	
 %}
 
@@ -125,10 +126,10 @@ SAffect:  tEGAL ExpAri { $$ = $2; }
 ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "AFC %d %d\n", symbIndex, $1); $$ = symbIndex; }
                     | tID { symbIndex = containsSymbol(&tableVar, $1); if (symbIndex == -1) printf("la variable n'existe pas dans ce contexte\n"); else { tmpSymbol = getSymbol(&tableVar, symbIndex); symbIndex = addTmp(&tableVar, tmpSymbol.type); fprintf(output, "COP %d %d\n", symbIndex, tmpSymbol.address); $$ = symbIndex; } }
 					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
-					| ExpAri tPLUS ExpAri { fprintf(output, "ADD %d %d %d\n", $1, $1, $3); $$ = $1; popTmp(&tableVar);}
-					| ExpAri tMOINS ExpAri { fprintf(output, "SOU %d %d %d\n", $1, $1, $3); $$ = $1; popTmp(&tableVar); }
-					| ExpAri tFOIS ExpAri { fprintf(output, "MUL %d %d %d\n", $1, $1, $3); $$ = $1; popTmp(&tableVar); }
-					| ExpAri tDIV ExpAri { fprintf(output, "DIV %d %d %d\n", $1, $1, $3); $$ = $1; popTmp(&tableVar); }
+					| ExpAri tPLUS ExpAri { addInstructParams3(&tableInstruct, 1, $1, $1, $3); $$ = $1; popTmp(&tableVar);}
+					| ExpAri tMOINS ExpAri { addInstructParams3(&tableInstruct, 3, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
+					| ExpAri tFOIS ExpAri { addInstructParams3(&tableInstruct, 2, $1, $1, $3); popTmp(&tableVar); }
+					| ExpAri tDIV ExpAri { addInstructParams3(&tableInstruct, 4, $1, $1, $3); popTmp(&tableVar); }
 					| tPO ExpAri tPF { $$ = $2; }
 
 Return: 	tRETURN ExpAri { $$ = $2; }
@@ -168,17 +169,22 @@ yyerror(char *s){
 	exit(0);
 }
 
-void main (void) {
+int main (void) {
+    compilationError = false;
     initLabelTable(&tableLbl);
-    int index = addLabel1(&tableLbl, 5);
-    printf("%d\n", index);
-    updateLabel(&tableLbl, index, 9);
-    printLabelTable(&tableLbl);
-
-   	output = fopen("source.asm", "w");
-    fputs("# made by Paul and Renaud\n", output);
-    initTable(&tableVar);
+    initInstructionTable(&tableInstruct);
+    initSymbTable(&tableVar);
     initFctTable(&tableFct);
+   	output = fopen("source.asm", "w");
+
 	yyparse();
+
+    printInstructionTable(&tableInstruct);
+    printLabelTable(tableLbl);
+
 	fclose(output);
+    freeLabelTable(&tableLbl);
+    //free(&tableLbl);
+    //freeInstructionTable(&tableInstruct);
+    return 0;
 }
