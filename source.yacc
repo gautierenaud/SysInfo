@@ -75,7 +75,7 @@ DFct: 		{
 			tID { tmpFctSymbol.name = $4; } 
 			tPO 
             Params { tmpFctSymbol.params = paramName; } 
-			tPF { addSymbFct(&tableFct, tmpFctSymbol); printFctTable(&tableFct); fprintf(output, "%s:\n", tmpFctSymbol.name);}
+			tPF { addSymbFct(&tableFct, tmpFctSymbol); fprintf(output, "%s:\n", tmpFctSymbol.name);}
             Bloc
 			{
                 // TO DO: vérifier si on a besoin d'une ligne return
@@ -110,7 +110,7 @@ SDecl: 		Decl tVIR SDecl
 		 			| Decl
 
 Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
-					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $3); popTmp(&tableVar); }
+					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $3); popTmp(&tableVar); }
 					
 
 Affect: 	 tID  SAffect 
@@ -118,22 +118,25 @@ Affect: 	 tID  SAffect
                     printTable(&tableVar); 
                     symbIndex = containsSymbol(&tableVar, $1); 
                     if (symbIndex > -1) { 
-                        fprintf(output, "COP %d %d\n", tableVar.symbolArray[symbIndex].symb.address, $2); 
+                        addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $2); 
+                        popTmp(&tableVar); 
                     } else {
-                            printf("undef variable\n"); 
+                        printf("undef variable\n");
+                        compilationError = true;
+                        popTmp(&tableVar);
                     } 
                 }
 
 
 SAffect:  tEGAL ExpAri { $$ = $2; }
 
-ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "AFC %d %d\n", symbIndex, $1); $$ = symbIndex; }
-                    | tID { symbIndex = containsSymbol(&tableVar, $1); if (symbIndex == -1) printf("la variable n'existe pas dans ce contexte\n"); else { tmpSymbol = getSymbol(&tableVar, symbIndex); symbIndex = addTmp(&tableVar, tmpSymbol.type); fprintf(output, "COP %d %d\n", symbIndex, tmpSymbol.address); $$ = symbIndex; } }
+ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, $1); $$ = symbIndex; }
+                    | tID { symbIndex = containsSymbol(&tableVar, $1); if (symbIndex == -1) printf("la variable n'existe pas dans ce contexte\n"); else { tmpSymbol = getSymbol(&tableVar, symbIndex); symbIndex = addTmp(&tableVar, tmpSymbol.type); addInstructParams2(&tableInstruct, 5, symbIndex, tmpSymbol.address); } }
 					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
 					| ExpAri tPLUS ExpAri { addInstructParams3(&tableInstruct, 1, $1, $1, $3); $$ = $1; popTmp(&tableVar);}
 					| ExpAri tMOINS ExpAri { addInstructParams3(&tableInstruct, 3, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
-					| ExpAri tFOIS ExpAri { addInstructParams3(&tableInstruct, 2, $1, $1, $3); popTmp(&tableVar); }
-					| ExpAri tDIV ExpAri { addInstructParams3(&tableInstruct, 4, $1, $1, $3); popTmp(&tableVar); }
+					| ExpAri tFOIS ExpAri { addInstructParams3(&tableInstruct, 2, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
+					| ExpAri tDIV ExpAri { addInstructParams3(&tableInstruct, 4, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
 					| tPO ExpAri tPF { $$ = $2; }
 
 Return: 	tRETURN ExpAri { $$ = $2; }
