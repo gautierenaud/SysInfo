@@ -38,11 +38,15 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tIF tELSE tWHILE tERROR tOR tAND
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tWHILE tERROR tOR tAND
 
 %token <str> tID
 %token <num> tINTVAL
+%token <num> tIF
 
+%type <num> Condition
+%type <num> Cond
+%type <num> SCond
 %type <type> TType
 %type <num> ExpAri
 %type <num> SAffect
@@ -142,20 +146,20 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF { fprintf(output, "if:\n");} Condition {fprintf(output, "JMF\n");} Bloc SIf { fprintf(output, "fi:\n");}				
+If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size); }				
 					
-SIf: 			tELSE { fprintf(output, "else:\n");} Bloc 
+SIf: 			tELSE  Bloc 
 					| 		
 
 While: 		tWHILE Condition {fprintf(output, "JMF\n");} Bloc
 
-Condition: tPO SCond tPF  
+Condition: tPO SCond tPF {$$ = $2;}
 
-SCond:      Cond
-            | Cond ConnectLogi Cond
+SCond:      Cond {$$ = $1;} 
+            | Cond ConnectLogi Cond {$$ = $1;}
 
-Cond: 		ExpAri tEGAL tEGAL ExpAri { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "EQU %d %d %d\n",symbIndex,$1,$4); }
-					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "EQU %d %d %d\n",symbIndex,$1,$4); }
+Cond: 		ExpAri tEGAL tEGAL ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams3(&tableInstruct, 11, symbIndex,$1,$4);  }
+					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "AFC %d 1",symbIndex); fprintf(output, "EQU %d %d %d\n",symbIndex,$1,symbIndex); }
 
 ConnectLogi:    tAND
                 | tOR
