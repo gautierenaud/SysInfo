@@ -126,7 +126,18 @@ Affect: 	 tID  SAffect
 SAffect:  tEGAL ExpAri { $$ = $2; }
 
 ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, $1); $$ = symbIndex; }
-                    | tID { symbIndex = containsSymbol(&tableVar, $1); if (symbIndex == -1) printf("la variable n'existe pas dans ce contexte\n"); else { tmpSymbol = getSymbol(&tableVar, symbIndex); symbIndex = addTmp(&tableVar, tmpSymbol.type); addInstructParams2(&tableInstruct, 5, symbIndex, tmpSymbol.address); } }
+                    | tID 
+                        { 
+                            symbIndex = containsSymbol(&tableVar, $1); 
+                            if (symbIndex == -1) 
+                                printf("la variable n'existe pas dans ce contexte\n");
+                            else { 
+                                tmpSymbol = getSymbol(&tableVar, symbIndex);
+                                symbIndex = addTmp(&tableVar, tmpSymbol.type); 
+                                addInstructParams2(&tableInstruct, 5, symbIndex, tmpSymbol.address);
+                                $$ = symbIndex;
+                            } 
+                        }
 					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
 					| ExpAri tPLUS ExpAri { addInstructParams3(&tableInstruct, 1, $1, $1, $3); $$ = $1; popTmp(&tableVar);}
 					| ExpAri tMOINS ExpAri { addInstructParams3(&tableInstruct, 3, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
@@ -162,7 +173,7 @@ Cond: 		ExpAri tEGAL tEGAL ExpAri {  }
 ConnectLogi:    tAND
                 | tOR
 
-Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); }
+Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); printf("j'affiche %d\n", $3); }
 
 %%
 

@@ -38,6 +38,14 @@ void freeInstructionTable(tableInstruction *table){
     free(table);
 }
 
+int addInstructParams0(tableInstruction *table, int action){
+    if (table->size == table->capacity)
+        resizeInstructionTable(table);
+    int tmpInstruct[5] = {action, 0, 0, 0, 0};
+
+    return addInstructLine(table, tmpInstruct);
+}
+
 int addInstructParams1(tableInstruction *table, int action, int param1){
     if (table->size == table->capacity)
         resizeInstructionTable(table);

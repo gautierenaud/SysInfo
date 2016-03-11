@@ -1,12 +1,13 @@
 int main(int i, int j, void k){
     int lala, lolo=5;
-		lala = 8;
-		lolo = 16;
-		t = 15;
-		if (a) {
-				lolo = 9;
-	  } else {
-				
-      }
-      printf(lolo);
+    lala = 8 * lolo;
+    lolo = 16;
+    t = 15;
+    if (lala == 16) {
+        lolo = 9;
+    } else {
+        printf(lolo);
+        lala = 65;
+    }
+    printf(lala);
 }
