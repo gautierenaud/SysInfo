@@ -149,9 +149,9 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size); }				
+If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size-1); }				
 					
-SIf: 			tELSE  Bloc 
+SIf: 			tELSE Bloc 
 					| 		
 
 While: 		tWHILE Condition {fprintf(output, "JMF\n");} Bloc
