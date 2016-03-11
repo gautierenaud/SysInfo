@@ -141,20 +141,20 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF { fprintf(output, "if:\n");} Condition Bloc SIf { fprintf(output, "fi:\n");}				
+If:			  tIF { fprintf(output, "if:\n");} Condition {fprintf(output, "JMF\n");} Bloc SIf { fprintf(output, "fi:\n");}				
 					
 SIf: 			tELSE { fprintf(output, "else:\n");} Bloc 
 					| 		
 
-While: 		tWHILE Condition Bloc
+While: 		tWHILE Condition {fprintf(output, "JMF\n");} Bloc
 
 Condition: tPO SCond tPF  
 
 SCond:      Cond
             | Cond ConnectLogi Cond
 
-Cond: 		ExpAri tEGAL tEGAL ExpAri {  }
-					| ExpAri
+Cond: 		ExpAri tEGAL tEGAL ExpAri { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "EQU %d %d %d\n",symbIndex,$1,$4); }
+					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "EQU %d %d %d\n",symbIndex,$1,$4); }
 
 ConnectLogi:    tAND
                 | tOR
