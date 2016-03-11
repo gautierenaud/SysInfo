@@ -3,7 +3,7 @@ int main(int i, int j, void k){
 		lala = 8;
 		lolo = 16;
 		t = 15;
-		if (lala == 16) {
+		if (lala == 16 + 3) {
 				lolo = 9;
 	  } else {
 				lala = 65;

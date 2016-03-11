@@ -149,7 +149,7 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size); }				
+If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size); }				
 					
 SIf: 			tELSE  Bloc 
 					| 		
@@ -161,11 +161,11 @@ Condition: tPO SCond tPF {$$ = $2;}
 SCond:      Cond {$$ = $1;} 
             | Cond ConnectLogi Cond {$$ = $1;}
 
-Cond: 		ExpAri tEGAL tEGAL ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams3(&tableInstruct, 11, symbIndex,$1,$4);  }
-					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); fprintf(output, "AFC %d 1",symbIndex); fprintf(output, "EQU %d %d %d\n",symbIndex,$1,symbIndex); }
+Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
+					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }
 
-ConnectLogi:    tAND
-                | tOR
+ConnectLogi:  tAND
+              | tOR
 
 Print: 		tPRINTF tPO ExpAri tPF { fprintf(output, "PRI %d\n", $3);}
 
