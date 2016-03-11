@@ -44,14 +44,14 @@
 %token <num> tINTVAL
 %token <num> tIF
 
-%type <num> Condition
-%type <num> Cond
-%type <num> SCond
 %type <type> TType
 %type <num> ExpAri
 %type <num> SAffect
 %type <num> Return
-
+%type <num> If
+%type <num> Cond
+%type <num> SCond
+%type <num> Condition
 
 //gerer les priorités
 %right tEGAL
@@ -115,7 +115,6 @@ Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initial
 
 Affect: 	 tID  SAffect 
                 {
-                    printTable(&tableVar); 
                     symbIndex = containsSymbol(&tableVar, $1); 
                     if (symbIndex > -1) { 
                         addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $2); 
@@ -131,7 +130,18 @@ Affect: 	 tID  SAffect
 SAffect:  tEGAL ExpAri { $$ = $2; }
 
 ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, $1); $$ = symbIndex; }
-                    | tID { symbIndex = containsSymbol(&tableVar, $1); if (symbIndex == -1) printf("la variable n'existe pas dans ce contexte\n"); else { tmpSymbol = getSymbol(&tableVar, symbIndex); symbIndex = addTmp(&tableVar, tmpSymbol.type); addInstructParams2(&tableInstruct, 5, symbIndex, tmpSymbol.address); } }
+                    | tID 
+                        { 
+                            symbIndex = containsSymbol(&tableVar, $1); 
+                            if (symbIndex == -1) 
+                                printf("la variable n'existe pas dans ce contexte\n");
+                            else { 
+                                tmpSymbol = getSymbol(&tableVar, symbIndex);
+                                symbIndex = addTmp(&tableVar, tmpSymbol.type); 
+                                addInstructParams2(&tableInstruct, 5, symbIndex, tmpSymbol.address);
+                                $$ = symbIndex;
+                            } 
+                        }
 					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
 					| ExpAri tPLUS ExpAri { addInstructParams3(&tableInstruct, 1, $1, $1, $3); $$ = $1; popTmp(&tableVar);}
 					| ExpAri tMOINS ExpAri { addInstructParams3(&tableInstruct, 3, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
@@ -151,15 +161,16 @@ IParams:  tVIR ExpAri
 					
 If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size-1); }				
 					
+
 SIf: 			tELSE Bloc 
 					| 		
 
-While: 		tWHILE Condition {fprintf(output, "JMF\n");} Bloc
+While: 		tWHILE Condition Bloc
 
-Condition: tPO SCond tPF {$$ = $2;}
+Condition: tPO SCond tPF { $$ = $2; } 
 
-SCond:      Cond {$$ = $1;} 
-            | Cond ConnectLogi Cond {$$ = $1;}
+SCond:      Cond
+            | Cond ConnectLogi Cond
 
 Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
 					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }
@@ -167,7 +178,7 @@ Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $
 ConnectLogi:  tAND
               | tOR
 
-Print: 		tPRINTF tPO ExpAri tPF { fprintf(output, "PRI %d\n", $3);}
+Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); popTmp(&tableVar); }
 
 %%
 
