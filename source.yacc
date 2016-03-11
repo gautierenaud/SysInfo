@@ -38,16 +38,20 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tIF tELSE tWHILE tERROR tOR tAND
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tWHILE tERROR tOR tAND
 
 %token <str> tID
 %token <num> tINTVAL
+%token <num> tIF
 
 %type <type> TType
 %type <num> ExpAri
 %type <num> SAffect
 %type <num> Return
-
+%type <num> If
+%type <num> Cond
+%type <num> SCond
+%type <num> Condition
 
 //gerer les priorités
 %right tEGAL
@@ -155,25 +159,25 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF { fprintf(output, "if:\n");} Condition Bloc SIf { fprintf(output, "fi:\n");}				
+If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size); }				
 					
 SIf: 			tELSE { fprintf(output, "else:\n");} Bloc 
 					| 		
 
 While: 		tWHILE Condition Bloc
 
-Condition: tPO SCond tPF  
+Condition: tPO SCond tPF { $$ = $2; } 
 
 SCond:      Cond
             | Cond ConnectLogi Cond
 
-Cond: 		ExpAri tEGAL tEGAL ExpAri {  }
-					| ExpAri
+Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
+					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }
 
-ConnectLogi:    tAND
-                | tOR
+ConnectLogi:  tAND
+              | tOR
 
-Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); printf("j'affiche %d\n", $3); }
+Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); popTmp(&tableVar); }
 
 %%
 
