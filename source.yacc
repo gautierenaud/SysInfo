@@ -111,7 +111,6 @@ Decl: 		        tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initial
 
 Affect: 	 tID  SAffect 
                 {
-                    printTable(&tableVar); 
                     symbIndex = containsSymbol(&tableVar, $1); 
                     if (symbIndex > -1) { 
                         addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $2); 
@@ -163,7 +162,7 @@ Cond: 		ExpAri tEGAL tEGAL ExpAri {  }
 ConnectLogi:    tAND
                 | tOR
 
-Print: 		tPRINTF tPO ExpAri tPF { fprintf(output, "PRI %d\n", $3);}
+Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); }
 
 %%
 

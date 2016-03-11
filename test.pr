@@ -7,5 +7,6 @@ int main(int i, int j, void k){
 				lolo = 9;
 	  } else {
 				
-		}
+      }
+      printf(lolo);
 }
