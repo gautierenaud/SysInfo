@@ -25,6 +25,7 @@ void {return tVOID;}
 \/ {return tDIV;}
 \* {return tFOIS;}
 = {return tEGAL;}
+\< {return tINF;}
 \( {return tPO;}
 \) {return tPF;}
 \{ {return tACO;}
