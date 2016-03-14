@@ -1,6 +1,7 @@
 %{
     #include <stdio.h>
     #include <stdlib.h>
+    #include "tableInstructions.h"
 %}
 
 %union{
@@ -8,8 +9,15 @@
     char letter;
 }
 
+%{
+    // mémoire où on stocke la valeur des variables
+    int mem[256];
+    int pc;
+    tableInstruction tableInstruct;
+%}
+
+%token tADD tMUL tSOU tDIV tCOP tAFC tJMP tJMF tINF tSUP tEQU tPRI
 %token <num> tINT
-%token <letter> tLETTER
 
 %%
 
@@ -17,7 +25,18 @@ Prg:    Line Lines
 Lines:  Line Lines
         |
 
-Line:   tINT tINT tINT tINT
+Line:   tADD tINT tINT tINT { addInstructParams3(&tableInstruct, 1, $2, $3, $4);}
+        | tMUL tINT tINT tINT { addInstructParams3(&tableInstruct, 2, $2, $3, $4);}
+        | tSOU tINT tINT tINT { addInstructParams3(&tableInstruct, 3, $2, $3, $4);}
+        | tDIV tINT tINT tINT { addInstructParams3(&tableInstruct, 4, $2, $3, $4);} 
+        | tCOP tINT tINT { addInstructParams2(&tableInstruct, 5, $2, $3); }
+        | tAFC tINT tINT { addInstructParams2(&tableInstruct, 6, $2, $3); }
+        | tJMP tINT { addInstructParams1(&tableInstruct, 7, $2); }
+        | tJMF tINT tINT { addInstructParams2(&tableInstruct, 8, $2, $3); }
+        | tINF tINT tINT tINT { addInstructParams3(&tableInstruct, 9, $2, $3, $4);}
+        | tSUP tINT tINT tINT { addInstructParams3(&tableInstruct, 10, $2, $3, $4);}
+        | tEQU tINT tINT tINT { addInstructParams3(&tableInstruct, 11, $2, $3, $4);}
+        | tPRI tINT { addInstructParams1(&tableInstruct, 12, $2); }
 
 %%
 
@@ -26,6 +45,10 @@ yyerror(char *s){
 	exit(0);
 }
 
-void main (void) {
+int main (void) {
+    initInstructionTable(&tableInstruct);
 	yyparse();
+    executeInstructions(&tableInstruct);
+    
+    return 0;
 }

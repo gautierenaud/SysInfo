@@ -38,7 +38,7 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tWHILE tERROR tOR tAND tSUP tINF
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tINF tSUP tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tWHILE tERROR tOR tAND
 
 %token <str> tID
 %token <num> tINTVAL
@@ -175,6 +175,7 @@ SCond:      Cond { $$ = $1; }
 							{symbIndex = addTmp(&tableVar, 'i'); if($2==0){addInstructParams3(&tableInstruct, 2, $1, $1, $3); addInstructParams2(&tableInstruct, 6, symbIndex, 1);
   addInstructParams3(&tableInstruct, 11, $1, $1, symbIndex); } 
 							if($2==1){addInstructParams3(&tableInstruct, 1, $1, $1, $3); addInstructParams2(&tableInstruct, 6, symbIndex, 0); addInstructParams3(&tableInstruct, 10, $1, $1, symbIndex);} popTmp(&tableVar);}
+
 
 Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
 					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }

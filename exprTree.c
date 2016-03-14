@@ -30,10 +30,7 @@ int analyseTree(node *n){
                 break;
             case '/':
                 return tmp1 / tmp2;
-                break;
-            default:
-                return NULL;
-                break;
+                break;   
         }
     }
 }
