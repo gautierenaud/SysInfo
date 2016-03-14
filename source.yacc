@@ -38,7 +38,7 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tWHILE tERROR tOR tAND
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tWHILE tERROR tOR tAND tSUP tINF
 
 %token <str> tID
 %token <num> tINTVAL
@@ -52,6 +52,7 @@
 %type <num> Cond
 %type <num> SCond
 %type <num> Condition
+%type <num> ConnectLogi
 
 //gerer les priorités
 %right tEGAL
@@ -170,13 +171,18 @@ While: 		tWHILE Condition Bloc
 Condition: tPO SCond tPF { $$ = $2; } 
 
 SCond:      Cond { $$ = $1; }
-            | Cond ConnectLogi Cond { $$ = $2; }
+            | Cond ConnectLogi Cond 
+							{symbIndex = addTmp(&tableVar, 'i'); if($2==0){addInstructParams3(&tableInstruct, 2, $1, $1, $3); addInstructParams2(&tableInstruct, 6, symbIndex, 1);
+  addInstructParams3(&tableInstruct, 11, $1, $1, symbIndex); } 
+							if($2==1){addInstructParams3(&tableInstruct, 1, $1, $1, $3); addInstructParams2(&tableInstruct, 6, symbIndex, 0); addInstructParams3(&tableInstruct, 10, $1, $1, symbIndex);} popTmp(&tableVar);}
 
 Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
 					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }
+					| ExpAri tSUP ExpAri { addInstructParams3(&tableInstruct, 10, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
+					| ExpAri tINF ExpAri { addInstructParams3(&tableInstruct, 9, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
 
-ConnectLogi:  tAND
-              | tOR
+ConnectLogi:  tAND {$$ = 0;}
+              | tOR	{$$ = 1;}
 
 Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); popTmp(&tableVar); }
 

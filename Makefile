@@ -23,3 +23,5 @@ inter: $(YINTESRC)
 
 test:
 	cat test.pr | ./$(OUTPUT)
+
+
