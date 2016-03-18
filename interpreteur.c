@@ -9,6 +9,7 @@ int mem[256];
 void executeInstructions(tableInstruction *table){
     pc = 0;
     while (pc < table->size){
+        //printInstructionLine(table, pc);
         execLine(table->instructions[pc]);
         pc++;
     }
@@ -18,11 +19,7 @@ void execLine(int * line){
     int tmp;
     switch (line[0]){
         case 1: // ADD
-            // mem[line[1]] = mem[line[2]] + mem[line[3]];
-            tmp = mem[line[2]] + mem[line[3]];
-            printf("[inter] sum %d\n", tmp);
-            mem[line[1]] = tmp;
-            printf("[inter] new val %d\n", mem[line[1]]);
+            mem[line[1]] = mem[line[2]] + mem[line[3]];
             break;
         case 2: // MUL
             mem[line[1]] = mem[line[2]] * mem[line[3]];
