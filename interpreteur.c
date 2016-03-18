@@ -9,7 +9,6 @@ int mem[256];
 void executeInstructions(tableInstruction *table){
     pc = 0;
     while (pc < table->size){
-        //printInstructionLine(table, pc);
         execLine(table->instructions[pc]);
         pc++;
     }
@@ -37,7 +36,7 @@ void execLine(int * line){
             mem[line[1]] = line[2];
             break;
         case 7: // JMP
-            pc = mem[line[1]];
+            pc = line[1];
             break;
         case 8: // JMF
             if (mem[line[1]] == 0)
