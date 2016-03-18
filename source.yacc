@@ -171,6 +171,7 @@ SIf: 			tELSE { $1 = addInstructParams1(&tableInstruct, 7, -1); } Bloc { addLabe
 
 While: 		tWHILE { $1 = tableInstruct.size; } Condition { $3 = addInstructParams2(&tableInstruct, 8, $3, -1); popTmp(&tableVar); } Bloc { tmpIndex = addInstructParams1(&tableInstruct, 7, $1 - 1); addLabel2(tableLbl , $3, tmpIndex); }
 
+
 Condition: tPO SCond tPF { $$ = $2; } 
 
 SCond:      Cond { $$ = $1; }
