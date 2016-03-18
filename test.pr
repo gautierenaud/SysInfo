@@ -1,8 +1,14 @@
 int main(int i, int j, void k){
-    int lala;
-    int index = 0;
-    while (index < 5){
-        printf(index);
-        index = index + 1;
+    int i = 0;
+    if (3 == 3){
+        printf(i);
+    }else{
+        if (4 == 5){
+            printf(45);
+        }else{
+            printf(64);
+        }
+        printf(4);
     }
+    printf(5);
 }

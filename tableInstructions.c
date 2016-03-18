@@ -26,7 +26,7 @@ void printInstructionTable(tableInstruction *table){
 void printInstructionLine(tableInstruction *table, int index){
     int i;
     printf("\t%s", intToCode(table->instructions[index][0]));
-    for (i = 1; i < table->instructions[index][4]; i++){
+    for (i = 1; i <= table->instructions[index][4]; i++){
          printf(" %d", table->instructions[index][i]);
     }
     printf("\n");
@@ -91,7 +91,11 @@ int addInstructLine(tableInstruction *table, int instruct[5]){
 void completeFromLabel(tableInstruction *table, tableLabels *tableLbl){
    int i;
    for (i = 0; i < tableLbl->size; i++){
-       table->instructions[tableLbl->labels[i][0]][2] = tableLbl->labels[i][1];
+       if (table->instructions[tableLbl->labels[i][0]][0] == 8)
+           table->instructions[tableLbl->labels[i][0]][2] = tableLbl->labels[i][1];
+       else
+           table->instructions[tableLbl->labels[i][0]][1] = tableLbl->labels[i][1];
+
    }
 }
 
