@@ -60,8 +60,14 @@ void execLine(int * line){
             else
                 mem[line[1]] = 0;
             break;
-        case 12:
+        case 12: // PRI
             printf("%d\n", mem[line[1]]);
+            break;
+        case 13: // CPA
+            mem[mem[line[1]]] = mem[line[2]];
+            break;
+        case 14: // CPB
+            mem[line[1]] = line[2];
             break;
     }
 }
