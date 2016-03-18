@@ -146,6 +146,15 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
                                 $$ = symbIndex;
                             } 
                         }
+					| tFOIS tID { symbIndex = containsSymbol(&tableVar, $2); 
+                            if (symbIndex == -1) 
+                                printf("le pointeur n'existe pas dans ce contexte\n");
+                            else {
+																tmpSymbol = getSymbol(&tableVar, symbIndex);
+																symbIndex = addTmp(&tableVar, ''); 
+																addInstructParams2(&tableInstruct, 15, symbIndex, tmpSymbol.address); 
+																$$ = symbIndex; 
+														} }
 					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
 					| ExpAri tPLUS ExpAri { addInstructParams3(&tableInstruct, 1, $1, $1, $3); $$ = $1; popTmp(&tableVar);}
 					| ExpAri tMOINS ExpAri { addInstructParams3(&tableInstruct, 3, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
