@@ -69,6 +69,9 @@ void execLine(int * line){
         case 14: // CPB
             mem[line[1]] = line[2];
             break;
+        case 15: // CPC
+            mem[line[1]] = mem[mem[line[2]]];
+            break;
     }
 }
 
