@@ -32,6 +32,8 @@ void {return tVOID;}
 \) {return tPF;}
 \{ {return tACO;}
 \} {return tACF;}
+\[ {return tCRO;}
+\] {return tCRF;}
 , {return tVIR;}
 ; {return tPOINTVIR;}
 printf {return tPRINTF;}

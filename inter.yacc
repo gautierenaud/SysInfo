@@ -39,7 +39,7 @@ Line:   tADD tINT tINT tINT { addInstructParams3(&tableInstruct, 1, $2, $3, $4);
         | tPRI tINT { addInstructParams1(&tableInstruct, 12, $2); }
         | tCPA tINT tINT { addInstructParams2(&tableInstruct, 13, $2, $3); }
         | tCPB tINT tINT { addInstructParams2(&tableInstruct, 14, $2, $3); }
-        | tCPC tINT tINT { addInstructParams2(&tableInstruct, 14, $2, $3); }
+        | tCPC tINT tINT { addInstructParams2(&tableInstruct, 15, $2, $3); }
 
 %%
 

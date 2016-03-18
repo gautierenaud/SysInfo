@@ -1,29 +1,7 @@
-int main(int i, int j, void k){
-
-  	int lala = 0;
-    int index = 0;
-    while (index < 5){
-        printf(index);
-				lala = 0;
-						while (lala < 2){
-        		printf(lala);
-        		lala = lala + 1;
-    		}
-        index = index + 1;
-    }
-		lala = 2;
-
-    int i = 0;
-    if (3 == 3){
-        printf(i);
-    }else{
-        if (4 == 5){
-            printf(45);
-        }else{
-            printf(64);
-        }
-        printf(4);
-    }
-    printf(5);
+int main(){
+		int lolo = 1;
+  	int* lala = &lolo;
+		*lala = 6;
+    printf(lolo);
 
 }
