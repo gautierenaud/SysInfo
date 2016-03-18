@@ -18,6 +18,9 @@ INT [0-9]+
 ^A return tSUP;
 ^B return tEQU;
 ^C return tPRI;
+^D return tCPA;
+^E return tCPB;
+^F return tCPC;
 {INT} {yylval.num=atoi(yytext); return tINT;}
 
 [ \n]

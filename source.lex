@@ -24,6 +24,7 @@ void {return tVOID;}
 \- {return tMOINS;}
 \/ {return tDIV;}
 \* {return tFOIS;}
+& {return tESP;}
 = {return tEGAL;}
 \< {return tINF;}
 \> {return tSUP;}
