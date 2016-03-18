@@ -71,6 +71,7 @@ Prg: 		DFct Prg
 TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
 			| tINT {$$ = 'i';}
+			|
 
 DFct: 		{
 				paramNum = 0;
@@ -110,6 +111,7 @@ Ligne: 		Return tPOINTVIR
      			| Print tPOINTVIR
      
 Decla: 		TType { varSymbol.type = $1; } SDecl 
+					| tINT tID tCRO ExpAri tCRF { varSymbol.type = 't'; } 
 
 SDecl: 		Decl tVIR SDecl 
 		 			| Decl
@@ -130,7 +132,7 @@ Affect: 	 tID  SAffect
                         popTmp(&tableVar);
                     } 
                 }
-					| tFOIS tID  SAffect 
+					| tFOIS tID SAffect 
                 {
                     symbIndex = containsSymbol(&tableVar, $2); 
                     if (symbIndex > -1) { 
@@ -141,6 +143,22 @@ Affect: 	 tID  SAffect
                         compilationError = true;
                         popTmp(&tableVar);
                     } 
+                }
+					| tID tCRO ExpAri tCRF SAffect 
+                {
+                    symbIndex = containsSymbol(&tableVar, $1); 
+                    if (symbIndex > -1) { 
+												tmpIndex = addTmp(&tableVar, tmpSymbol.type);	
+												addInstructParams2(&tableInstruct, 6, tmpIndex, symbIndex);
+												addInstructParams3(&tableInstruct, 1, $3, tmpIndex, $3);
+                        addInstructParams2(&tableInstruct, 13, $3, $5); 
+                        popTmp(&tableVar); 
+                    } else {
+                        printf("undef pointer\n");
+                        compilationError = true;
+                    } 
+										popTmp(&tableVar); 
+										popTmp(&tableVar);
                 }
 
 
