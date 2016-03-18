@@ -9,12 +9,14 @@ int mem[256];
 void executeInstructions(tableInstruction *table){
     pc = 0;
     while (pc < table->size){
+        //printInstructionLine(table, pc);
         execLine(table->instructions[pc]);
         pc++;
     }
 }
 
 void execLine(int * line){
+    int tmp;
     switch (line[0]){
         case 1: // ADD
             mem[line[1]] = mem[line[2]] + mem[line[3]];
@@ -62,5 +64,12 @@ void execLine(int * line){
         case 12:
             printf("%d\n", mem[line[1]]);
             break;
+    }
+}
+
+void printMem(){
+    int i;
+    for (i = 0; i < 256; i++){
+        printf("[inter] mem[%d] = %d\n", i, mem[i]);
     }
 }

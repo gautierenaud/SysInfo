@@ -1,22 +1,8 @@
 int main(int i, int j, void k){
-    int lala, lolo=5;
-    lala = 8 * lolo;
-    lolo = 16;
-<<<<<<< HEAD
-    t = 15;
-    if (lala == 16) {
-        lolo = 9;
-				if (lolo > 17) {
-        		lala = 19;
-    		}
-				lala = 26;
-=======
-    printf(3);
-    if (lolo == 16){
-        printf(lala);
-        }
-    if (lala == 1){
-        printf(3);
->>>>>>> ff32b0a97f28589079d8daff19a07ff9060eb48e
+    int lala;
+    int index = 0;
+    while (index < 5){
+        printf(index);
+        index = index + 1;
     }
 }

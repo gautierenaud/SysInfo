@@ -25,5 +25,5 @@ test:
 	cat test.pr | ./$(OUTPUT)
 
 itest:
-	./$(INTEOUT) < testinter.asm
+	./$(INTEOUT) < source.asm
 

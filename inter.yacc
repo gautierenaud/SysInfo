@@ -49,6 +49,6 @@ int main (void) {
     initInstructionTable(&tableInstruct);
 	yyparse();
     executeInstructions(&tableInstruct);
-    
+    printInstructionTable(&tableInstruct);
     return 0;
 }
