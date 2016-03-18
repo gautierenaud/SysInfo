@@ -39,11 +39,12 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tINF tSUP tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tERROR tOR tAND
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tINF tSUP tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tERROR tOR tAND
 
 %token <str> tID
 %token <num> tINTVAL
 %token <num> tIF
+%token <num> tELSE
 %token <num> tWHILE
 
 %type <type> TType
@@ -162,10 +163,10 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size - 1); }				
+If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc {addLabel2(tableLbl , $1, tableInstruct.size); } SIf 				
 					
 
-SIf: 			tELSE Bloc 
+SIf: 			tELSE { $1 = addInstructParams1(&tableInstruct, 7, -1); } Bloc { addLabel2(tableLbl, $1, tableInstruct.size - 1); }
 					| 		
 
 While: 		tWHILE { $1 = tableInstruct.size; } Condition { $3 = addInstructParams2(&tableInstruct, 8, $3, -1); popTmp(&tableVar); } Bloc { tmpIndex = addInstructParams1(&tableInstruct, 7, $1 -1); addLabel2(tableLbl , $3, tmpIndex); }

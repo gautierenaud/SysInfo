@@ -9,7 +9,6 @@ int mem[256];
 void executeInstructions(tableInstruction *table){
     pc = 0;
     while (pc < table->size){
-        //printInstructionLine(table, pc);
         execLine(table->instructions[pc]);
         pc++;
     }
