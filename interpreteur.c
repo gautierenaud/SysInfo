@@ -15,9 +15,14 @@ void executeInstructions(tableInstruction *table){
 }
 
 void execLine(int * line){
+    int tmp;
     switch (line[0]){
         case 1: // ADD
-            mem[line[1]] = mem[line[2]] + mem[line[3]];
+            // mem[line[1]] = mem[line[2]] + mem[line[3]];
+            tmp = mem[line[2]] + mem[line[3]];
+            printf("[inter] sum %d\n", tmp);
+            mem[line[1]] = tmp;
+            printf("[inter] new val %d\n", mem[line[1]]);
             break;
         case 2: // MUL
             mem[line[1]] = mem[line[2]] * mem[line[3]];
@@ -62,5 +67,12 @@ void execLine(int * line){
         case 12:
             printf("%d\n", mem[line[1]]);
             break;
+    }
+}
+
+void printMem(){
+    int i;
+    for (i = 0; i < 256; i++){
+        printf("[inter] mem[%d] = %d\n", i, mem[i]);
     }
 }

@@ -14,6 +14,7 @@
 %{
 	int paramNum; 
 	int symbIndex;
+    int tmpIndex;
 	char tmpChar;
   	symbol varSymbol;
     symbol tmpSymbol;
@@ -38,11 +39,12 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tINF tSUP tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tWHILE tERROR tOR tAND
+%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tINF tSUP tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tELSE tERROR tOR tAND
 
 %token <str> tID
 %token <num> tINTVAL
 %token <num> tIF
+%token <num> tWHILE
 
 %type <type> TType
 %type <num> ExpAri
@@ -160,13 +162,13 @@ IParam:   ExpAri IParams
 IParams:  tVIR ExpAri
 					|					
 					
-If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size); }				
+If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc SIf {addLabel2(tableLbl , $1, tableInstruct.size - 1); }				
 					
 
 SIf: 			tELSE Bloc 
 					| 		
 
-While: 		tWHILE Condition Bloc
+While: 		tWHILE { $1 = tableInstruct.size; } Condition { $3 = addInstructParams2(&tableInstruct, 8, $3, -1); popTmp(&tableVar); } Bloc { tmpIndex = addInstructParams1(&tableInstruct, 7, $1 - 1); addLabel2(tableLbl , $3, tmpIndex); }
 
 Condition: tPO SCond tPF { $$ = $2; } 
 

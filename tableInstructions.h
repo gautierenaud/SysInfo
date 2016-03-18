@@ -18,6 +18,7 @@ void initInstructionTable(tableInstruction *table);
 void freeInstructionTable(tableInstruction *table);
 void resizeInstructionTable(tableInstruction *table);
 void printInstructionTable(tableInstruction *table);
+void printInstructionLine(tableInstruction *table, int index);
 
 int addInstructParams0(tableInstruction *table, int action);
 int addInstructParams1(tableInstruction *table, int action, int param1);

@@ -15,12 +15,21 @@ void printInstructionTable(tableInstruction *table){
     printf("size of the instruct table: %d\n", table->size);
     int i, j, lim = table->size;
     for (i = 0; i < lim; i++){
-        printf("\t%s", intToCode(table->instructions[i][0]));
+        printf("[%d] \t%s", i, intToCode(table->instructions[i][0]));
         for (j = 1; j <= table->instructions[i][4]; j++){
             printf(" %d", table->instructions[i][j]);
         }
         printf("\n");
     }
+}
+
+void printInstructionLine(tableInstruction *table, int index){
+    int i;
+    printf("\t%s", intToCode(table->instructions[index][0]));
+    for (i = 1; i < table->instructions[index][4]; i++){
+         printf(" %d", table->instructions[index][i]);
+    }
+    printf("\n");
 }
 
 void initInstructionTable(tableInstruction *table){
