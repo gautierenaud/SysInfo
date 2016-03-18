@@ -20,7 +20,6 @@ INT [0-9]+
 ^C return tPRI;
 ^D return tCPA;
 ^E return tCPB;
-
 {INT} {yylval.num=atoi(yytext); return tINT;}
 
 [ \n]
