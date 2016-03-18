@@ -27,3 +27,6 @@ test:
 itest:
 	./$(INTEOUT) < source.asm
 
+alltest:
+	cat test.pr | ./$(OUTPUT)
+	./$(INTEOUT) < source.asm

@@ -168,7 +168,7 @@ If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popT
 SIf: 			tELSE Bloc 
 					| 		
 
-While: 		tWHILE { $1 = tableInstruct.size; } Condition { $3 = addInstructParams2(&tableInstruct, 8, $3, -1); popTmp(&tableVar); } Bloc { tmpIndex = addInstructParams1(&tableInstruct, 7, $1 - 1); addLabel2(tableLbl , $3, tmpIndex); }
+While: 		tWHILE { $1 = tableInstruct.size; } Condition { $3 = addInstructParams2(&tableInstruct, 8, $3, -1); popTmp(&tableVar); } Bloc { tmpIndex = addInstructParams1(&tableInstruct, 7, $1 -1); addLabel2(tableLbl , $3, tmpIndex); }
 
 
 Condition: tPO SCond tPF { $$ = $2; } 

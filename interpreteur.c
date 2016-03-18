@@ -37,7 +37,7 @@ void execLine(int * line){
             mem[line[1]] = line[2];
             break;
         case 7: // JMP
-            pc = mem[line[1]];
+            pc = line[1];
             break;
         case 8: // JMF
             if (mem[line[1]] == 0)
