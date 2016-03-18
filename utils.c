@@ -50,6 +50,12 @@ const char * intToCode(int i){
         case 12:
             return "PRI";
             break;
+				case 13:
+            return "CPA";
+            break;
+				case 14:
+            return "CPB";
+            break;
         default:
             return "NOP";
             break;
