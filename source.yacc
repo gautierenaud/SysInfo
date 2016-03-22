@@ -16,6 +16,7 @@
 	int symbIndex;
     int tmpIndex;
 	char tmpChar;
+    char declType;
   	symbol varSymbol;
     symbol tmpSymbol;
     symbFct tmpFctSymbol;
@@ -71,7 +72,6 @@ Prg: 		DFct Prg
 TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
 			| tINT {$$ = 'i';}
-			|
 
 DFct: 		{
 				paramNum = 0;
@@ -110,11 +110,16 @@ Ligne: 		Return tPOINTVIR
      			| Affect tPOINTVIR
      			| Print tPOINTVIR
      
-Decla: 		TType { varSymbol.type = $1; } SDecl 
-					| tINT tID tCRO ExpAri tCRF { varSymbol.type = 't'; } 
+Decla:      tVOID tID { varSymbol.type = 'v'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
+            | tVOID tID { varSymbol.type = 'v'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $4); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
+            | tINT tID { varSymbol.type = 'i'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); memset(&(varSymbol.name), 0, sizeof(varSymbol.name)); } SDecl
+            | tINT tID { varSymbol.type = 'i'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $4); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
+            | tINT tFOIS tID { varSymbol.type = 'p'; strncpy(varSymbol.name, $3, strlen($3)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
+            | tINT tFOIS tID { varSymbol.type = 'p'; strncpy(varSymbol.name, $3, strlen($3)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $5); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
+            | tINT tID tCRO tINTVAL { varSymbol.type = 't'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; addSymbolSize(&tableVar, varSymbol, $4);  memset(&(varSymbol.name), 0, sizeof(varSymbol.name)); } tCRF SDecl
 
-SDecl: 		Decl tVIR SDecl 
-		 			| Decl
+SDecl: 		tVIR Decl SDecl 
+		 	|
 
 Decl: 		tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
 					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $3); popTmp(&tableVar); }
@@ -146,19 +151,21 @@ Affect: 	 tID  SAffect
                 }
 					| tID tCRO ExpAri tCRF SAffect 
                 {
-                    symbIndex = containsSymbol(&tableVar, $1); 
+                    symbIndex = containsSymbol(&tableVar, $1);
+                    printf("name: %s\n", $1);
+                    printTable(&tableVar);
                     if (symbIndex > -1) { 
-												tmpIndex = addTmp(&tableVar, tmpSymbol.type);	
-												addInstructParams2(&tableInstruct, 6, tmpIndex, symbIndex);
-												addInstructParams3(&tableInstruct, 1, $3, tmpIndex, $3);
+                        tmpIndex = addTmp(&tableVar, tmpSymbol.type);	
+                        addInstructParams2(&tableInstruct, 6, tmpIndex, symbIndex);
+                        addInstructParams3(&tableInstruct, 1, $3, tmpIndex, $3);
                         addInstructParams2(&tableInstruct, 13, $3, $5); 
                         popTmp(&tableVar); 
                     } else {
                         printf("undef pointer\n");
                         compilationError = true;
                     } 
-										popTmp(&tableVar); 
-										popTmp(&tableVar);
+                    popTmp(&tableVar); 
+                    popTmp(&tableVar);
                 }
 
 
