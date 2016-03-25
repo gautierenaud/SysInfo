@@ -5,6 +5,13 @@
 
 int pc;
 int mem[256];
+int reg[5]; 
+/* reg[0] = ebp
+	 reg[1] = return
+	 reg[2] = 
+	 reg[3] = 
+	 reg[4] = 
+*/
 
 void executeInstructions(tableInstruction *table){
     pc = 0;
@@ -71,6 +78,12 @@ void execLine(int * line){
             break;
         case 15: // CPC
             mem[line[1]] = mem[mem[line[2]]];
+            break;
+				case 16: // RCP
+            mem[line[1]] = reg[line[2]];
+            break;
+				case 17: // RAF
+            reg[line[1]] = mem[line[2]];
             break;
     }
 }
