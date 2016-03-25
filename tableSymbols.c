@@ -35,12 +35,27 @@ int addSymbol(tableSymbols *table, symbol symb){
         table->symbolArray[table->sizeData].symb = symb;
         table->symbolArray[table->sizeData].symb.address = table->sizeData;
         table->symbolArray[table->sizeData].depth = table->actualDepth;
-        //printf("symbol address: %d\n", table->symbolArray[table->sizeData].symb.address);
         table->sizeData++;
     }else{
-        printf("no more place in the array to insert element");
+        printf("[symbols] no more place in the array to insert element\n");
     }
     return table->sizeData - 1;
+}
+
+// for symbols that will take several places in the memory
+int addSymbolSize(tableSymbols *table, symbol symb, int size){
+    // if we have the space to append the symbol
+    if (table->sizeData + table->sizeTmp + size - 1 < table->capacity){
+        // append the symbol at the end of the array
+        table->symbolArray[table->sizeData].symb = symb;
+        table->symbolArray[table->sizeData].symb.address = table->sizeData;
+        table->symbolArray[table->sizeData].depth = table->actualDepth;
+        table->sizeData += size;
+        return table->sizeData - size;
+    }else{
+        printf("[Symbols] no more place in the array to insert element\n");
+        return -1;
+    }
 }
 
 void exitTable(tableSymbols *table){
@@ -98,7 +113,7 @@ symbol peekTmp(tableSymbols *table){
 void printTable(tableSymbols *table){
     int index = 0;
     symbol tmpSymb;
-    printf("print Table, sizeData: %d; ", table->sizeData);
+    printf("print Table, sizeData: %d\n ", table->sizeData);
     while (index < table->sizeData){
         tmpSymb = table->symbolArray[index].symb;
         printf("name: %s; addr: %d; ", tmpSymb.name, index);

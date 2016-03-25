@@ -30,6 +30,7 @@ void initSymbTableCapacity(tableSymbols *table, int capacity);
 
 // add an element in the table
 int addSymbol(tableSymbols *table, symbol symb);
+int addSymbolSize(tableSymbols *table, symbol symb, int size);
 
 // sort d'une profondeur, et efface les variables de la profondeur sortante
 void exitTable(tableSymbols *table);

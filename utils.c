@@ -56,6 +56,9 @@ const char * intToCode(int i){
 		case 14:
             return "CPB";
             break;
+        case 15:
+            return "CPC";
+            break;
         default:
             return "NOP";
             break;

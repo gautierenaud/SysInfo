@@ -116,7 +116,17 @@ Decla:      tVOID tID { varSymbol.type = 'v'; strncpy(varSymbol.name, $2, strlen
             | tINT tID { varSymbol.type = 'i'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $4); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
             | tINT tFOIS tID { varSymbol.type = 'p'; strncpy(varSymbol.name, $3, strlen($3)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
             | tINT tFOIS tID { varSymbol.type = 'p'; strncpy(varSymbol.name, $3, strlen($3)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $5); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
-            | tINT tID tCRO tINTVAL { varSymbol.type = 't'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; addSymbolSize(&tableVar, varSymbol, $4);  memset(&(varSymbol.name), 0, sizeof(varSymbol.name)); } tCRF SDecl
+            | tINT tID tCRO tINTVAL 
+                {
+                    printTable(&tableVar);
+                    varSymbol.type = 't';
+                    strncpy(varSymbol.name, $2, strlen($2));
+                    varSymbol.initialized = false;
+                    addSymbolSize(&tableVar,varSymbol, $4);
+                    memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
+                    printTable(&tableVar);
+                }
+                tCRF SDecl
 
 SDecl: 		tVIR Decl SDecl 
 		 	|
@@ -150,25 +160,22 @@ Affect: 	 tID  SAffect
                     } 
                 }
 					| tID tCRO ExpAri tCRF SAffect 
-                {
-                    symbIndex = containsSymbol(&tableVar, $1);
-                    printf("name: %s\n", $1);
-                    printTable(&tableVar);
-                    if (symbIndex > -1) { 
-                        tmpIndex = addTmp(&tableVar, tmpSymbol.type);	
-                        addInstructParams2(&tableInstruct, 6, tmpIndex, symbIndex);
-                        addInstructParams3(&tableInstruct, 1, $3, tmpIndex, $3);
-                        addInstructParams2(&tableInstruct, 13, $3, $5); 
-                        popTmp(&tableVar); 
-                    } else {
-                        printf("undef pointer\n");
-                        compilationError = true;
-                    } 
-                    popTmp(&tableVar); 
-                    popTmp(&tableVar);
-                }
-
-
+                        {
+                            symbIndex = containsSymbol(&tableVar, $1);
+                            if (symbIndex != -1){
+                                tmpIndex = addTmp(&tableVar, 'i');
+                                addInstructParams2(&tableInstruct, 6, tmpIndex, symbIndex);
+                                addInstructParams3(&tableInstruct, 1, $3, $3, tmpIndex);
+                                popTmp(&tableVar);
+                                addInstructParams2(&tableInstruct, 13, $3, $5);
+                            }else{
+                                printf("undef array\n");
+                                compilationError = true;
+                            }
+                            popTmp(&tableVar);  // ExprAri
+                            popTmp(&tableVar);  // SAffect
+                        }
+                
 SAffect:  tEGAL ExpAri { $$ = $2; }
 
 ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, $1); $$ = symbIndex; }
@@ -185,23 +192,36 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
                             } 
                         }
 					| tFOIS tID { symbIndex = containsSymbol(&tableVar, $2); 
-                            if (symbIndex == -1) 
-                                printf("le pointeur n'existe pas dans ce contexte\n");
-                            else {
-																tmpSymbol = getSymbol(&tableVar, symbIndex);
-																symbIndex = addTmp(&tableVar, 'p'); 
-																addInstructParams2(&tableInstruct, 15, symbIndex, tmpSymbol.address); 
-																$$ = symbIndex; 
-														} }
+                        if (symbIndex == -1) 
+                            printf("le pointeur n'existe pas dans ce contexte\n");
+                        else {
+                            tmpSymbol = getSymbol(&tableVar, symbIndex);
+                            symbIndex = addTmp(&tableVar, 'p'); 
+                            addInstructParams2(&tableInstruct, 15, symbIndex, tmpSymbol.address); 
+                            $$ = symbIndex; 
+                        } }
 					| tESP tID { symbIndex = containsSymbol(&tableVar, $2); 
-                            if (symbIndex == -1) 
-                                printf("la variable n'existe pas dans ce contexte\n");
-                            else {
-																tmpSymbol = getSymbol(&tableVar, symbIndex);
-																symbIndex = addTmp(&tableVar, 'i'); 
-																addInstructParams2(&tableInstruct, 14, symbIndex, tmpSymbol.address); 
-																$$ = symbIndex; 
-														} }
+                        if (symbIndex == -1) 
+                            printf("la variable n'existe pas dans ce contexte\n");
+                        else {
+                            tmpSymbol = getSymbol(&tableVar, symbIndex);
+                            symbIndex = addTmp(&tableVar, 'i'); 
+                            addInstructParams2(&tableInstruct, 14, symbIndex, tmpSymbol.address); 
+                            $$ = symbIndex; 
+                        } }
+                    | tID tCRO ExpAri tCRF { symbIndex = containsSymbol(&tableVar, $1); 
+                        if (symbIndex == -1) 
+                            printf("la variable n'existe pas dans ce contexte\n");
+                        else {
+                            tmpSymbol = getSymbol(&tableVar, symbIndex);
+                            symbIndex = addTmp(&tableVar, 'i');
+                            addInstructParams2(&tableInstruct, 6, symbIndex, tmpSymbol.address);
+                            addInstructParams3(&tableInstruct, 1, $3, $3, symbIndex);
+                            popTmp(&tableVar);
+                            addInstructParams2(&tableInstruct, 13, $3, $3); 
+                            $$ = $3;
+
+                        } }
 					| IFct { $$ = 1; /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */ } 
 					| ExpAri tPLUS ExpAri { addInstructParams3(&tableInstruct, 1, $1, $1, $3); $$ = $1; popTmp(&tableVar);}
 					| ExpAri tMOINS ExpAri { addInstructParams3(&tableInstruct, 3, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
