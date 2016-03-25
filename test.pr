@@ -1,7 +1,9 @@
 int main(){
 	int lala;
 	int abbb[10];
-	abbb[5] = 3;
+	abbb[4] = 3;
+	abbb[11] = 8;
 	
    	printf(abbb[5]);
+   	printf(abbb[11]);
 }
