@@ -66,7 +66,7 @@
 
 %%
 
-Prg: 		DFct Prg 
+Prg: 		{ addInstructParams1(&tableInstruct, 7, -1); } DFct Prg 
 			| DFct
 					
 TType:  tVOID {$$ = 'v';}
@@ -76,6 +76,8 @@ TType:  tVOID {$$ = 'v';}
 DFct: {
 				paramNum = 0;
 				paramName = (char*) malloc(sizeof(char));
+                tmpIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
 			} 
 			TType { tmpFctSymbol.type = $2; } 
 			tID { tmpFctSymbol.name = $4; } 
