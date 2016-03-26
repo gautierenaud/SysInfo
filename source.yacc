@@ -12,7 +12,8 @@
 
 
 %{
-	int paramNum; 
+	int paramNum;
+	int instructNum; 
 	int symbIndex;
     int tmpIndex;
 	char tmpChar;
@@ -235,13 +236,17 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
 
 Return: 	tRETURN ExpAri { $$ = $2; }
 
-IFct: 		tID tPO IParam tPF { /*fprintf(output, "JMP %s\n", $1);*/}
+/**********************************************************************/
 
-IParam:   ExpAri IParams
+IFct: 		tID tPO IParam tPF { instructNum = tableInstrcut->size + 2; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 6, symbIndex, instructNum); addInstructParams2(&tableInstruct, 4, $1, $1, $3);} 
+
+IParam:   ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $1); popTmp(&tableVar);} IParams { $$ = instructNum; }
 					|
 
-IParams:  tVIR ExpAri
-					|					
+IParams:  tVIR ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $1); popTmp(&tableVar);}
+					|	
+
+/**********************************************************************/				
 					
 If:			  tIF Condition { $1 = addInstructParams2(&tableInstruct, 8, $2, -1); popTmp(&tableVar); } Bloc {addLabel2(tableLbl , $1, tableInstruct.size); } SIf 				
 					

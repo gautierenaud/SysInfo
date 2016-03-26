@@ -2,7 +2,7 @@
     #include "y.tab.h"
 %}
 
-INT [0-9]+
+INT -?[0-9]+
 
 %%
 
