@@ -7,6 +7,7 @@
     #include "tableLabels.h"
     #include "tableInstructions.h" 
     #include "tableFonctions.h"
+    #include "tableParams.h"
 
 %}
 
@@ -26,6 +27,7 @@
     tableSymbFcts tableFct;
     tableLabels *tableLbl;
     tableInstruction tableInstruct;
+    tableParams tablePar;
     FILE *output;
     bool compilationError;
 	
@@ -67,7 +69,7 @@
 %%
 
 Prg: 		{ addInstructParams1(&tableInstruct, 7, -1); } DFct Prg 
-			| DFct
+			|
 					
 TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
@@ -77,18 +79,20 @@ DFct: {
 				paramNum = 0;
 				paramName = (char*) malloc(sizeof(char));
                 tmpIndex = addTmp(&tableVar, 'i');
-                addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
+                tablePar = INIT_PARAMS_TABLE;
+                //addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
 			} 
 			TType { tmpFctSymbol.type = $2; } 
 			tID { tmpFctSymbol.name = $4; } 
 			tPO 
-      Params { tmpFctSymbol.params = paramName; } 
+            Params { tmpFctSymbol.params = paramName; } 
 			tPF { addSymbFct(&tableFct, tmpFctSymbol); /*fprintf(output, "%s:\n", tmpFctSymbol.name);*/}
             Bloc
 			{
                 // TO DO: vérifier si on a besoin d'une ligne return
 				free(paramName);
 				freeTable(&tableVar);
+                printParamTable(&tablePar);
 			}
 
 Params:     Param
@@ -97,7 +101,15 @@ Params:     Param
 Param: 		ParamVar tVIR Param
 		 	| ParamVar
 
-ParamVar:	TType { tmpChar = $1; strncat(paramName, &tmpChar, 1);} tID { paramNum++;}
+ParamVar:	TType tID 
+            {
+                tmpChar = $1; strncat(paramName, &tmpChar, 1);
+                paramNum++;
+                varSymbol.type = $1;
+                strncpy(varSymbol.name, $2, strlen($2));
+                addParam(&tablePar, varSymbol);
+                memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
+            }
 		 			
 Bloc: 		tACO Expr tACF
 
@@ -286,14 +298,15 @@ int main (void) {
     initInstructionTable(&tableInstruct);
     initSymbTable(&tableVar);
     initFctTable(&tableFct);
-   	
+    tablePar = INIT_PARAMS_TABLE;
+    printParamTable(&tablePar);  	
 
 	yyparse();
-		completeFromLabel(&tableInstruct, tableLbl);
+	completeFromLabel(&tableInstruct, tableLbl);
     printInstructionTable(&tableInstruct);
     printLabelTable(tableLbl);
-		output = fopen("source.asm", "w");
-		printInstructsToFile(&tableInstruct, output);
+	output = fopen("source.asm", "w");
+	printInstructsToFile(&tableInstruct, output);
 
 	fclose(output);
     freeLabelTable(&tableLbl);
