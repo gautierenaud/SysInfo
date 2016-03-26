@@ -2,14 +2,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char intToHex(int i){
-    char result[2];
+char* intToHex(int i){
+    char *result = malloc(sizeof(char) * 3);
     sprintf(result, "%X", i);
-    return result[0];
+    return result;
 }
 
-int hexToInt(char c){
-   return (int) strtol(&c, NULL, 16);
+int hexToInt(char* c){
+   return (int) strtol(c, NULL, 16);
 }
 
 const char * intToCode(int i){
@@ -58,6 +58,12 @@ const char * intToCode(int i){
             break;
         case 15:
             return "CPC";
+            break;
+        case 16:
+            return "RCP";
+            break;
+        case 17:
+            return "RAF";
             break;
         default:
             return "NOP";

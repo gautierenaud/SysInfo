@@ -102,7 +102,7 @@ void completeFromLabel(tableInstruction *table, tableLabels *tableLbl){
 void printInstructsToFile(tableInstruction *table, FILE *output){
     int i, j;
     for (i = 0; i < table->size; i++){
-        fprintf(output, "%c", intToHex(table->instructions[i][0]));
+        fprintf(output, "%s", intToHex(table->instructions[i][0]));
         for(j = 1; j <= table->instructions[i][4]; j++){
             fprintf(output, " %d", table->instructions[i][j]);
         }
