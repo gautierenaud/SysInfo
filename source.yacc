@@ -41,13 +41,14 @@
     char str[16];
 }
 
-%token tINT tVOID tCONST tPO tPF tACO tACF tPOINTVIR tVIR tEGAL tINF tSUP tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tERROR tOR tAND tESP tCRO tCRF
+%token tINT tVOID tCONST tPO tACO tACF tPOINTVIR tVIR tEGAL tINF tSUP tPLUS tMOINS tFOIS tDIV tRETURN tPRINTF tSTRING tGUIL tERROR tOR tAND tESP tCRO tCRF
 
 %token <str> tID
 %token <num> tINTVAL
 %token <num> tIF
 %token <num> tELSE
 %token <num> tWHILE
+%token <num> tPF
 
 %type <type> TType
 %type <num> ExpAri
@@ -240,12 +241,12 @@ Return: 	tRETURN ExpAri { $$ = $2; }
 
 /**********************************************************************/
 
-IFct: 		tID tPO IParam tPF { instructNum = tableInstrcut->size + 2; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 6, symbIndex, instructNum); addInstructParams2(&tableInstruct, 4, $1, $1, $3);} 
+IFct: 		tID tPO IParam tPF { /*instructNum = tableInstrcut.size + 3;*/ symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 6, symbIndex, instructNum + 3); symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 16, symbIndex, 0); $4 = addInstructParams1(&tableInstruct, 7, -1); addLabel2(tableLbl , $4, tableInstruct.size); /*ajouter un label dans la table des label char**/} 
 
-IParam:   ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $1); popTmp(&tableVar);} IParams { $$ = instructNum; }
+IParam:   ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $1); popTmp(&tableVar);} IParams { /*$$ = instructNum;*/ }
 					|
 
-IParams:  tVIR ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $1); popTmp(&tableVar);}
+IParams:  tVIR ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $2); popTmp(&tableVar);}
 					|	
 
 /**********************************************************************/				
