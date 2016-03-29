@@ -1,8 +1,25 @@
+int f(){
+	int lala = 9;
+	while (lala > 0){
+		printf(lala);
+		lala = lala - 1;
+	}
+}
+
 int main(){
 	int a = 65, b = 95 + a, azadz, sdcfhsq, dfgsgd;
 	a = 3 * a;
 	printf(b);
 	int azzeazess;
-	int gr = a - 8;
+	int gr = a - 7;
 	printf(gr);
+	if (gr == 187){
+		printf(b);
+	}else{
+		printf(42);
+	}
+	while (a > 0){
+		printf(a);
+		a = a - 1;
+	}
 }
