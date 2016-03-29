@@ -6,6 +6,8 @@ INT -?[0-9]+
 
 %%
 
+^10 return tRCP;
+^11 return tRAF;
 ^1 return tADD;
 ^2 return tMUL;
 ^3 return tSOU;

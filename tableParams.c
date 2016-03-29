@@ -21,7 +21,11 @@ void addParam(tableParams *table, symbol symb){
     }
 }
 
-int getParam(tableParams *table, char *name){
+symbol getParam(tableParams *table, int index){
+    return table->paramList[index];
+}
+
+int containsParam(tableParams *table, char *name){
     int index = 0;
     bool found = false;
 

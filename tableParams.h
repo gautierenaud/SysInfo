@@ -18,7 +18,9 @@ const tableParams INIT_PARAMS_TABLE;
 void addParam(tableParams *table, symbol symb);
 
 // return the index of the param, -1 otherwise
-int getParam(tableParams *table, char *name);
+int containsParam(tableParams *table, char *name);
+
+symbol getParam(tableParams *table, int index);
 
 void printParamTable(tableParams *table);
 

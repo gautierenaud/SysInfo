@@ -70,8 +70,10 @@
 
 %%
 
-Prg: 		{ addInstructParams1(&tableInstruct, 7, -1); } DFct Prg 
-			|
+Prg: 		{addInstructParams2(&tableInstruct, 16, 1,3); addInstructParams1(&tableInstruct, 7, -1); } DFct SPrg 
+
+SPrg:       DFct SPrg
+            |
 					
 TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
@@ -80,7 +82,6 @@ TType:  tVOID {$$ = 'v';}
 DFct: {
 				paramNum = 0;
 				paramName = (char*) malloc(sizeof(char));
-                tmpIndex = addTmp(&tableVar, 'i');
                 tablePar = INIT_PARAMS_TABLE;
                 //addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
 			} 
@@ -88,7 +89,7 @@ DFct: {
 			tID { tmpFctSymbol.name = $4; } 
 			tPO 
             Params { tmpFctSymbol.params = paramName; } 
-			tPF { addSymbFct(&tableFct, tmpFctSymbol); /*fprintf(output, "%s:\n", tmpFctSymbol.name);*/}
+			tPF { addSymbFct(&tableFct, tmpFctSymbol); }
             Bloc
 			{
                 // TO DO: vérifier si on a besoin d'une ligne return
@@ -134,13 +135,11 @@ Decla:      tVOID tID { varSymbol.type = 'v'; strncpy(varSymbol.name, $2, strlen
             | tINT tFOIS tID { varSymbol.type = 'p'; strncpy(varSymbol.name, $3, strlen($3)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $5); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
             | tINT tID tCRO tINTVAL 
                 {
-                    printTable(&tableVar);
                     varSymbol.type = 't';
                     strncpy(varSymbol.name, $2, strlen($2));
                     varSymbol.initialized = false;
                     addSymbolSize(&tableVar,varSymbol, $4);
                     memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
-                    printTable(&tableVar);
                 }
                 tCRF SDecl
 
@@ -197,11 +196,23 @@ SAffect:  tEGAL ExpAri { $$ = $2; }
 ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, $1); $$ = symbIndex; }
          | tID 
              { 
-                  symbIndex = containsSymbol(&tableVar, $1); 
-                  if (symbIndex == -1) 
-                      printf("la variable %s n'existe pas dans ce contexte\n", $1);
-                  else { 
+                  symbIndex = containsSymbol(&tableVar, $1);
+                  bool found = false;
+                  if (symbIndex != -1){
                       tmpSymbol = getSymbol(&tableVar, symbIndex);
+                      found = true;
+                  }else{
+                    symbIndex = containsParam(&tablePar, $1);
+                    if (symbIndex != -1){
+                        tmpSymbol = getParam(&tablePar, symbIndex);
+                        found = true;
+                    }
+                  }
+
+                  if (!found){
+                      compilationError = true;
+                      printf("la variable %s n'existe pas dans ce contexte\n", $1);
+                  }else { 
                       symbIndex = addTmp(&tableVar, tmpSymbol.type); 
                       addInstructParams2(&tableInstruct, 5, symbIndex, tmpSymbol.address);
                       $$ = symbIndex;
@@ -305,7 +316,6 @@ int main (void) {
     initSymbTable(&tableVar);
     initFctTable(&tableFct);
     tablePar = INIT_PARAMS_TABLE;
-    printParamTable(&tablePar);  	
 
 	yyparse();
 	completeFromLabel(&tableInstruct, tableLbl);
