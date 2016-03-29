@@ -48,7 +48,11 @@ symbFct getSymbFct(tableSymbFcts *table, int index){
 }
 
 void printFctTable(tableSymbFcts *table){
-    printf("number of elements: %d\n", table->sizeData);
+    printf("[function table] elements: %d\n", table->sizeData);
+    int i;
+    for (i = 0; i < table->sizeData; i++){
+        printf("\t @%d name: %s \t\tparams: %s\n", i, table->symbFctArray[i].name, table->symbFctArray[i].params);
+    }
 }
 
 
