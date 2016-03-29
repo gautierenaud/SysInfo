@@ -164,14 +164,12 @@ Decla:      TType tID TTab
             }
             InitVar
             {
-                printTable(&tableVar);
                 // si on a une affectation
                 if ($5 != -1){
                     tableVar.symbolArray[symbIndex].symb.initialized = true;
                     addInstructParams2(&tableInstruct, 5, $3, $5);
                     popTmp(&tableVar);
                 }
-                printTable(&tableVar);
             }
             SDecl
 
