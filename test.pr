@@ -1,15 +1,8 @@
-int f(int llala, int b){
-	int a;
-	a = b;
-}
-
 int main(){
-	int lala = 1+1+1+1+1+1+1+1+1+1+1;
-	int abbb[10];
-	int b;
-	abbb[4] = 3;
-	abbb[0-1] = 8;
-	
-   	printf(lala);
-   	printf(abbb[11]);
+	int a = 65, b = 95 + a, azadz, sdcfhsq, dfgsgd;
+	a = 3 * a;
+	printf(b);
+	int azzeazess;
+	int gr = a - 8;
+	printf(gr);
 }
