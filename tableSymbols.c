@@ -10,7 +10,6 @@ void initSymbTable(tableSymbols *table){
     table->sizeData= 0;
     table->sizeTmp = 0;
     table->capacity = CAPACITY;
-//  table->step = STEP;
 }
 
 void initSymbTableCapacity(tableSymbols *table, int capacity){
@@ -90,7 +89,7 @@ int addTmp(tableSymbols *table, char type){
     symbol tmp;
     tmp.type = type;
     if (table->sizeData + table->sizeTmp < table->capacity){
-        tmp.address = table->capacity - table->sizeTmp - 1;
+        tmp.address = table->sizeData + table->sizeTmp;
         table->symbolArray[table->capacity - table->sizeTmp++ - 1].symb = tmp;
         //printf("tmp address: %d\n", table->symbolArray[table->capacity - table->sizeTmp].symb.address);
     }else{
