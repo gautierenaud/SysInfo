@@ -81,18 +81,12 @@ TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
 			| tINT {$$ = 'i';}
 
-DFct:       {
-				paramNum = 0;
-				paramName = (char*) malloc(sizeof(char));
-                tablePar = INIT_PARAMS_TABLE;
-			} 
-			TType { tmpFctSymbol.type = $2; } 
+DFct:       TType { tmpFctSymbol.type = $1; } 
 			tID 
             { 
-                tmpFctSymbol.name = $4;
+                tmpFctSymbol.name = $3;
                 // on teste si c'est la fonction main
-                if (strcmp("main", $4) == 0){
-                    printf("%s\n", $4);
+                if (strcmp("main", $3) == 0){
                     if (!mainPresent){
                         mainPresent = true;
                         // TO DO: vérifier la destination
@@ -103,9 +97,19 @@ DFct:       {
                     }
                 }
             } 
-			tPO 
-            Params { tmpFctSymbol.params = paramName; } 
-			tPF { addSymbFct(&tableFct, tmpFctSymbol); }
+			tPO
+            {
+				paramNum = 0;
+				paramName = (char*) malloc(sizeof(char));
+                tablePar = INIT_PARAMS_TABLE;
+			}  
+            Params 
+            {
+                tmpFctSymbol.params = paramName;
+                addSymbFct(&tableFct, tmpFctSymbol);
+                printFctTable(&tableFct);
+            } 
+			tPF 
             Bloc
 			{
                 // TO DO: vérifier si on a besoin d'une ligne return
@@ -166,7 +170,7 @@ Decla:      TType tID TTab
             {
                 // si on a une affectation
                 if ($5 != -1){
-                    tableVar.symbolArray[symbIndex].symb.initialized = true;
+                    tableVar.symbolArray[$3].symb.initialized = true;
                     addInstructParams2(&tableInstruct, 5, $3, $5);
                     popTmp(&tableVar);
                 }
@@ -368,12 +372,15 @@ int main (void) {
 
 	yyparse();
 	completeFromLabel(&tableInstruct, tableLbl);
-    printInstructionTable(&tableInstruct);
-    printLabelTable(tableLbl);
-	output = fopen("source.asm", "w");
-	printInstructsToFile(&tableInstruct, output);
-
-	fclose(output);
+	if (!mainPresent){
+        printf("main function not present\n");
+    }else if (compilationError){
+        printf("compilation error, no assembly file\n");
+    }else{
+        output = fopen("source.asm", "w");
+	    printInstructsToFile(&tableInstruct, output);
+	    fclose(output);
+    }
     freeLabelTable(&tableLbl);
     //free(&tableLbl);
     //freeInstructionTable(&tableInstruct);
