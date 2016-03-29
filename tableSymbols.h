@@ -17,16 +17,12 @@ typedef struct{
     int sizeData; // number of elements inside
     int sizeTmp; // number of temporary variables
     int actualDepth; //depth of the actual bloc
-		int fctDepth; //depth of the actual function according to the bloc number
+	int fctDepth; //depth of the actual function according to the bloc number
     int capacity; // number of element it can hold
-
-    // int step;   // step by which we will increase the size of the array
-
 } tableSymbols;
 
 // initialise la table des symboles
 void initSymbTable(tableSymbols *table);
-void initSymbTableCapacity(tableSymbols *table, int capacity);
 
 // add an element in the table
 int addSymbol(tableSymbols *table, symbol symb);
