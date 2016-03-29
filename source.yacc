@@ -31,7 +31,7 @@
     tableParams tablePar;
     FILE *output;
     bool compilationError;
-	
+    bool mainPresent = false;
 %}
 
 // l'union permet d'utiliser les types sans avoir à les caster
@@ -70,7 +70,7 @@
 
 %%
 
-Prg: 		{addInstructParams2(&tableInstruct, 16, 1,3); addInstructParams1(&tableInstruct, 7, -1); } DFct SPrg 
+Prg: 		{ addInstructParams1(&tableInstruct, 7, -1); } DFct SPrg 
 
 SPrg:       DFct SPrg
             |
@@ -79,14 +79,28 @@ TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
 			| tINT {$$ = 'i';}
 
-DFct: {
+DFct:       {
 				paramNum = 0;
 				paramName = (char*) malloc(sizeof(char));
                 tablePar = INIT_PARAMS_TABLE;
-                //addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
 			} 
 			TType { tmpFctSymbol.type = $2; } 
-			tID { tmpFctSymbol.name = $4; } 
+			tID 
+            { 
+                tmpFctSymbol.name = $4;
+                // on teste si c'est la fonction main
+                if (strcmp("main", $4) == 0){
+                    printf("%s\n", $4);
+                    if (!mainPresent){
+                        mainPresent = true;
+                        // TO DO: vérifier la destination
+                        addLabel2(tableLbl, 0, tableInstruct.size);
+                    }else{
+                        printf("main already declared\n");
+                        compilationError = true;
+                    }
+                }
+            } 
 			tPO 
             Params { tmpFctSymbol.params = paramName; } 
 			tPF { addSymbFct(&tableFct, tmpFctSymbol); }
