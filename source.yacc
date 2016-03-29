@@ -53,6 +53,8 @@
 %token <num> tPF
 
 %type <type> TType
+%type <num> TTab
+%type <num> InitVar
 %type <num> ExpAri
 %type <num> SAffect
 %type <num> Return
@@ -94,7 +96,7 @@ DFct:       {
                     if (!mainPresent){
                         mainPresent = true;
                         // TO DO: vérifier la destination
-                        addLabel2(tableLbl, 0, tableInstruct.size);
+                        addLabel2(tableLbl, 0, tableInstruct.size - 1);
                     }else{
                         printf("main already declared\n");
                         compilationError = true;
@@ -141,28 +143,63 @@ Ligne: 		Return tPOINTVIR
      			| Affect tPOINTVIR
      			| Print tPOINTVIR
      
-Decla:      tVOID tID { varSymbol.type = 'v'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
-            | tVOID tID { varSymbol.type = 'v'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $4); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
-            | tINT tID { varSymbol.type = 'i'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); memset(&(varSymbol.name), 0, sizeof(varSymbol.name)); } SDecl
-            | tINT tID { varSymbol.type = 'i'; strncpy(varSymbol.name, $2, strlen($2)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $4); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
-            | tINT tFOIS tID { varSymbol.type = 'p'; strncpy(varSymbol.name, $3, strlen($3)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
-            | tINT tFOIS tID { varSymbol.type = 'p'; strncpy(varSymbol.name, $3, strlen($3)); varSymbol.initialized = false; } SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $5); popTmp(&tableVar); memset(&(varSymbol.name), 0, sizeof(varSymbol.name));  } SDecl
-            | tINT tID tCRO tINTVAL 
-                {
+Decla:      TType tID TTab
+            {
+                // copy the name of the variable to a local representation
+                strncpy(varSymbol.name, $2, strlen($2));
+                
+                varSymbol.initialized = false;
+
+                // if it is an array
+                if ($3 != -1){
                     varSymbol.type = 't';
-                    strncpy(varSymbol.name, $2, strlen($2));
-                    varSymbol.initialized = false;
-                    addSymbolSize(&tableVar,varSymbol, $4);
-                    memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
+                    $3 = addSymbolSize(&tableVar, varSymbol, $3);
+                }else{
+                    varSymbol.type = $1;
+                    $3 = addSymbol(&tableVar, varSymbol);
                 }
-                tCRF SDecl
+
+                // erase the name of the varSymbol
+                memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
+            }
+            InitVar
+            {
+                printTable(&tableVar);
+                // si on a une affectation
+                if ($5 != -1){
+                    tableVar.symbolArray[symbIndex].symb.initialized = true;
+                    addInstructParams2(&tableInstruct, 5, $3, $5);
+                    popTmp(&tableVar);
+                }
+                printTable(&tableVar);
+            }
+            SDecl
+
+TTab:       tCRO tINTVAL tCRF  { $$ = $2; }
+            |               { $$ = -1; }
+
+InitVar:    SAffect         { $$ = $1; }
+            |               { $$ = -1; }
 
 SDecl: 		tVIR Decl SDecl 
 		 	|
 
-Decl: 		tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false; addSymbol(&tableVar, varSymbol); }
-					| tID { strncpy(varSymbol.name, $1, strlen($1)); varSymbol.initialized = false;} SAffect { varSymbol.initialized = true; symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $3); popTmp(&tableVar); }
-					
+Decl:       tID
+            {
+                strncpy(varSymbol.name, $1, strlen($1));
+                varSymbol.initialized = false;
+                symbIndex = addSymbol(&tableVar, varSymbol);
+                memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
+            }
+            InitVar
+            {
+                symbIndex = containsSymbol(&tableVar, $1);
+                if ($3 != -1){
+                    tableVar.symbolArray[symbIndex].symb.initialized = true;
+                    addInstructParams2(&tableInstruct, 5, symbIndex, $3);
+                    popTmp(&tableVar);
+                }
+            }
 
 Affect: 	 tID  SAffect 
                 {
