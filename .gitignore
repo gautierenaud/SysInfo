@@ -7,3 +7,8 @@ lex.yy.c
 y.output
 source.asm
 testinter.asm
+
+# Ignore all but source and test files in ArchiInfo
+Archi_Info/*
+!Archi_Info/*.ucf
+!Archi_Info/*.vhd
