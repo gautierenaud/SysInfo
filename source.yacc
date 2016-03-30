@@ -31,6 +31,8 @@
     tableParams tablePar;
     FILE *output;
     bool compilationError;
+    bool returnValue; // if a function returns a value or not
+    bool returningObligation; // if a functions has to returrn a value
     bool mainPresent = false;
 %}
 
@@ -81,7 +83,16 @@ TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
 			| tINT {$$ = 'i';}
 
-DFct:       TType { tmpFctSymbol.type = $1; } 
+DFct:       TType 
+            { 
+                tmpFctSymbol.type = $1;
+                // we will test if we need to return something
+                if ($1 == 'i' || $1 == 'p')
+                    returningObligation = true;
+                else
+                    returningObligation = false;
+                returnValue = false;
+            } 
 			tID 
             { 
                 tmpFctSymbol.name = $3;
@@ -313,7 +324,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
 					| ExpAri tDIV ExpAri { addInstructParams3(&tableInstruct, 4, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
 					| tPO ExpAri tPF { $$ = $2; }
 
-Return: 	tRETURN ExpAri { $$ = $2; }
+Return: 	tRETURN ExpAri { $$ = $2; returnValue = true; /*maybe check the type of the returning expression*/}
 
 /**********************************************************************/
 

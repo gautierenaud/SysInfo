@@ -1,5 +1,5 @@
 int f(int a){
-	int lala = 9;
+	int lala = a;
 	while (lala > 0){
 		printf(lala);
 		lala = lala - 1;
