@@ -47,7 +47,7 @@ begin
 	process
 		begin
 			if rising_edge(CLK) then
-				Dout <= ROM(Address);
+				Dout <= ROM(conv_integer(Address));
 			end if;
 	end process;
 	

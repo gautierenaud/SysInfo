@@ -6,8 +6,6 @@ INT -?[0-9]+
 
 %%
 
-^10 return tRCP;
-^11 return tRAF;
 ^1 return tADD;
 ^2 return tMUL;
 ^3 return tSOU;
@@ -23,6 +21,9 @@ INT -?[0-9]+
 ^D return tCPA;
 ^E return tCPB;
 ^F return tCPC;
+^10 return tRCP;
+^11 return tRAF;
+^12 return tRET;
 {INT} {yylval.num=atoi(yytext); return tINT;}
 
 [ \n]

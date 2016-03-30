@@ -16,7 +16,7 @@
     tableInstruction tableInstruct;
 %}
 
-%token tADD tMUL tSOU tDIV tCOP tAFC tJMP tJMF tINF tSUP tEQU tPRI tCPA tCPB tCPC tRCP tRAF
+%token tADD tMUL tSOU tDIV tCOP tAFC tJMP tJMF tINF tSUP tEQU tPRI tCPA tCPB tCPC tRCP tRAF tRET
 %token <num> tINT
 
 %%
@@ -42,6 +42,7 @@ Line:   tADD tINT tINT tINT { addInstructParams3(&tableInstruct, 1, $2, $3, $4);
         | tCPC tINT tINT { addInstructParams2(&tableInstruct, 15, $2, $3); }
 		| tRCP tINT tINT { addInstructParams2(&tableInstruct, 16, $2, $3); }
         | tRAF tINT tINT { addInstructParams2(&tableInstruct, 17, $2, $3); }
+        | tRET { addInstructParams0(&tableInstruct, 18); }
 
 %%
 

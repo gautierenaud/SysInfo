@@ -90,7 +90,7 @@ void printTable(tableSymbols *table){
     printf("print Table, sizeData: %d\n ", table->sizeData);
     while (index < table->sizeData){
         tmpSymb = table->symbolArray[index].symb;
-        printf("name: %s; addr: %d; ", tmpSymb.name, index);
+        printf("\tname: %s; addr: %d;\n", tmpSymb.name, index);
         index++;
     }
     printf("\n");

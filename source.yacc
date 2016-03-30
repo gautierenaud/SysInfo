@@ -17,6 +17,7 @@
 	int instructNum; 
 	int symbIndex;
     int tmpIndex;
+    int mainIndex;
 	char tmpChar;
     char declType;
   	symbol varSymbol;
@@ -74,10 +75,41 @@
 
 %%
 
-Prg: 		{ addInstructParams1(&tableInstruct, 7, -1); } DFct SPrg 
+Prg: 		{
+                // jump to the end
+                addInstructParams1(&tableInstruct, 7, -1);
+            }
+            DFct SPrg 
 
 SPrg:       DFct SPrg
             |
+            {
+                // jump goal is here
+                addLabel2(tableLbl, 0, tableInstruct.size - 1);
+                // prepare to call the main function
+                // Ctxt value
+                tmpIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
+                // @ return
+                tmpIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 6, tmpIndex, tableInstruct.size + 1);
+
+                // nouvelle valeur de ebp
+                tmpIndex = addTmp(&tableVar, 'i');
+                // copie de la valeur actuelle de ebp
+                addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
+                addInstructParams1(&tableInstruct, 12, tmpIndex);
+                // nombre de var locales à prendre en compte
+                tmpIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 6, tmpIndex, tableVar.sizeData - 2);
+                addInstructParams3(&tableInstruct, 1, tmpIndex - 1, tmpIndex - 1, tmpIndex);
+                popTmp(&tableVar);
+
+                addInstructParams2(&tableInstruct, 17, 0, tmpIndex - 1);
+
+                // jump to the main
+                addInstructParams1(&tableInstruct, 7, mainIndex);
+            }
 					
 TType:  tVOID {$$ = 'v';}
 			| tINT tFOIS {$$ = 'p'; }
@@ -101,7 +133,8 @@ DFct:       TType
                     if (!mainPresent){
                         mainPresent = true;
                         // TO DO: vérifier la destination
-                        addLabel2(tableLbl, 0, tableInstruct.size - 1);
+                        //addLabel2(tableLbl, 0, tableInstruct.size - 1);
+                        mainIndex = tableInstruct.size - 1;
                     }else{
                         printf("main already declared\n");
                         compilationError = true;
@@ -119,14 +152,20 @@ DFct:       TType
                 tmpFctSymbol.params = paramName;
                 addSymbFct(&tableFct, tmpFctSymbol);
                 printFctTable(&tableFct);
+				free(paramName);
             } 
 			tPF 
             Bloc
 			{
                 // TO DO: vérifier si on a besoin d'une ligne return
-				free(paramName);
 				freeTable(&tableVar);
                 printParamTable(&tablePar);
+                // charge l'addresse de retour dans le registre 2
+                addInstructParams2(&tableInstruct, 17, 2, -2);
+                // charge la valeur sauvegardée de ebp dans le registre 0
+                addInstructParams2(&tableInstruct, 17, 0, -1);
+                // charge l'addresse de retour dans pc
+                addInstructParams0(&tableInstruct, 18);
 			}
 
 Params:     Param
@@ -324,7 +363,13 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
 					| ExpAri tDIV ExpAri { addInstructParams3(&tableInstruct, 4, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
 					| tPO ExpAri tPF { $$ = $2; }
 
-Return: 	tRETURN ExpAri { $$ = $2; returnValue = true; /*maybe check the type of the returning expression*/}
+Return: 	tRETURN ExpAri 
+            {
+                $$ = $2;
+                returnValue = true;
+                /*maybe check the type of the returning expression*/
+                addInstructParams2(&tableInstruct, 17, 1, $2);
+            }
 
 /**********************************************************************/
 
@@ -383,6 +428,7 @@ int main (void) {
 
 	yyparse();
 	completeFromLabel(&tableInstruct, tableLbl);
+    printInstructionTable(&tableInstruct);
 	if (!mainPresent){
         printf("main function not present\n");
     }else if (compilationError){

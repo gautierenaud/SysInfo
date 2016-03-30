@@ -1,5 +1,6 @@
 #include "interpreteur.h"
 #include <stdio.h>
+#include <stdlib.h>
 
 // global variables:
 
@@ -7,8 +8,8 @@ int pc;
 int mem[256];
 int reg[5]; 
 /* reg[0] = ebp
-	 reg[1] = return
-	 reg[2] = 
+	 reg[1] = returnValue
+	 reg[2] = returnAddress
 	 reg[3] = 
 	 reg[4] = 
 */
@@ -81,10 +82,18 @@ void execLine(int * line){
             mem[line[1]] = mem[mem[line[2]]];
             break;
         case 16: // RCP
-            mem[line[1]] = reg[line[2]];
+            mem[reg[0] + line[1]] = reg[line[2]];
             break;
         case 17: // RAF
-            reg[line[1]] = mem[line[2]];
+            reg[line[1]] = mem[reg[0] + line[2]];
+            printf("reg[0] = %d\n", reg[0]);
+            printf("reg[%d] = mem[%d] = %d\n", line[1], reg[0], mem[reg[0]]);
+            break;
+        case 18: // RET
+            pc = reg[2];
+            printf("it's a ret!\n");
+            printf("epb's value: %d\n", reg[2]);
+            exit(0);
             break;
     }
 }

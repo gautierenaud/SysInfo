@@ -65,6 +65,9 @@ const char * intToCode(int i){
         case 17:
             return "RAF";
             break;
+        case 18:
+            return "RET";
+            break;
         default:
             return "NOP";
             break;
