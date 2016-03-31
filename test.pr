@@ -1,21 +1,10 @@
-int f(int a){
-	int lala = a;
-	while (lala > 0){
-		printf(lala);
-		lala = lala - 1;
-	}
+int f(){
+	int lala = 5;
+	printf(lala);
 }
 
 int main(){
 	int a = 65, b = 95 + a, azadz, sdcfhsq, dfgsgd;
-	a = 3 * a;
 	printf(b);
-	int azzeazess;
-	int gr = a - 7;
-	printf(gr);
-	if (gr == 187){
-		printf(b);
-	}else{
-		printf(42);
-	}
+	f();
 }

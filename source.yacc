@@ -89,26 +89,24 @@ SPrg:       DFct SPrg
                 // prepare to call the main function
                 // Ctxt value
                 tmpIndex = addTmp(&tableVar, 'i');
-                addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
+                addInstructParams2(&tableInstruct, 16, tmpIndex, 0); 
+
                 // @ return
                 tmpIndex = addTmp(&tableVar, 'i');
-                addInstructParams2(&tableInstruct, 6, tmpIndex, tableInstruct.size + 1);
+                addInstructParams2(&tableInstruct, 6, tmpIndex, tableInstruct.size + 4);
 
-                // nouvelle valeur de ebp
-                tmpIndex = addTmp(&tableVar, 'i');
-                // copie de la valeur actuelle de ebp
-                addInstructParams2(&tableInstruct, 16, tmpIndex, 0);
-                addInstructParams1(&tableInstruct, 12, tmpIndex);
                 // nombre de var locales à prendre en compte
                 tmpIndex = addTmp(&tableVar, 'i');
-                addInstructParams2(&tableInstruct, 6, tmpIndex, tableVar.sizeData - 2);
-                addInstructParams3(&tableInstruct, 1, tmpIndex - 1, tmpIndex - 1, tmpIndex);
-                popTmp(&tableVar);
+                addInstructParams2(&tableInstruct, 6, tmpIndex, tableVar.sizeData - 1);
+                addInstructParams3(&tableInstruct, 1, tmpIndex, tmpIndex, tmpIndex - 2);
 
-                addInstructParams2(&tableInstruct, 17, 0, tmpIndex - 1);
+                addInstructParams2(&tableInstruct, 17, 0, tmpIndex);
 
                 // jump to the main
                 addInstructParams1(&tableInstruct, 7, mainIndex);
+                popTmp(&tableVar);
+                popTmp(&tableVar);
+                popTmp(&tableVar);
             }
 					
 TType:  tVOID {$$ = 'v';}
@@ -116,7 +114,9 @@ TType:  tVOID {$$ = 'v';}
 			| tINT {$$ = 'i';}
 
 DFct:       TType 
-            { 
+            {
+                initSymbTable(&tableVar);
+
                 tmpFctSymbol.type = $1;
                 // we will test if we need to return something
                 if ($1 == 'i' || $1 == 'p')
@@ -150,6 +150,7 @@ DFct:       TType
             Params 
             {
                 tmpFctSymbol.params = paramName;
+                tmpFctSymbol.startIndex = tableInstruct.size;
                 addSymbFct(&tableFct, tmpFctSymbol);
                 printFctTable(&tableFct);
 				free(paramName);
@@ -161,9 +162,9 @@ DFct:       TType
 				freeTable(&tableVar);
                 printParamTable(&tablePar);
                 // charge l'addresse de retour dans le registre 2
-                addInstructParams2(&tableInstruct, 17, 2, -2);
+                addInstructParams2(&tableInstruct, 17, 2, -1);
                 // charge la valeur sauvegardée de ebp dans le registre 0
-                addInstructParams2(&tableInstruct, 17, 0, -1);
+                addInstructParams2(&tableInstruct, 17, 0, -2);
                 // charge l'addresse de retour dans pc
                 addInstructParams0(&tableInstruct, 18);
 			}
@@ -192,7 +193,7 @@ Expr: 		Ligne Expr
 Ligne: 		Return tPOINTVIR 
      			| Decla tPOINTVIR
      			| IFct tPOINTVIR
-     			| If
+                | If
      			| While
      			| Affect tPOINTVIR
      			| Print tPOINTVIR
@@ -265,7 +266,7 @@ Affect: 	 tID  SAffect
                         popTmp(&tableVar);
                     } 
                 }
-					| tFOIS tID SAffect 
+            | tFOIS tID SAffect 
                 {
                     symbIndex = containsSymbol(&tableVar, $2); 
                     if (symbIndex > -1) { 
@@ -277,22 +278,22 @@ Affect: 	 tID  SAffect
                         popTmp(&tableVar);
                     } 
                 }
-					| tID tCRO ExpAri tCRF SAffect 
-                        {
-                            symbIndex = containsSymbol(&tableVar, $1);
-                            if (symbIndex != -1){
-                                tmpIndex = addTmp(&tableVar, 'i');
-                                addInstructParams2(&tableInstruct, 6, tmpIndex, symbIndex);
-                                addInstructParams3(&tableInstruct, 1, $3, $3, tmpIndex);
-                                popTmp(&tableVar);
-                                addInstructParams2(&tableInstruct, 13, $3, $5);
-                            }else{
-                                printf("undef array\n");
-                                compilationError = true;
-                            }
-                            popTmp(&tableVar);  // ExprAri
-                            popTmp(&tableVar);  // SAffect
-                        }
+            | tID tCRO ExpAri tCRF SAffect 
+                {
+                    symbIndex = containsSymbol(&tableVar, $1);
+                    if (symbIndex != -1){
+                        tmpIndex = addTmp(&tableVar, 'i');
+                        addInstructParams2(&tableInstruct, 6, tmpIndex, symbIndex);
+                        addInstructParams3(&tableInstruct, 1, $3, $3, tmpIndex);
+                        popTmp(&tableVar);
+                        addInstructParams2(&tableInstruct, 13, $3, $5);
+                    }else{
+                        printf("undef array\n");
+                        compilationError = true;
+                    }
+                    popTmp(&tableVar);  // ExprAri
+                    popTmp(&tableVar);  // SAffect
+                }
                 
 SAffect:  tEGAL ExpAri { $$ = $2; }
 
@@ -373,10 +374,66 @@ Return: 	tRETURN ExpAri
 
 /**********************************************************************/
 
-IFct: 		tID tPO IParam tPF { /*instructNum = tableInstrcut.size + 3;*/ symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 6, symbIndex, instructNum + 3); symbIndex = addSymbol(&tableVar, varSymbol); addInstructParams2(&tableInstruct, 16, symbIndex, 0); $4 = addInstructParams1(&tableInstruct, 7, -1); addLabel2(tableLbl , $4, tableInstruct.size); /*ajouter un label dans la table des label char**/} 
+IFct: 		tID tPO IParam tPF 
+            {
+                // version Paul
+                /*instructNum = tableInstrcut.size + 3;*/
+                /*
+                symbIndex = addSymbol(&tableVar, varSymbol);
+                addInstructParams2(&tableInstruct, 6, symbIndex, instructNum + 3);
+                symbIndex = addSymbol(&tableVar, varSymbol);
+                addInstructParams2(&tableInstruct, 16, symbIndex, 0);
+                $4 = addInstructParams1(&tableInstruct, 7, -1);
+                addLabel2(tableLbl , $4, tableInstruct.size);
+                */
+                /*ajouter un label dans la table des label char**/
 
-IParam:   ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $1); popTmp(&tableVar);} IParams { /*$$ = instructNum;*/ }
-					|
+                // version Renaud
+
+                /* ajouter les paramètres */
+
+                // prepare to call the function
+                // Ctxt value
+                tmpIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 16, tmpIndex, 0); 
+
+                // @ return
+                tmpIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 6, tmpIndex, tableInstruct.size + 4);
+
+                // nombre de var locales à prendre en compte
+                tmpIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 6, tmpIndex, tableVar.sizeData - 1);
+                addInstructParams3(&tableInstruct, 1, tmpIndex, tmpIndex, tmpIndex - 2);
+
+                addInstructParams2(&tableInstruct, 17, 0, tmpIndex);
+
+                // jump to the function
+                // get by proto
+                // int funcIndex = containsSymbFct(&tableFct, $1, $3);
+                int funcIndex = containsFctName(&tableFct, $1);
+                if (funcIndex != -1)
+                    addInstructParams1(&tableInstruct, 7, tableFct.symbFctArray[funcIndex].startIndex - 1);
+                else {
+                    // printf("function %s missing. params: %s\n", $1, $3);
+                    printf("function %s missing\n", $1);
+                    compilationError = true;
+                }
+                popTmp(&tableVar);
+                popTmp(&tableVar);
+                popTmp(&tableVar);
+            } 
+
+IParam:     ExpAri 
+            {
+                symbIndex = addSymbol(&tableVar, varSymbol);
+                instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $1);
+                popTmp(&tableVar);
+                char c = tableVar.symbolArray[$1].symb.type;
+            }
+            IParams
+            { /*$$ = instructNum;*/ }
+			|
 
 IParams:  tVIR ExpAri { symbIndex = addSymbol(&tableVar, varSymbol); instructNum = addInstructParams2(&tableInstruct, 5, symbIndex, $2); popTmp(&tableVar);}
 					|	
@@ -401,10 +458,31 @@ SCond:      Cond { $$ = $1; }
 							if($2==1){addInstructParams3(&tableInstruct, 1, $1, $1, $3); addInstructParams2(&tableInstruct, 6, symbIndex, 0); addInstructParams3(&tableInstruct, 10, $1, $1, symbIndex);} popTmp(&tableVar);}
 
 
-Cond: 		ExpAri tEGAL tEGAL ExpAri { addInstructParams3(&tableInstruct, 11, $1, $1, $4); $$ = $1; popTmp(&tableVar); }
-					| ExpAri { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&tableInstruct, 6, symbIndex, 1); addInstructParams3(&tableInstruct, 11, $1,$1,symbIndex); popTmp(&tableVar); }
-					| ExpAri tSUP ExpAri { addInstructParams3(&tableInstruct, 10, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
-					| ExpAri tINF ExpAri { addInstructParams3(&tableInstruct, 9, $1, $1, $3); $$ = $1; popTmp(&tableVar); }
+Cond: 		ExpAri tEGAL tEGAL ExpAri 
+            {
+                addInstructParams3(&tableInstruct, 11, $1, $1, $4);
+                $$ = $1;
+                popTmp(&tableVar);
+            }
+			| ExpAri
+            {
+                symbIndex = addTmp(&tableVar, 'i');
+                addInstructParams2(&tableInstruct, 6, symbIndex, 1);
+                addInstructParams3(&tableInstruct, 11, $1, $1, symbIndex);
+                popTmp(&tableVar);
+            }
+			| ExpAri tSUP ExpAri 
+            {
+                addInstructParams3(&tableInstruct, 10, $1, $1, $3);
+                $$ = $1;
+                popTmp(&tableVar);
+            }
+            | ExpAri tINF ExpAri
+            {
+                addInstructParams3(&tableInstruct, 9, $1, $1, $3);
+                $$ = $1;
+                popTmp(&tableVar);
+            }
 
 ConnectLogi:  tAND {$$ = 0;}
               | tOR	{$$ = 1;}
