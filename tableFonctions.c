@@ -43,6 +43,22 @@ int containsSymbFct(tableSymbFcts *table, char *name, char *params){
     return found ? index : -1;
 }
 
+int containsFctName(tableSymbFcts *table, char *name){
+    int index = 0;
+    bool found = false;
+    symbFct tmpSymb;
+
+    while (index < table->sizeData && !found){
+        tmpSymb = table->symbFctArray[index];
+        if (strcmp(tmpSymb.name, name) != 0)
+            index++;
+        else
+            found = true;
+    }
+
+    return found ? index : -1;
+}
+
 symbFct getSymbFct(tableSymbFcts *table, int index){
     return table->symbFctArray[index];
 }

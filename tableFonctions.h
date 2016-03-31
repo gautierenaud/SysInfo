@@ -9,6 +9,7 @@ typedef struct{
     char *name;
     char type;
     char *params;
+    int startIndex; // index at which the instructions for the function will start
 }symbFct;
 
 // append declared variables at the beginning of the array 
@@ -29,7 +30,11 @@ int addSymbFct(tableSymbFcts *table, symbFct symb);
 void freeFctTable(tableSymbFcts *table);
 
 // return -1 if absent and the index otherwise
+// search by prototype
 int containsSymbFct(tableSymbFcts *table, char* name, char *params);
+// search only by name
+int containsFctName(tableSymbFcts *table, char* name);
+
 
 symbFct getSymbFct(tableSymbFcts *table, int index);
 
