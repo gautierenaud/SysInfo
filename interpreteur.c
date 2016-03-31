@@ -21,9 +21,6 @@ void executeInstructions(tableInstruction *table){
         execLine(table->instructions[pc]);
         pc++;
     }
-
-    printMem();
-    printReg();
 }
 
 void execLine(int * line){
