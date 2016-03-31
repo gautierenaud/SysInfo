@@ -6,5 +6,6 @@
 void executeInstructions(tableInstruction *table);
 void execLine(int *line);
 void printMem();
+void printReg();
 
 #endif

@@ -21,6 +21,9 @@ void executeInstructions(tableInstruction *table){
         execLine(table->instructions[pc]);
         pc++;
     }
+
+    printMem();
+    printReg();
 }
 
 void execLine(int * line){
@@ -55,45 +58,40 @@ void execLine(int * line){
             if (mem[reg[0] + line[2]] < mem[reg[0] + line[3]])
                 mem[reg[0] + line[1]] = 1;
             else
-                mem[line[1]] = 0;
+                mem[reg[0] + line[1]] = 0;
             break;
         case 10: // SUP
-            if (mem[line[2]] > mem[line[3]])
-                mem[line[1]] = 1;
+            if (mem[reg[0] + line[2]] > mem[reg[0] + line[3]])
+                mem[reg[0] + line[1]] = 1;
             else
-                mem[line[1]] = 0;
+                mem[reg[0] + line[1]] = 0;
             break;
         case 11: // EQU
-            if (mem[line[2]] == mem[line[3]])
-                mem[line[1]] = 1;
+            if (mem[reg[0] + line[2]] == mem[reg[0] + line[3]])
+                mem[reg[0] + line[1]] = 1;
             else
-                mem[line[1]] = 0;
+                mem[reg[0] + line[1]] = 0;
             break;
         case 12: // PRI
-            printf("%d\n", mem[line[1]]);
+            printf("%d\n", mem[reg[0] + line[1]]);
             break;
         case 13: // CPA
-            mem[mem[line[1]]] = mem[line[2]];
+            mem[mem[line[1]]] = mem[reg[0] + line[2]];
             break;
         case 14: // CPB
             mem[line[1]] = line[2];
             break;
         case 15: // CPC
-            mem[line[1]] = mem[mem[line[2]]];
+            mem[reg[0] + line[1]] = mem[mem[line[2]]];
             break;
         case 16: // RCP
             mem[reg[0] + line[1]] = reg[line[2]];
             break;
         case 17: // RAF
             reg[line[1]] = mem[reg[0] + line[2]];
-            printf("reg[0] = %d\n", reg[0]);
-            printf("reg[%d] = mem[%d] = %d\n", line[1], reg[0], mem[reg[0]]);
             break;
         case 18: // RET
             pc = reg[2];
-            printf("it's a ret!\n");
-            printf("epb's value: %d\n", reg[2]);
-            exit(0);
             break;
     }
 }
@@ -102,5 +100,12 @@ void printMem(){
     int i;
     for (i = 0; i < 256; i++){
         printf("[inter] mem[%d] = %d\n", i, mem[i]);
+    }
+}
+
+void printReg(){
+    int i;
+    for (i = 0; i < 5; i++){
+        printf("[inter] reg[%d] = %d\n", i, reg[i]);
     }
 }
