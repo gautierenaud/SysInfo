@@ -32,19 +32,17 @@
 						Dout => t_Dout
           );
 
+			t_CLK <= not t_CLK after 5ns;
 
   --  Test Bench Statements
      tb : PROCESS
      BEGIN
+		wait for 10 ns;
+		t_address <= x"0153";
+      wait for 10 ns;
+		  
+		t_address <= x"0004";
 
-        -- wait for 100 ns; -- wait until global set/reset completes
-			t_CLK <= '0';
-        -- Add user defined stimulus here
-
-			t_CLK <= not t_CLK after 5ns;
-
-        wait; -- will wait forever
      END PROCESS tb;
   --  End Test Bench 
-
   END;

@@ -37,7 +37,7 @@ entity Mem_Instructions is
            Dout : out  STD_LOGIC_VECTOR (31 downto 0));
 end Mem_Instructions;
 
-architecture Behavioral of Mem_Instructions is
+	architecture Behavioral of Mem_Instructions is
 	
 	type ROM_INSTRUCTIONS is array (0 to (2**16 - 1)) of STD_LOGIC_VECTOR (31 downto 0);
 	signal ROM : ROM_INSTRUCTIONS;
@@ -46,9 +46,8 @@ begin
 
 	process
 		begin
-			if rising_edge(CLK) then
-				Dout <= ROM(conv_integer(Address));
-			end if;
+		wait until clk'event and clk='1';
+		Dout <= ROM(conv_integer(Address));
 	end process;
 	
 end Behavioral;
