@@ -62,11 +62,6 @@ begin
 				end loop;
 			elsif W = '1' then
 				Reg(conv_integer(AddrW)) <= DATA;
---				if AddrW = AddrA then
---					QA <= DATA;
---				elsif AddrW = AddrB then
---					QB <= DATA;
---				end if;
 			end if;
 		end if;
 	end process;
