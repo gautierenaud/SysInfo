@@ -45,30 +45,26 @@ end UAL;
 architecture Behavioral of UAL is
 
 	signal calcul : STD_LOGIC_VECTOR (15 downto 0);
-	signal test : STD_LOGIC_VECTOR (8 downto 0);
+	signal test : STD_LOGIC_VECTOR (7 downto 0);
+	signal mult : STD_LOGIC_VECTOR (15 downto 0);
+	signal add : STD_LOGIC_VECTOR (8 downto 0);
+	signal sous : STD_LOGIC_VECTOR (7 downto 0);
 
 begin
 
-	S <= A + B when Ctrl_Alu = "001";
-	test <= ("0" & A) + ("0" & B) when Ctrl_Alu = "001";
-	C <= test(8) when Ctrl_Alu = "001";
+--	add <= ("0" & A) + ("0" & B) when Ctrl_Alu = "001";
+--	C <= test(8) when Ctrl_Alu = "001" else '0';
 	
-			--else A * B when Ctrl_ALu = "010";
+	N <= '1' when (Ctrl_Alu = "011" and A < B)
+		else '0';
+	
+	test <= A + B when Ctrl_Alu = "001"
+	else B - A when Ctrl_Alu = "011" and A < B
+	else A - B when Ctrl_Alu = "011";
+	
+	--Z <= '0' when test = X"00";
+	
+	S <= test;
 
---
---	calcul <= X"00" & (A + B) when Ctrl_Alu = x"01"
---			else A * B when Ctrl_Alu = x"02"
---			else A - B when Ctrl_Alu = x"03"
---			else (others => '0');
---	
---	calcul <= x"0111";
---
---	Z <= '1' when calcul = x"00" else '0';
---	N <= '1' when(calcul < x"00") else '0';
---	C <= '1' when(calcul > x"FF" and Ctrl_Alu = x"01") else '0';
---	O <= '1' when(calcul > x"FF" and Ctrl_Alu = x"02")else '0';
---
---
-	Z <= '1';
 end Behavioral;
 
