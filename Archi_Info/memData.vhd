@@ -31,17 +31,18 @@ begin
 
 process
 begin
-	wait until ck'event and ck='1';
+	wait until clk'event and clk='1';
 	if rst='1' then  mem <= (others => (others => '0'));	
 	else
-		if rw='1' then mem(adr) <= din;
+		if rw='1' then mem(conv_integer(adr)) <= din;
 		else 
-			dout <= mem(adr);
+			aux <= mem(conv_integer(adr));
 		end if;
 	end if;
 		
 end process;
 
+dout <= aux;
 
 end Behavioral;
 

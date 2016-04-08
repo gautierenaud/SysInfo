@@ -1,6 +1,7 @@
 
 # PlanAhead Generated physical constraints 
 
+NET "clk" LOC = C9;
 NET "ck" LOC = C9;
 NET "din[0]" LOC = T10;
 NET "din[1]" LOC = T9;
@@ -21,4 +22,5 @@ NET "dout[7]" LOC = T11;
 NET "en" LOC = D9;
 NET "load" LOC = B8;
 NET "rst" LOC = C4;
+NET "rw" LOC = A8;
 NET "sens" LOC = A8;
