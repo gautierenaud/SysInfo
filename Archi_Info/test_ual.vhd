@@ -81,8 +81,8 @@ BEGIN
 
    -- Stimulus process
    
-		A <= x"02", x"FF" after 100 ns;
-		B <= x"03", x"00" after 150 ns;
-		Ctrl_Alu <= "001", "010" after 200 ns;
+		A <= x"02", x"FF" after 50 ns, x"05" after 125 ns;
+		B <= x"03", x"00" after 75 ns, x"02" after 100 ns, x"10" after 150 ns;
+		Ctrl_Alu <= "001", "010" after 60 ns, "011" after 100 ns;
 
 END;
