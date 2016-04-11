@@ -40,7 +40,7 @@ end Mem_Instructions;
 	architecture Behavioral of Mem_Instructions is
 	
 	type ROM_INSTRUCTIONS is array (0 to (2**16 - 1)) of STD_LOGIC_VECTOR (31 downto 0);
-	signal ROM : ROM_INSTRUCTIONS;
+	signal ROM : ROM_INSTRUCTIONS := ((x"01010102"), (x"02010101"), others => x"00000000");
 	
 begin
 

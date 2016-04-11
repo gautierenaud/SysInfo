@@ -38,10 +38,10 @@
      tb : PROCESS
      BEGIN
 		wait for 10 ns;
-		t_address <= x"0153";
+		t_address <= x"0001";
       wait for 10 ns;
 		  
-		t_address <= x"0004";
+		t_address <= x"0000";
 
      END PROCESS tb;
   --  End Test Bench 
