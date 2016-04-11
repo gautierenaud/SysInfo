@@ -10,7 +10,8 @@ entity FourReg is
            OOP : out  STD_LOGIC_VECTOR (7 downto 0);
            OB : out  STD_LOGIC_VECTOR (7 downto 0);
            OC : out  STD_LOGIC_VECTOR (7 downto 0);
-           CLK : in  STD_LOGIC);
+           CLK : in  STD_LOGIC;
+			  RST : in STD_LOGIC);
 end FourReg;
 
 architecture Behavioral of FourReg is
@@ -20,10 +21,17 @@ begin
 	process (CLK)
 	begin
 		if CLK = '1' then
-			OA <= IA;
-			OOP <= IOP;
-			OB <= IB;
-			OC <= IC;
+			if RST = '1' then
+				OA <= x"00";
+				OB <= x"00";
+				OC <= x"00";
+				OOP <= x"00";
+			else
+				OA <= IA;
+				OOP <= IOP;
+				OB <= IB;
+				OC <= IC;
+			end if;
 		end if;
 	end process;
 
