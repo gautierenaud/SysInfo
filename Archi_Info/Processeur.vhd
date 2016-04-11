@@ -2,6 +2,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 USE ieee.numeric_std.ALL;
+use IEEE.std_logic_arith.all;
+use IEEE.std_logic_unsigned.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -195,17 +197,20 @@ br : banc_registres PORT MAP (
           QB => QB
 );
 
-LC : LogicCombi PORT MAP (
-           DIN => MemReOPOut,
-			  CLK => CLK,
-           DOUT => WBR
-			  );
 
-
-
+WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" else '0';
 
 SA <= QA;
 SB <= QB;
+
+	process (clk)
+		begin
+		if rst = '1' then
+			ip <= x"0000";
+		elsif CLK'event and CLK = '1' then
+			IP <= IP + x"0001";
+		end if;
+	end process;
 
 end Behavioral;
 
