@@ -100,23 +100,23 @@ architecture Behavioral of Processeur is
 signal CK : std_logic := '0';
 signal memInstructOut : std_logic_vector (31 downto 0) := (others => '0');
 signal A0 : std_logic_vector (7 downto 0) := (others => '0');
-signal A1 : std_logic_vector (7 downto 0) := (others => '0');
-signal A2 : std_logic_vector (7 downto 0) := (others => '0');
-signal A3 : std_logic_vector (7 downto 0) := (others => '0');
-signal A4 : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDIAOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXAOut : std_logic_vector (7 downto 0) := (others => '0');
+signal EXMemAOut : std_logic_vector (7 downto 0) := (others => '0');
+signal MemReAOut : std_logic_vector (7 downto 0) := (others => '0');
 signal OP0 : std_logic_vector (7 downto 0) := (others => '0');
-signal OP1 : std_logic_vector (7 downto 0) := (others => '0');
-signal OP2 : std_logic_vector (7 downto 0) := (others => '0');
-signal OP3 : std_logic_vector (7 downto 0) := (others => '0');
-signal OP4 : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDIOPOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXOPOut : std_logic_vector (7 downto 0) := (others => '0');
+signal EXMemOPOut : std_logic_vector (7 downto 0) := (others => '0');
+signal MemReOPOut : std_logic_vector (7 downto 0) := (others => '0');
 signal B0 : std_logic_vector (7 downto 0) := (others => '0');
-signal B1 : std_logic_vector (7 downto 0) := (others => '0');
-signal B2 : std_logic_vector (7 downto 0) := (others => '0');
-signal B3 : std_logic_vector (7 downto 0) := (others => '0');
-signal B4 : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDIBOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXBOut : std_logic_vector (7 downto 0) := (others => '0');
+signal EXMemBOut : std_logic_vector (7 downto 0) := (others => '0');
+signal MemReBOut : std_logic_vector (7 downto 0) := (others => '0');
 signal C0 : std_logic_vector (7 downto 0) := (others => '0');
-signal C1 : std_logic_vector (7 downto 0) := (others => '0');
-signal C2 : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDICOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXCOut : std_logic_vector (7 downto 0) := (others => '0');
 signal C3 : std_logic_vector (7 downto 0) := (others => '0');
 signal C4 : std_logic_vector (7 downto 0) := (others => '0');
 signal IP : std_logic_vector (15 downto 0) := (others => '0');
@@ -140,45 +140,45 @@ LIDI : FourReg PORT MAP (
          IOP => memInstructOut(31 downto 24),
          IB => memInstructOut(15 downto 8),
          IC => memInstructOut(7 downto 0),
-         OA => A1,
-         OOP => OP1,
-         OB => B1,
-         OC => C1,
+         OA => LIDIAOut,
+         OOP => LIDIOPOut,
+         OB => LIDIBOut,
+         OC => LIDICOut,
          CLK => CLK,
 			RST => RST
 			);
 			
 DIEX : FourReg PORT MAP (
-			IA => A1,
-         IOP => OP1,
-         IB => B1,
-         IC => C1,
-         OA => A2,
-         OOP => OP2,
-         OB => B2,
-         OC => C2,
+			IA => LIDIAOut,
+         IOP => LIDIOPOut,
+         IB => LIDIBOut,
+         IC => LIDICOut,
+         OA => DIEXAOut,
+         OOP => DIEXOPOut,
+         OB => DIEXBOut,
+         OC => DIEXCOut,
          CLK => CLK,
 			RST => RST
 			);
 			
 EXMem : ThreeReg PORT MAP (
-			IA => A2,
-         IOP => OP2,
-         IB => B2,
-         OA => A3,
-         OOP => OP3,
-         OB => B3,
+			IA => DIEXAOut,
+         IOP => DIEXOPOut,
+         IB => DIEXBOut,
+         OA => EXMemAOut,
+         OOP => EXMemOPOut,
+         OB => EXMemBOut,
          CLK => CLK,
 			RST => RST
 			);
 			
 MemRE : ThreeReg PORT MAP (
-			IA => A3,
-         IOP => OP3,
-         IB => B3,
-         OA => A4,
-         OOP => OP4,
-         OB => B4,
+			IA => EXMemAOut,
+         IOP => EXMemOPOut,
+         IB => EXMemBOut,
+         OA => MemReAOut,
+         OOP => MemReOPOut,
+         OB => MemReBOut,
          CLK => CLK,
 			RST => RST
 			);
@@ -186,9 +186,9 @@ MemRE : ThreeReg PORT MAP (
 br : banc_registres PORT MAP (
 			 AddrA => AdrA, 
           AddrB => AdrB,
-          AddrW => A4,
+          AddrW => MemReAOut,
           W => WBR,
-          DATA => B4,
+          DATA => MemReBOut,
           RST => RST,
           CLK => CLK,
           QA => QA,
@@ -196,7 +196,7 @@ br : banc_registres PORT MAP (
 );
 
 LC : LogicCombi PORT MAP (
-           DIN => OP4,
+           DIN => MemReOPOut,
 			  CLK => CLK,
            DOUT => WBR
 			  );
@@ -206,11 +206,6 @@ LC : LogicCombi PORT MAP (
 
 SA <= QA;
 SB <= QB;
-
---process
---	begin
---		wait until ck'event and ck='1';
---end process;
 
 end Behavioral;
 
