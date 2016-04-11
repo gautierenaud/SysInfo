@@ -2,6 +2,8 @@
 library IEEE;
 use IEEE.STD_LOGIC_1164.ALL;
 USE ieee.numeric_std.ALL;
+use IEEE.std_logic_arith.all;
+use IEEE.std_logic_unsigned.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -184,8 +186,8 @@ MemRE : ThreeReg PORT MAP (
 			);
 
 br : banc_registres PORT MAP (
-			 AddrA => AdrA, 
-          AddrB => AdrB,
+			 AddrA => x"04", 
+          AddrB => x"08",
           AddrW => A4,
           W => WBR,
           DATA => B4,
@@ -194,23 +196,25 @@ br : banc_registres PORT MAP (
           QA => QA,
           QB => QB
 );
-
-LC : LogicCombi PORT MAP (
-           DIN => OP4,
-			  CLK => CLK,
-           DOUT => WBR
-			  );
-
-
-
+--
+--LC : LogicCombi PORT MAP (
+--           DIN => OP4,
+--			  CLK => CLK,
+--           DOUT => WBR
+--			  );
+WBR <= '1' when OP4 = x"01" or OP4 = x"02" or OP4 = x"03" or OP4 = x"04" or OP4 = x"06" else '0';
 
 SA <= QA;
 SB <= QB;
 
---process
---	begin
---		wait until ck'event and ck='1';
---end process;
+	process (clk)
+		begin
+		if rst = '1' then
+			ip <= x"0000";
+		elsif CLK'event and CLK = '1' then
+			IP <= IP + x"0001";
+		end if;
+	end process;
 
 end Behavioral;
 

@@ -56,7 +56,7 @@ begin
 	process (clk)
 		begin
 		if CLK'event and CLK = '1' then
-			if RST = '0' then
+			if RST = '1' then
 				for I in 0 to 15 loop
 					Reg(I) <= x"00";
 				end loop;
