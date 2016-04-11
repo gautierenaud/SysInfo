@@ -41,7 +41,7 @@ end Mem_Instructions;
 	
 	type ROM_INSTRUCTIONS is array (0 to (16 - 1)) of STD_LOGIC_VECTOR (31 downto 0);
 	--type ROM_INSTRUCTIONS is array (0 to (2**16 - 1)) of STD_LOGIC_VECTOR (31 downto 0);
-	signal ROM : ROM_INSTRUCTIONS := ((x"06010102"), (x"02010101"), others => x"00000000");
+	signal ROM : ROM_INSTRUCTIONS := ((x"06010102"), (x"00000000"), (x"00000000"), (x"00000000"), (x"00000000"), (x"05020101"), others => x"00000000");
 	
 begin
 

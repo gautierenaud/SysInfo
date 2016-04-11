@@ -98,6 +98,15 @@ architecture Behavioral of Processeur is
 			  CLK : in STD_LOGIC;
            DOUT : out  STD_LOGIC);
 	END COMPONENT;
+	
+	COMPONENT Multiplexer
+   PORT(
+        A : IN  std_logic_vector(7 downto 0);
+        B : IN  std_logic_vector(7 downto 0);
+        S : IN  std_logic;
+        Z : OUT  std_logic_vector(7 downto 0)
+       );
+   END COMPONENT;
 			
 signal CK : std_logic := '0';
 signal memInstructOut : std_logic_vector (31 downto 0) := (others => '0');
@@ -126,8 +135,9 @@ signal AdrA : std_logic_vector (7 downto 0) := (others => '0');
 signal AdrB : std_logic_vector (7 downto 0) := (others => '0');
 signal QA : std_logic_vector (7 downto 0) := (others => '0');
 signal QB : std_logic_vector (7 downto 0) := (others => '0');
+signal BRMuxOut : std_logic_vector (7 downto 0) := (others => '0');
 signal WBR : std_logic := '0';
-
+signal BRSIN : std_logic := '0';
 
 begin
 
@@ -153,7 +163,7 @@ LIDI : FourReg PORT MAP (
 DIEX : FourReg PORT MAP (
 			IA => LIDIAOut,
          IOP => LIDIOPOut,
-         IB => LIDIBOut,
+         IB => BRMuxOut,
          IC => LIDICOut,
          OA => DIEXAOut,
          OOP => DIEXOPOut,
@@ -186,7 +196,7 @@ MemRE : ThreeReg PORT MAP (
 			);
 
 br : banc_registres PORT MAP (
-			 AddrA => AdrA, 
+			 AddrA => LIDIBOut, 
           AddrB => AdrB,
           AddrW => MemReAOut,
           W => WBR,
@@ -197,8 +207,15 @@ br : banc_registres PORT MAP (
           QB => QB
 );
 
+BRMux : Multiplexer PORT MAP (
+	 A => LIDIBOut,
+	 B => QA,
+	 S => BRSIN,
+	 Z => BRMuxOut
+);
+BRSIN <= '1' when LIDIOPOut = x"05" else '0';
 
-WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" else '0';
+WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" or MemReOPOut = x"05" else '0';
 
 SA <= QA;
 SB <= QB;

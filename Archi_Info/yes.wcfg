@@ -3,7 +3,7 @@
    <wave_state>
    </wave_state>
    <db_ref_list>
-      <db_ref path="/home/paul/Documents/SystemesInfo/SysInfo/Archi_Info/test_Processeur_isim_beh.wdb" id="1" type="auto">
+      <db_ref path="/home/gautierenaud/Documents/Lien vers Documents/INSA/4IR/Sem2/Systemes informatiques/Archi_Info/test_Processeur_isim_beh2.wdb" id="1" type="auto">
          <top_modules>
             <top_module name="numeric_std" />
             <top_module name="std_logic_1164" />
@@ -13,7 +13,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="48" />
+   <WVObjectSize size="51" />
    <wvobject fp_name="/test_processeur/uut/ip" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ip[15:0]</obj_property>
       <obj_property name="ObjectShortName">ip[15:0]</obj_property>
@@ -295,14 +295,33 @@
       <obj_property name="ObjectShortName">addrw[7:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_processeur/uut/b4" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">b4[7:0]</obj_property>
-      <obj_property name="ObjectShortName">b4[7:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
-   </wvobject>
    <wvobject fp_name="/test_processeur/uut/br/rst" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">rst</obj_property>
       <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/BRMux/a" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">a[7:0]</obj_property>
+      <obj_property name="ObjectShortName">a[7:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/BRMux/b" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">b[7:0]</obj_property>
+      <obj_property name="ObjectShortName">b[7:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/BRMux/s" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">s</obj_property>
+      <obj_property name="ObjectShortName">s</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/BRMux/z" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">z[7:0]</obj_property>
+      <obj_property name="ObjectShortName">z[7:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/br/reg" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">reg[0:15]</obj_property>
