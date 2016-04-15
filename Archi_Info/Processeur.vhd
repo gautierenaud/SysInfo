@@ -138,6 +138,7 @@ signal QB : std_logic_vector (7 downto 0) := (others => '0');
 signal BRMuxOut : std_logic_vector (7 downto 0) := (others => '0');
 signal WBR : std_logic := '0';
 signal BRSIN : std_logic := '0';
+signal CtrlALuIN : std_logic_vector(2 downto 0) := "000";
 
 begin
 
@@ -213,9 +214,13 @@ BRMux : Multiplexer PORT MAP (
 	 S => BRSIN,
 	 Z => BRMuxOut
 );
-BRSIN <= '1' when LIDIOPOut = x"05" else '0';
+BRSIN <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or LIDIOPOut = x"05" else '0';
 
+-- LC for writing in register memory
 WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" or MemReOPOut = x"05" else '0';
+
+-- LC for the ALU
+CtrlAluIN <= DIEXOPOut(2 downto 0) when DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = x"03" or DIEXOPOUT = x"04" else "000";
 
 SA <= QA;
 SB <= QB;
