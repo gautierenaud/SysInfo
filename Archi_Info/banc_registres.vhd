@@ -32,9 +32,9 @@ use IEEE.std_logic_unsigned.all;
 --use UNISIM.VComponents.all;
 
 entity banc_registres is
-    Port ( AddrA : in  STD_LOGIC_VECTOR (7 downto 0);
-           AddrB : in  STD_LOGIC_VECTOR (7 downto 0);
-           AddrW : in  STD_LOGIC_VECTOR (7 downto 0);
+    Port ( AddrA : in  STD_LOGIC_VECTOR (3 downto 0);
+           AddrB : in  STD_LOGIC_VECTOR (3 downto 0);
+           AddrW : in  STD_LOGIC_VECTOR (3 downto 0);
            W : in  STD_LOGIC;
            DATA : in  STD_LOGIC_VECTOR (7 downto 0);
            RST : in  STD_LOGIC;

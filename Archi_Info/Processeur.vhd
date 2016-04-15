@@ -25,9 +25,9 @@ architecture Behavioral of Processeur is
 
 	 COMPONENT banc_registres
 	 PORT(
-			AddrA : IN  std_logic_vector(7 downto 0);
-			AddrB : IN  std_logic_vector(7 downto 0);
-			AddrW : IN  std_logic_vector(7 downto 0);
+			AddrA : IN  std_logic_vector(3 downto 0);
+			AddrB : IN  std_logic_vector(3 downto 0);
+			AddrW : IN  std_logic_vector(3 downto 0);
 			W : IN  std_logic;
 			DATA : IN  std_logic_vector(7 downto 0);
 			RST : IN  std_logic;
@@ -60,7 +60,7 @@ architecture Behavioral of Processeur is
 			 
 	 COMPONENT memData
 	 PORT(
-			adr : IN  std_logic_vector(15 downto 0);
+			adr : IN  std_logic_vector(7 downto 0);
 			din : IN  std_logic_vector(7 downto 0);
 			rw : IN  std_logic;
 			rst : IN  std_logic;
@@ -82,7 +82,7 @@ architecture Behavioral of Processeur is
 			  RST : in STD_LOGIC);
 	END COMPONENT;
 	
-		 COMPONENT ThreeReg PORT (
+	COMPONENT ThreeReg PORT (
 			  IA : in  STD_LOGIC_VECTOR (7 downto 0);
            IOP : in  STD_LOGIC_VECTOR (7 downto 0);
            IB : in  STD_LOGIC_VECTOR (7 downto 0);
@@ -145,6 +145,10 @@ signal AluOOut : std_logic := '0';
 signal AluCOut : std_logic := '0';
 signal AluZOut : std_logic := '0';
 signal AluSOut : std_logic_vector (7 downto 0) := (others => '0');
+signal LCMemD : std_logic := '0';
+signal MUXMemDOUT : std_logic_vector (7 downto 0) := (others => '0');
+signal MUXMemDIN : std_logic_vector (7 downto 0) := (others => '0');
+signal MemDOUT : std_logic_vector (7 downto 0) := (others => '0');
 
 begin
 
@@ -194,7 +198,7 @@ EXMem : ThreeReg PORT MAP (
 MemRE : ThreeReg PORT MAP (
 			IA => EXMemAOut,
          IOP => EXMemOPOut,
-         IB => EXMemBOut,
+         IB => MUXMemDOUT,
          OA => MemReAOut,
          OOP => MemReOPOut,
          OB => MemReBOut,
@@ -203,9 +207,9 @@ MemRE : ThreeReg PORT MAP (
 			);
 
 br : banc_registres PORT MAP (
-			 AddrA => LIDIBOut, 
-          AddrB => LIDICOut,
-          AddrW => MemReAOut,
+			 AddrA => LIDIBOut(3 downto 0), 
+          AddrB => LIDICOut(3 downto 0),
+          AddrW => MemReAOut(3 downto 0),
           W => WBR,
           DATA => MemReBOut,
           RST => RST,
@@ -223,19 +227,35 @@ ALU: UAL PORT MAP (
 	Z => AluZOut,
 	C => AluCOut,
 	S => AluSOut
-);	
+);
+
+MemD: memData PORT MAP(
+	adr => MuxMemDIN,
+	din => EXMemBOut,
+	rw => LCMemD,
+	rst => RST,
+	clk => CLK,
+	dout => MemDOUT
+);
 
 -- Multiplexer for the registry memory
-DIEXBIn <= LIDIBOut when LIDIOPOut = x"06" else QA;
+DIEXBIn <= LIDIBOut when LIDIOPOut = x"06" or LIDIOPOut = x"07" else QA;
 
 -- LC for writing in register memory
-WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" or MemReOPOut = x"05" else '0';
+WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" or MemReOPOut = x"05" or MemReOPOut = x"07" else '0';
 
 -------- LOGIC FOR THE UAL --------
 -- LC for the ALU
 CtrlAluIN <= DIEXOPOut(2 downto 0) when DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = x"03" or DIEXOPOUT = x"04" else "000";
 -- Multiplexer for ALU
 EXMemBIn <= AluSOut when (DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = x"03" or DIEXOPOUT = x"04") else DIEXBOut;
+
+-------- LOGIC FOR THE DATA MEMORY ---------
+-- LC
+LCMemD <= '1' when ExMemOPOut = x"08" else '0';
+-- Multiplexers
+MUXMemDOUT <= MemDOUT when EXMemOPOut = x"07" else ExMemBOut;
+MUXMemDIN <= ExMemAOut when EXMemOPOut = x"08" else ExMemBOut;
 
 SA <= QA;
 SB <= QB;

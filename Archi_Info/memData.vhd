@@ -14,7 +14,7 @@ use IEEE.std_logic_unsigned.all;
 --use UNISIM.VComponents.all;
 
 entity memData is
-    Port ( adr : in  STD_LOGIC_VECTOR (15 downto 0);
+    Port ( adr : in  STD_LOGIC_VECTOR (7 downto 0);
            din : in  STD_LOGIC_VECTOR (7 downto 0);
            rw : in  STD_LOGIC;
            rst : in  STD_LOGIC;
@@ -23,8 +23,7 @@ entity memData is
 end memData;
 
 architecture Behavioral of memData is
-	signal aux : std_logic_vector (7 downto 0);
-	type MEMOIRE is array (0 to (2**16-1)) of STD_LOGIC_VECTOR (7 downto 0);
+	type MEMOIRE is array (0 to (2**8 - 1)) of STD_LOGIC_VECTOR (7 downto 0);
 	signal mem : MEMOIRE;
 
 begin
@@ -34,15 +33,14 @@ begin
 	wait until clk'event and clk='1';
 	if rst='1' then  mem <= (others => (others => '0'));	
 	else
-		if rw='1' then mem(conv_integer(adr)) <= din;
-		else 
-			aux <= mem(conv_integer(adr));
+		if rw='1' then
+			mem(conv_integer(adr)) <= din;
 		end if;
 	end if;
 		
 end process;
 
-dout <= aux;
+dout <= mem(conv_integer(adr));
 
 end Behavioral;
 
