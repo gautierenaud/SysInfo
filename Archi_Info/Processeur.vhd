@@ -92,63 +92,69 @@ architecture Behavioral of Processeur is
            CLK : in  STD_LOGIC;
 			  RST : in STD_LOGIC);
 	END COMPONENT;
-	
-	COMPONENT LogicCombi PORT (
-           DIN : in  STD_LOGIC_VECTOR (7 downto 0);
-			  CLK : in STD_LOGIC;
-           DOUT : out  STD_LOGIC);
-	END COMPONENT;
-	
-	COMPONENT Multiplexer
-   PORT(
-        A : IN  std_logic_vector(7 downto 0);
-        B : IN  std_logic_vector(7 downto 0);
-        S : IN  std_logic;
-        Z : OUT  std_logic_vector(7 downto 0)
-       );
-   END COMPONENT;
 			
 signal CK : std_logic := '0';
-signal memInstructOut : std_logic_vector (31 downto 0) := (others => '0');
-signal A0 : std_logic_vector (7 downto 0) := (others => '0');
-signal LIDIAOut : std_logic_vector (7 downto 0) := (others => '0');
-signal DIEXAOut : std_logic_vector (7 downto 0) := (others => '0');
-signal EXMemAOut : std_logic_vector (7 downto 0) := (others => '0');
-signal MemReAOut : std_logic_vector (7 downto 0) := (others => '0');
-signal OP0 : std_logic_vector (7 downto 0) := (others => '0');
-signal LIDIOPOut : std_logic_vector (7 downto 0) := (others => '0');
-signal DIEXOPOut : std_logic_vector (7 downto 0) := (others => '0');
-signal EXMemOPOut : std_logic_vector (7 downto 0) := (others => '0');
-signal MemReOPOut : std_logic_vector (7 downto 0) := (others => '0');
-signal B0 : std_logic_vector (7 downto 0) := (others => '0');
-signal LIDIBOut : std_logic_vector (7 downto 0) := (others => '0');
-signal DIEXBOut : std_logic_vector (7 downto 0) := (others => '0');
-signal EXMemBOut : std_logic_vector (7 downto 0) := (others => '0');
-signal EXMemBIn : std_logic_vector (7 downto 0) := (others => '0');
-signal MemReBOut : std_logic_vector (7 downto 0) := (others => '0');
-signal C0 : std_logic_vector (7 downto 0) := (others => '0');
-signal LIDICOut : std_logic_vector (7 downto 0) := (others => '0');
-signal DIEXCOut : std_logic_vector (7 downto 0) := (others => '0');
-signal C3 : std_logic_vector (7 downto 0) := (others => '0');
-signal C4 : std_logic_vector (7 downto 0) := (others => '0');
+
+-- Processor -- 
 signal IP : std_logic_vector (15 downto 0) := (others => '0');
+-- Processor -- 
+
+-- Mem Instruct --
+signal memInstructOut : std_logic_vector (31 downto 0) := (others => '0');
+-- Mem Instruct --
+
+-- LI/DI --
+signal LIDIAOut : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDIOPOut : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDIBOut : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDICOut : std_logic_vector (7 downto 0) := (others => '0');
+-- LI/DI --
+
+-- Mem Registers -- 
 signal AdrA : std_logic_vector (7 downto 0) := (others => '0');
 signal AdrB : std_logic_vector (7 downto 0) := (others => '0');
 signal QA : std_logic_vector (7 downto 0) := (others => '0');
 signal QB : std_logic_vector (7 downto 0) := (others => '0');
-signal DIEXBIn : std_logic_vector (7 downto 0) := (others => '0');
 signal WBR : std_logic := '0';
 signal BRSIN : std_logic := '0';
+-- Mem Registers -- 
+
+-- DI/EX --
+signal DIEXBIn : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXAOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXOPOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXBOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXCOut : std_logic_vector (7 downto 0) := (others => '0');
+-- DI/EX --
+
+-- ALU --
 signal CtrlALuIN : std_logic_vector(2 downto 0) := "000";
 signal AluNOut : std_logic := '0';
 signal AluOOut : std_logic := '0';
 signal AluCOut : std_logic := '0';
 signal AluZOut : std_logic := '0';
 signal AluSOut : std_logic_vector (7 downto 0) := (others => '0');
-signal LCMemD : std_logic := '0';
+-- ALU --
+
+-- EX/Mem --
+signal EXMemAOut : std_logic_vector (7 downto 0) := (others => '0');
+signal EXMemOPOut : std_logic_vector (7 downto 0) := (others => '0');
+signal EXMemBOut : std_logic_vector (7 downto 0) := (others => '0');
+signal EXMemBIn : std_logic_vector (7 downto 0) := (others => '0');
+-- EX/Mem -- 
+
+-- Mem Data --
 signal MUXMemDOUT : std_logic_vector (7 downto 0) := (others => '0');
 signal MUXMemDIN : std_logic_vector (7 downto 0) := (others => '0');
 signal MemDOUT : std_logic_vector (7 downto 0) := (others => '0');
+signal LCMemD : std_logic := '0';
+-- Mem Data --
+
+-- Mem/Re --
+signal MemReAOut : std_logic_vector (7 downto 0) := (others => '0');
+signal MemReOPOut : std_logic_vector (7 downto 0) := (others => '0');
+signal MemReBOut : std_logic_vector (7 downto 0) := (others => '0');
+-- Mem/Re --
 
 begin
 
@@ -249,6 +255,7 @@ WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" o
 CtrlAluIN <= DIEXOPOut(2 downto 0) when DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = x"03" or DIEXOPOUT = x"04" else "000";
 -- Multiplexer for ALU
 EXMemBIn <= AluSOut when (DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = x"03" or DIEXOPOUT = x"04") else DIEXBOut;
+
 
 -------- LOGIC FOR THE DATA MEMORY ---------
 -- LC
