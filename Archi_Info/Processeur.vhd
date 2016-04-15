@@ -124,6 +124,7 @@ signal B0 : std_logic_vector (7 downto 0) := (others => '0');
 signal LIDIBOut : std_logic_vector (7 downto 0) := (others => '0');
 signal DIEXBOut : std_logic_vector (7 downto 0) := (others => '0');
 signal EXMemBOut : std_logic_vector (7 downto 0) := (others => '0');
+signal EXMemBIn : std_logic_vector (7 downto 0) := (others => '0');
 signal MemReBOut : std_logic_vector (7 downto 0) := (others => '0');
 signal C0 : std_logic_vector (7 downto 0) := (others => '0');
 signal LIDICOut : std_logic_vector (7 downto 0) := (others => '0');
@@ -135,9 +136,15 @@ signal AdrA : std_logic_vector (7 downto 0) := (others => '0');
 signal AdrB : std_logic_vector (7 downto 0) := (others => '0');
 signal QA : std_logic_vector (7 downto 0) := (others => '0');
 signal QB : std_logic_vector (7 downto 0) := (others => '0');
-signal BRMuxOut : std_logic_vector (7 downto 0) := (others => '0');
+signal DIEXBIn : std_logic_vector (7 downto 0) := (others => '0');
 signal WBR : std_logic := '0';
 signal BRSIN : std_logic := '0';
+signal CtrlALuIN : std_logic_vector(2 downto 0) := "000";
+signal AluNOut : std_logic := '0';
+signal AluOOut : std_logic := '0';
+signal AluCOut : std_logic := '0';
+signal AluZOut : std_logic := '0';
+signal AluSOut : std_logic_vector (7 downto 0) := (others => '0');
 
 begin
 
@@ -163,8 +170,8 @@ LIDI : FourReg PORT MAP (
 DIEX : FourReg PORT MAP (
 			IA => LIDIAOut,
          IOP => LIDIOPOut,
-         IB => BRMuxOut,
-         IC => LIDICOut,
+         IB => DIEXBIn,
+         IC => QB,
          OA => DIEXAOut,
          OOP => DIEXOPOut,
          OB => DIEXBOut,
@@ -176,7 +183,7 @@ DIEX : FourReg PORT MAP (
 EXMem : ThreeReg PORT MAP (
 			IA => DIEXAOut,
          IOP => DIEXOPOut,
-         IB => DIEXBOut,
+         IB => EXMemBIn,
          OA => EXMemAOut,
          OOP => EXMemOPOut,
          OB => EXMemBOut,
@@ -197,7 +204,7 @@ MemRE : ThreeReg PORT MAP (
 
 br : banc_registres PORT MAP (
 			 AddrA => LIDIBOut, 
-          AddrB => AdrB,
+          AddrB => LIDICOut,
           AddrW => MemReAOut,
           W => WBR,
           DATA => MemReBOut,
@@ -207,15 +214,28 @@ br : banc_registres PORT MAP (
           QB => QB
 );
 
-BRMux : Multiplexer PORT MAP (
-	 A => LIDIBOut,
-	 B => QA,
-	 S => BRSIN,
-	 Z => BRMuxOut
-);
-BRSIN <= '1' when LIDIOPOut = x"05" else '0';
+ALU: UAL PORT MAP (
+	A => DIEXBOut,
+	B => DIEXCOut,
+	Ctrl_Alu => CtrlALuIN,
+	N => AluNOut,
+	O => ALuOOut,
+	Z => AluZOut,
+	C => AluCOut,
+	S => AluSOut
+);	
 
+-- Multiplexer for the registry memory
+DIEXBIn <= LIDIBOut when LIDIOPOut = x"06" else QA;
+
+-- LC for writing in register memory
 WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" or MemReOPOut = x"05" else '0';
+
+-------- LOGIC FOR THE UAL --------
+-- LC for the ALU
+CtrlAluIN <= DIEXOPOut(2 downto 0) when DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = x"03" or DIEXOPOUT = x"04" else "000";
+-- Multiplexer for ALU
+EXMemBIn <= AluSOut when (DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = x"03" or DIEXOPOUT = x"04") else DIEXBOut;
 
 SA <= QA;
 SB <= QB;
