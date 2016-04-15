@@ -94,6 +94,7 @@ architecture Behavioral of Processeur is
 	END COMPONENT;
 			
 signal CK : std_logic := '0';
+signal Alea : std_logic := '0';
 
 -- Processor -- 
 signal IP : std_logic_vector (15 downto 0) := (others => '0');
@@ -101,9 +102,11 @@ signal IP : std_logic_vector (15 downto 0) := (others => '0');
 
 -- Mem Instruct --
 signal memInstructOut : std_logic_vector (31 downto 0) := (others => '0');
+signal nopInstruct : std_logic_vector (31 downto 0) := (others => '0');
 -- Mem Instruct --
 
 -- LI/DI --
+signal LIDIIn : std_logic_vector (31 downto 0) := (others => '0');
 signal LIDIAOut : std_logic_vector (7 downto 0) := (others => '0');
 signal LIDIOPOut : std_logic_vector (7 downto 0) := (others => '0');
 signal LIDIBOut : std_logic_vector (7 downto 0) := (others => '0');
@@ -165,10 +168,10 @@ memInstruct : Mem_Instructions PORT MAP (
 			);
 			
 LIDI : FourReg PORT MAP (
-			IA => memInstructOut(23 downto 16),
-         IOP => memInstructOut(31 downto 24),
-         IB => memInstructOut(15 downto 8),
-         IC => memInstructOut(7 downto 0),
+			IA => LIDIIn(23 downto 16),
+         IOP => LIDIIn(31 downto 24),
+         IB => LIDIIn(15 downto 8),
+         IC => LIDIIn(7 downto 0),
          OA => LIDIAOut,
          OOP => LIDIOPOut,
          OB => LIDIBOut,
@@ -244,6 +247,9 @@ MemD: memData PORT MAP(
 	dout => MemDOUT
 );
 
+--Multipler for the LIDI IN
+LIDIIn <= nopInstruct when alea = '1' else memInstructOut;
+
 -- Multiplexer for the registry memory
 DIEXBIn <= LIDIBOut when LIDIOPOut = x"06" or LIDIOPOut = x"07" else QA;
 
@@ -272,7 +278,7 @@ SB <= QB;
 		if rst = '1' then
 			ip <= x"0000";
 		elsif CLK'event and CLK = '1' then
-			IP <= IP + x"0001";
+				IP <= IP + x"0001";
 		end if;
 	end process;
 
