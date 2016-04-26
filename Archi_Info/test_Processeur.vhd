@@ -62,8 +62,6 @@ BEGIN
       wait for 100 ns;	
 		RST <= '0';
 
-      wait for Clk_period*10;
-
       -- insert stimulus here 
 
       wait;

@@ -13,7 +13,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="73" />
+   <WVObjectSize size="80" />
    <wvobject fp_name="/test_processeur/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -21,6 +21,16 @@
    <wvobject fp_name="/test_processeur/rst" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">rst</obj_property>
       <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/nopcpt" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">nopcpt[2:0]</obj_property>
+      <obj_property name="ObjectShortName">nopcpt[2:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/ip" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">ip[15:0]</obj_property>
+      <obj_property name="ObjectShortName">ip[15:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/sa" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">sa[7:0]</obj_property>
@@ -63,8 +73,8 @@
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/memInstruct/rom" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">rom[0:60]</obj_property>
-      <obj_property name="ObjectShortName">rom[0:60]</obj_property>
+      <obj_property name="ElementShortName">rom[0:16]</obj_property>
+      <obj_property name="ObjectShortName">rom[0:16]</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#ff00ff</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
@@ -153,226 +163,6 @@
          <obj_property name="ObjectShortName">rom[16]</obj_property>
          <obj_property name="Radix">HEXRADIX</obj_property>
       </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[17]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[17]</obj_property>
-         <obj_property name="ObjectShortName">rom[17]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[18]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[18]</obj_property>
-         <obj_property name="ObjectShortName">rom[18]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[19]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[19]</obj_property>
-         <obj_property name="ObjectShortName">rom[19]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[20]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[20]</obj_property>
-         <obj_property name="ObjectShortName">rom[20]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[21]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[21]</obj_property>
-         <obj_property name="ObjectShortName">rom[21]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[22]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[22]</obj_property>
-         <obj_property name="ObjectShortName">rom[22]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[23]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[23]</obj_property>
-         <obj_property name="ObjectShortName">rom[23]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[24]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[24]</obj_property>
-         <obj_property name="ObjectShortName">rom[24]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[25]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[25]</obj_property>
-         <obj_property name="ObjectShortName">rom[25]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[26]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[26]</obj_property>
-         <obj_property name="ObjectShortName">rom[26]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[27]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[27]</obj_property>
-         <obj_property name="ObjectShortName">rom[27]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[28]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[28]</obj_property>
-         <obj_property name="ObjectShortName">rom[28]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[29]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[29]</obj_property>
-         <obj_property name="ObjectShortName">rom[29]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[30]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[30]</obj_property>
-         <obj_property name="ObjectShortName">rom[30]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[31]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[31]</obj_property>
-         <obj_property name="ObjectShortName">rom[31]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[32]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[32]</obj_property>
-         <obj_property name="ObjectShortName">rom[32]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[33]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[33]</obj_property>
-         <obj_property name="ObjectShortName">rom[33]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[34]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[34]</obj_property>
-         <obj_property name="ObjectShortName">rom[34]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[35]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[35]</obj_property>
-         <obj_property name="ObjectShortName">rom[35]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[36]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[36]</obj_property>
-         <obj_property name="ObjectShortName">rom[36]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[37]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[37]</obj_property>
-         <obj_property name="ObjectShortName">rom[37]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[38]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[38]</obj_property>
-         <obj_property name="ObjectShortName">rom[38]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[39]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[39]</obj_property>
-         <obj_property name="ObjectShortName">rom[39]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[40]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[40]</obj_property>
-         <obj_property name="ObjectShortName">rom[40]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[41]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[41]</obj_property>
-         <obj_property name="ObjectShortName">rom[41]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[42]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[42]</obj_property>
-         <obj_property name="ObjectShortName">rom[42]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[43]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[43]</obj_property>
-         <obj_property name="ObjectShortName">rom[43]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[44]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[44]</obj_property>
-         <obj_property name="ObjectShortName">rom[44]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[45]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[45]</obj_property>
-         <obj_property name="ObjectShortName">rom[45]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[46]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[46]</obj_property>
-         <obj_property name="ObjectShortName">rom[46]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[47]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[47]</obj_property>
-         <obj_property name="ObjectShortName">rom[47]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[48]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[48]</obj_property>
-         <obj_property name="ObjectShortName">rom[48]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[49]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[49]</obj_property>
-         <obj_property name="ObjectShortName">rom[49]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[50]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[50]</obj_property>
-         <obj_property name="ObjectShortName">rom[50]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[51]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[51]</obj_property>
-         <obj_property name="ObjectShortName">rom[51]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[52]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[52]</obj_property>
-         <obj_property name="ObjectShortName">rom[52]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[53]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[53]</obj_property>
-         <obj_property name="ObjectShortName">rom[53]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[54]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[54]</obj_property>
-         <obj_property name="ObjectShortName">rom[54]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[55]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[55]</obj_property>
-         <obj_property name="ObjectShortName">rom[55]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[56]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[56]</obj_property>
-         <obj_property name="ObjectShortName">rom[56]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[57]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[57]</obj_property>
-         <obj_property name="ObjectShortName">rom[57]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[58]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[58]</obj_property>
-         <obj_property name="ObjectShortName">rom[58]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[59]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[59]</obj_property>
-         <obj_property name="ObjectShortName">rom[59]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
-      <wvobject fp_name="/test_processeur/uut/memInstruct/rom[60]" type="array" db_ref_id="1">
-         <obj_property name="ElementShortName">[60]</obj_property>
-         <obj_property name="ObjectShortName">rom[60]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
-      </wvobject>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/LIDI/ia" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ia[7:0]</obj_property>
@@ -414,6 +204,30 @@
       <obj_property name="ObjectShortName">oc[7:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
+   <wvobject fp_name="/test_processeur/uut/counting" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">counting</obj_property>
+      <obj_property name="ObjectShortName">counting</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#aaaa7f</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/alea" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">alea</obj_property>
+      <obj_property name="ObjectShortName">alea</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#aaaa7f</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/saveinstruct" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">saveinstruct[31:0]</obj_property>
+      <obj_property name="ObjectShortName">saveinstruct[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#aaaa7f</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/lidiout" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">lidiout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">lidiout[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
    <wvobject fp_name="/test_processeur/uut/LIDI/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -423,22 +237,22 @@
       <obj_property name="ObjectShortName">rst</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/br/addra" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">addra[7:0]</obj_property>
-      <obj_property name="ObjectShortName">addra[7:0]</obj_property>
+      <obj_property name="ElementShortName">addra[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addra[3:0]</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#00ffff</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/br/addrb" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">addrb[7:0]</obj_property>
-      <obj_property name="ObjectShortName">addrb[7:0]</obj_property>
+      <obj_property name="ElementShortName">addrb[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addrb[3:0]</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#00ffff</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/br/addrw" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">addrw[7:0]</obj_property>
-      <obj_property name="ObjectShortName">addrw[7:0]</obj_property>
+      <obj_property name="ElementShortName">addrw[3:0]</obj_property>
+      <obj_property name="ObjectShortName">addrw[3:0]</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#00ffff</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
@@ -2002,6 +1816,13 @@
    <wvobject fp_name="/test_processeur/uut/MemRE/ob" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">ob[7:0]</obj_property>
       <obj_property name="ObjectShortName">ob[7:0]</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#ff00ff</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/muxmemdin" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">muxmemdin[7:0]</obj_property>
+      <obj_property name="ObjectShortName">muxmemdin[7:0]</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#ff00ff</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>

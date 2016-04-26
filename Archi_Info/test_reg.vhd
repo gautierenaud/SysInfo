@@ -41,9 +41,9 @@ ARCHITECTURE behavior OF test_reg IS
  
     COMPONENT banc_registres
     PORT(
-         AddrA : IN  std_logic_vector(7 downto 0);
-         AddrB : IN  std_logic_vector(7 downto 0);
-         AddrW : IN  std_logic_vector(7 downto 0);
+         AddrA : IN  std_logic_vector(3 downto 0);
+         AddrB : IN  std_logic_vector(3 downto 0);
+         AddrW : IN  std_logic_vector(3 downto 0);
          W : IN  std_logic;
          DATA : IN  std_logic_vector(7 downto 0);
          RST : IN  std_logic;
@@ -55,9 +55,9 @@ ARCHITECTURE behavior OF test_reg IS
     
 
    --Inputs
-   signal AddrA : std_logic_vector(7 downto 0) := (others => '0');
-   signal AddrB : std_logic_vector(7 downto 0) := (others => '0');
-   signal AddrW : std_logic_vector(7 downto 0) := (others => '0');
+   signal AddrA : std_logic_vector(3 downto 0) := (others => '0');
+   signal AddrB : std_logic_vector(3 downto 0) := (others => '0');
+   signal AddrW : std_logic_vector(3 downto 0) := (others => '0');
    signal W : std_logic := '0';
    signal DATA : std_logic_vector(7 downto 0) := (others => '0');
    signal RST : std_logic := '0';
@@ -102,9 +102,9 @@ BEGIN
       wait for CLK_period*10;
 
 		W <= '0', '1' after 100 ns;
-		AddrW <= x"05", x"06" after 150 ns;
-		AddrA <= x"05";
-		AddrB <= x"06";
+		AddrW <= x"5", x"6" after 150 ns;
+		AddrA <= x"5";
+		AddrB <= x"6";
 		DATA <= x"11";
 
 		RST <= '1', '0' after 200 ns;
