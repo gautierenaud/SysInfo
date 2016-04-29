@@ -13,7 +13,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="80" />
+   <WVObjectSize size="81" />
    <wvobject fp_name="/test_processeur/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -21,6 +21,12 @@
    <wvobject fp_name="/test_processeur/rst" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">rst</obj_property>
       <obj_property name="ObjectShortName">rst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/test_processeur/uut/lidi_clk" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">lidi_clk</obj_property>
+      <obj_property name="ObjectShortName">lidi_clk</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#00ffff</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/nopcpt" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">nopcpt[2:0]</obj_property>
@@ -204,24 +210,24 @@
       <obj_property name="ObjectShortName">oc[7:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_processeur/uut/counting" type="logic" db_ref_id="1">
-      <obj_property name="ElementShortName">counting</obj_property>
-      <obj_property name="ObjectShortName">counting</obj_property>
+   <wvobject fp_name="/test_processeur/uut/mem_saveinstruct" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">mem_saveinstruct[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_saveinstruct[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#aaaa7f</obj_property>
+      <obj_property name="CustomSignalColor">#a0a0a4</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/alea" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">alea</obj_property>
       <obj_property name="ObjectShortName">alea</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#aaaa7f</obj_property>
+      <obj_property name="CustomSignalColor">#a0a0a4</obj_property>
    </wvobject>
-   <wvobject fp_name="/test_processeur/uut/saveinstruct" type="array" db_ref_id="1">
-      <obj_property name="ElementShortName">saveinstruct[31:0]</obj_property>
-      <obj_property name="ObjectShortName">saveinstruct[31:0]</obj_property>
-      <obj_property name="Radix">HEXRADIX</obj_property>
+   <wvobject fp_name="/test_processeur/uut/ip_counting" type="logic" db_ref_id="1">
+      <obj_property name="ElementShortName">ip_counting</obj_property>
+      <obj_property name="ObjectShortName">ip_counting</obj_property>
       <obj_property name="UseCustomSignalColor">true</obj_property>
-      <obj_property name="CustomSignalColor">#aaaa7f</obj_property>
+      <obj_property name="CustomSignalColor">#a0a0a4</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/lidiout" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">lidiout[31:0]</obj_property>

@@ -94,18 +94,18 @@ architecture Behavioral of Processeur is
 	END COMPONENT;
 			
 signal CK : std_logic := '0';
+signal LIDI_CLK : std_logic := '0';
 
 -- Gestion des Aléas --
 signal Alea : std_logic := '0';
-signal Counting : std_logic := '1';
 signal nopInstruct : std_logic_vector (31 downto 0) := (others => '0');
 signal nopCPT : std_logic_vector (2 downto 0) := (others => '0');
-signal noping : std_logic := '0';
-signal saveInstruct : std_logic_vector (31 downto 0) := (others => '0');
+signal mem_saveInstruct : std_logic_vector (31 downto 0) := (others => '0');
 -- Gestion des Aléas -- 
 
 -- Processor -- 
 signal IP : std_logic_vector (15 downto 0) := (others => '0');
+signal IP_Counting : std_logic := '1';
 -- Processor -- 
 
 -- Mem Instruct --
@@ -170,7 +170,7 @@ signal MemReBOut : std_logic_vector (7 downto 0) := (others => '0');
 begin
 
 memInstruct : Mem_Instructions PORT MAP (
-			CLK => CLK,
+			CLK => LIDI_CLK,
 			Address => IP,     
 			Dout => memInstructOut
 			);
@@ -184,7 +184,7 @@ LIDI : FourReg PORT MAP (
          OOP => LIDIInterOut(31 downto 24),
          OB => LIDIInterOut(15 downto 8),
          OC => LIDIInterOut(7 downto 0),
-         CLK => CLK,
+         CLK => LIDI_CLK,
 			RST => RST
 			);
 			
@@ -256,10 +256,11 @@ MemD: memData PORT MAP(
 );
 
 -- Multiplexer for the LIDI IN
-LIDIIN <= LIDIInterOut when Alea = '1' else saveInstruct when nopCpt = "100" else memInstructOut;
+LIDI_CLK <= CLK when alea = '0' else '0';
+LIDIIN <= memInstructOut;
 
 -- Multiplexer to go out of the LIDI
-LIDIOut <= nopInstruct when Alea = '1' else LIDIInterOut;
+LIDIOut <= mem_saveInstruct when nopCpt = "100" else nopInstruct when Alea = '1' else LIDIInterOut;
 
 
 -- Multiplexer for the registry memory
@@ -294,31 +295,31 @@ SB <= QB;
 				-- si on trouve un aléas
 				if (LIDIIn(31 downto 24) = x"01" or LIDIIn(31 downto 24) = x"02") and LIDIOut(31 downto 24) = x"01" then
 					alea <= '1';
-					Counting <= '0';
 					nopCpt <= "000";
+					IP_Counting <= '0';
+					mem_saveInstruct <= memInstructOut;
 				end if;
 			end if;
-			
 			
 			if rst = '1' then
 				IP <= x"0000";
 			else
-				if nopCpt = "100" then
-						nopCpt <= "000";
-				end if;
-				if Counting = '0' then
-					if nopCpt = "000" then
-						saveInstruct <= memInstructOut;
-					elsif nopCpt = "011" then
+				if Alea = '1' then
+					if nopCpt = "011" then
+						IP_Counting <= '1';
+						nopCpt <= nopCpt + '1';
+					elsif nopCpt = "100" then
 						alea <= '0';
-						Counting <= '1';
+						nopCpt <= "000";
+						mem_saveInstruct <= x"00000000";
+					else
+						nopCpt <= nopCpt + '1';
 					end if;
-					nopCpt <= nopCpt + '1';
-				else
+				end if;
+				if IP_Counting = '1' then
 					IP <= IP + x"0001";
 				end if;
 			end if;
-			
 		end if;
 	end process;
 end Behavioral;
