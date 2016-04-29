@@ -13,7 +13,7 @@
          </top_modules>
       </db_ref>
    </db_ref_list>
-   <WVObjectSize size="81" />
+   <WVObjectSize size="82" />
    <wvobject fp_name="/test_processeur/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -229,10 +229,19 @@
       <obj_property name="UseCustomSignalColor">true</obj_property>
       <obj_property name="CustomSignalColor">#a0a0a4</obj_property>
    </wvobject>
+   <wvobject fp_name="/test_processeur/uut/lidiin" type="array" db_ref_id="1">
+      <obj_property name="ElementShortName">lidiin[31:0]</obj_property>
+      <obj_property name="ObjectShortName">lidiin[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#808000</obj_property>
+   </wvobject>
    <wvobject fp_name="/test_processeur/uut/lidiout" type="array" db_ref_id="1">
       <obj_property name="ElementShortName">lidiout[31:0]</obj_property>
       <obj_property name="ObjectShortName">lidiout[31:0]</obj_property>
       <obj_property name="Radix">HEXRADIX</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="CustomSignalColor">#808000</obj_property>
    </wvobject>
    <wvobject fp_name="/test_processeur/uut/LIDI/clk" type="logic" db_ref_id="1">
       <obj_property name="ElementShortName">clk</obj_property>

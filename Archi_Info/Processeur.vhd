@@ -1,9 +1,13 @@
 
 library IEEE;
+library STD;
 use IEEE.STD_LOGIC_1164.ALL;
 USE ieee.numeric_std.ALL;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+
+use STD.TEXTIO.ALL;
+use IEEE.std_logic_textio.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -256,7 +260,7 @@ MemD: memData PORT MAP(
 );
 
 -- Multiplexer for the LIDI IN
-LIDI_CLK <= CLK when alea = '0' else '0';
+LIDI_CLK <= CLK when IP_Counting = '1' else '0';
 LIDIIN <= memInstructOut;
 
 -- Multiplexer to go out of the LIDI
@@ -291,20 +295,26 @@ SB <= QB;
 		begin
 		if CLK'event and CLK = '1' then
 		
-			if alea = '0' then
-				-- si on trouve un aléas
-				if (LIDIIn(31 downto 24) = x"01" or LIDIIn(31 downto 24) = x"02") and LIDIOut(31 downto 24) = x"01" then
-					alea <= '1';
-					nopCpt <= "000";
-					IP_Counting <= '0';
-					mem_saveInstruct <= memInstructOut;
-				end if;
+			-- si on trouve un aléas
+			if ((x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"05")
+				and ((x"01" <= LIDIOut(31 downto 24) and LIDIOut(31 downto 24) <= x"06"))
+					and ((LIDIIn(15 downto 8) = LIDIOut(23 downto 16))
+						or ((LIDIIn(7 downto 0) = LIDIOut(23 downto 16) and (x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"04")))))
+			then
+				alea <= '1';
+				nopCpt <= "000";
+				IP_Counting <= '0';
+				mem_saveInstruct <= memInstructOut;
+				write(output, "Aléa! ");
 			end if;
 			
 			if rst = '1' then
 				IP <= x"0000";
 			else
-				if Alea = '1' then
+				if Alea = '1' and not(((x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"05")
+					and ((x"01" <= LIDIOut(31 downto 24) and LIDIOut(31 downto 24) <= x"06"))
+						and ((LIDIIn(15 downto 8) = LIDIOut(23 downto 16))
+							or ((LIDIIn(7 downto 0) = LIDIOut(23 downto 16) and (x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"04")))))) then
 					if nopCpt = "011" then
 						IP_Counting <= '1';
 						nopCpt <= nopCpt + '1';

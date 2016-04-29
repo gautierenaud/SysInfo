@@ -22,7 +22,7 @@ end Mem_Instructions;
 	
 	type ROM_INSTRUCTIONS is array (0 to 16) of STD_LOGIC_VECTOR (31 downto 0);
 	--type ROM_INSTRUCTIONS is array (0 to (2**16 - 1)) of STD_LOGIC_VECTOR (31 downto 0);
-	signal ROM : ROM_INSTRUCTIONS := ((x"06010802"), (x"05050101"), (x"01020105"), (x"02030105"), (x"03040105"), (x"08100300"), (x"07001000"), others => x"00000000");
+	signal ROM : ROM_INSTRUCTIONS := ((x"06000900"), (x"06010800"), (x"05050100"), (x"01020105"), (x"02030005"), (x"03040105"), (x"08100300"), (x"07001000"), others => x"00000000");
 	
 begin
 
@@ -31,6 +31,6 @@ begin
 		wait until clk'event and clk='1';
 		Dout <= ROM(conv_integer(Address));
 	end process;
-	
+--	Dout <= ROM(conv_integer(Address));
 end Behavioral;
 
