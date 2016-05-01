@@ -1,6 +1,7 @@
 int f(){
-	int lala = 5;
-	printf(lala);
+    int lala = 5;
+    return lala;
+    printf(lala);
 }
 
 int main(){

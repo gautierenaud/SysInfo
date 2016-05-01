@@ -197,6 +197,7 @@ Ligne: 		Return tPOINTVIR
      			| While
      			| Affect tPOINTVIR
      			| Print tPOINTVIR
+                | error tPOINTVIR {compilationError = true;}
      
 Decla:      TType tID TTab
             {
@@ -366,10 +367,18 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
 
 Return: 	tRETURN ExpAri 
             {
-                $$ = $2;
+                // $$ = $2;
                 returnValue = true;
-                /*maybe check the type of the returning expression*/
+                /* maybe check the type of the returning expression */
                 addInstructParams2(&tableInstruct, 17, 1, $2);
+
+                /* Prepare the jump to the calling function */
+                // charge l'addresse de retour dans le registre 2
+                addInstructParams2(&tableInstruct, 17, 2, -1);
+                // charge la valeur sauvegardée de ebp dans le registre 0
+                addInstructParams2(&tableInstruct, 17, 0, -2);
+                // charge l'addresse de retour dans pc
+                addInstructParams0(&tableInstruct, 18);
             }
 
 /**********************************************************************/
@@ -492,8 +501,8 @@ Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); po
 %%
 
 yyerror(char *s){
-	fprintf(stderr,"%s\n",s);
-	exit(0);
+	fprintf(stderr,"%s\n", s);
+	//exit(0);
 }
 
 int main (void) {
