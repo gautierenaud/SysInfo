@@ -311,6 +311,7 @@ SB <= QB;
 			if rst = '1' then
 				IP <= x"0000";
 			else
+				-- si on a besoin de lire un entrée + si on vient d'écrire qqchose + @qqchose == @entrée
 				if Alea = '1' and not(((x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"05")
 					and ((x"01" <= LIDIOut(31 downto 24) and LIDIOut(31 downto 24) <= x"06"))
 						and ((LIDIIn(15 downto 8) = LIDIOut(23 downto 16))
