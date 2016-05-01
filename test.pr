@@ -6,10 +6,10 @@ int f(int lolo, int lulu){
 }
 
 int main(){
-	int a = 65, b = 95;
+	int a = 65, b = 85;
 	printf(b);
-	a = f(b, a );
-	printf(a);
+	int i = f(b, a ) + 2;
+	printf(i);
 }
 
 
