@@ -18,7 +18,7 @@ void {return tVOID;}
 \if {return tIF;}
 \else {return tELSE;}
 \while {return tWHILE;}
-\return {return tRETURN;} 
+"return" {return tRETURN;} 
 \" {return tGUIL;}
 \+ {return tPLUS;}
 \- {return tMOINS;}

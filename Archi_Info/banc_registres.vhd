@@ -50,8 +50,8 @@ architecture Behavioral of banc_registres is
 
 begin
 	
-	QA <= Reg(conv_integer(AddrA));
-	QB <= Reg(conv_integer(AddrB));
+	QA <= Reg(conv_integer(AddrA)) when not (AddrA = AddrW) else Reg(conv_integer(AddrW));
+	QB <= Reg(conv_integer(AddrB)) when not (AddrB = AddrW) else Reg(conv_integer(AddrW));
 	
 	process (clk)
 		begin

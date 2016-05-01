@@ -1,9 +1,13 @@
 
 library IEEE;
+library STD;
 use IEEE.STD_LOGIC_1164.ALL;
 USE ieee.numeric_std.ALL;
 use IEEE.std_logic_arith.all;
 use IEEE.std_logic_unsigned.all;
+
+use STD.TEXTIO.ALL;
+use IEEE.std_logic_textio.all;
 
 -- Uncomment the following library declaration if using
 -- arithmetic functions with Signed or Unsigned values
@@ -94,23 +98,31 @@ architecture Behavioral of Processeur is
 	END COMPONENT;
 			
 signal CK : std_logic := '0';
+signal LIDI_CLK : std_logic := '0';
+
+-- Gestion des Aléas --
 signal Alea : std_logic := '0';
+signal nopInstruct : std_logic_vector (31 downto 0) := (others => '0');
+signal nopCPT : std_logic_vector (2 downto 0) := (others => '0');
+signal mem_saveInstruct : std_logic_vector (31 downto 0) := (others => '0');
+-- Gestion des Aléas -- 
 
 -- Processor -- 
 signal IP : std_logic_vector (15 downto 0) := (others => '0');
+signal IP_Counting : std_logic := '1';
 -- Processor -- 
 
 -- Mem Instruct --
 signal memInstructOut : std_logic_vector (31 downto 0) := (others => '0');
-signal nopInstruct : std_logic_vector (31 downto 0) := (others => '0');
 -- Mem Instruct --
 
 -- LI/DI --
+-- intermediate signal for the LIDI input
+signal LIDIInter : std_logic_vector (31 downto 0) := (others => '0');
+-- intermediate signal for the LIDI outpt
+signal LIDIInterOUT : std_logic_vector (31 downto 0) := (others => '0');
 signal LIDIIn : std_logic_vector (31 downto 0) := (others => '0');
-signal LIDIAOut : std_logic_vector (7 downto 0) := (others => '0');
-signal LIDIOPOut : std_logic_vector (7 downto 0) := (others => '0');
-signal LIDIBOut : std_logic_vector (7 downto 0) := (others => '0');
-signal LIDICOut : std_logic_vector (7 downto 0) := (others => '0');
+signal LIDIOut : std_logic_vector (31 downto 0) := (others => '0');
 -- LI/DI --
 
 -- Mem Registers -- 
@@ -162,7 +174,7 @@ signal MemReBOut : std_logic_vector (7 downto 0) := (others => '0');
 begin
 
 memInstruct : Mem_Instructions PORT MAP (
-			CLK => CLK,
+			CLK => LIDI_CLK,
 			Address => IP,     
 			Dout => memInstructOut
 			);
@@ -172,17 +184,17 @@ LIDI : FourReg PORT MAP (
          IOP => LIDIIn(31 downto 24),
          IB => LIDIIn(15 downto 8),
          IC => LIDIIn(7 downto 0),
-         OA => LIDIAOut,
-         OOP => LIDIOPOut,
-         OB => LIDIBOut,
-         OC => LIDICOut,
-         CLK => CLK,
+         OA => LIDIInterOut(23 downto 16),
+         OOP => LIDIInterOut(31 downto 24),
+         OB => LIDIInterOut(15 downto 8),
+         OC => LIDIInterOut(7 downto 0),
+         CLK => LIDI_CLK,
 			RST => RST
 			);
 			
 DIEX : FourReg PORT MAP (
-			IA => LIDIAOut,
-         IOP => LIDIOPOut,
+			IA => LIDIOut(23 downto 16),
+         IOP => LIDIOut(31 downto 24),
          IB => DIEXBIn,
          IC => QB,
          OA => DIEXAOut,
@@ -216,8 +228,8 @@ MemRE : ThreeReg PORT MAP (
 			);
 
 br : banc_registres PORT MAP (
-			 AddrA => LIDIBOut(3 downto 0), 
-          AddrB => LIDICOut(3 downto 0),
+			 AddrA => LIDIOut(11 downto 8), 
+          AddrB => LIDIOut(3 downto 0),
           AddrW => MemReAOut(3 downto 0),
           W => WBR,
           DATA => MemReBOut,
@@ -247,14 +259,20 @@ MemD: memData PORT MAP(
 	dout => MemDOUT
 );
 
---Multipler for the LIDI IN
-LIDIIn <= nopInstruct when alea = '1' else memInstructOut;
+-- Multiplexer for the LIDI IN
+LIDI_CLK <= CLK when IP_Counting = '1' else '0';
+LIDIIN <= memInstructOut;
+
+-- Multiplexer to go out of the LIDI
+LIDIOut <= mem_saveInstruct when nopCpt = "100" else nopInstruct when Alea = '1' else LIDIInterOut;
+
 
 -- Multiplexer for the registry memory
-DIEXBIn <= LIDIBOut when LIDIOPOut = x"06" or LIDIOPOut = x"07" else QA;
+DIEXBIn <= LIDIOut(15 downto 8) when (LIDIOut(31 downto 24) = x"06" or LIDIOut(31 downto 24) = x"07") else QA;
 
 -- LC for writing in register memory
 WBR <= '1' when MemReOPOut = x"01" or MemReOPOut = x"02" or MemReOPOut = x"03" or MemReOPOut = x"04" or MemReOPOut = x"06" or MemReOPOut = x"05" or MemReOPOut = x"07" else '0';
+
 
 -------- LOGIC FOR THE UAL --------
 -- LC for the ALU
@@ -267,20 +285,52 @@ EXMemBIn <= AluSOut when (DIEXOPOUT = x"01" or DIEXOPOUT = x"02" or DIEXOPOUT = 
 -- LC
 LCMemD <= '1' when ExMemOPOut = x"08" else '0';
 -- Multiplexers
-MUXMemDOUT <= MemDOUT when EXMemOPOut = x"07" else ExMemBOut;
 MUXMemDIN <= ExMemAOut when EXMemOPOut = x"08" else ExMemBOut;
+MUXMemDOUT <= MemDOUT when EXMemOPOut = x"07" else ExMemBOut;
 
 SA <= QA;
 SB <= QB;
-
+	
 	process (clk)
 		begin
-		if rst = '1' then
-			ip <= x"0000";
-		elsif CLK'event and CLK = '1' then
-				IP <= IP + x"0001";
+		if CLK'event and CLK = '1' then
+		
+			-- si on trouve un aléas
+			if ((x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"05")
+				and ((x"01" <= LIDIOut(31 downto 24) and LIDIOut(31 downto 24) <= x"06"))
+					and ((LIDIIn(15 downto 8) = LIDIOut(23 downto 16))
+						or ((LIDIIn(7 downto 0) = LIDIOut(23 downto 16) and (x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"04")))))
+			then
+				alea <= '1';
+				nopCpt <= "000";
+				IP_Counting <= '0';
+				mem_saveInstruct <= memInstructOut;
+				write(output, "Aléa! ");
+			end if;
+			
+			if rst = '1' then
+				IP <= x"0000";
+			else
+				if Alea = '1' and not(((x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"05")
+					and ((x"01" <= LIDIOut(31 downto 24) and LIDIOut(31 downto 24) <= x"06"))
+						and ((LIDIIn(15 downto 8) = LIDIOut(23 downto 16))
+							or ((LIDIIn(7 downto 0) = LIDIOut(23 downto 16) and (x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"04")))))) then
+					if nopCpt = "011" then
+						IP_Counting <= '1';
+						nopCpt <= nopCpt + '1';
+					elsif nopCpt = "100" then
+						alea <= '0';
+						nopCpt <= "000";
+						mem_saveInstruct <= x"00000000";
+					else
+						nopCpt <= nopCpt + '1';
+					end if;
+				end if;
+				if IP_Counting = '1' then
+					IP <= IP + x"0001";
+				end if;
+			end if;
 		end if;
 	end process;
-
 end Behavioral;
 
