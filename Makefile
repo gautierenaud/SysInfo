@@ -30,3 +30,13 @@ itest:
 alltest:
 	cat test.pr | ./$(OUTPUT)
 	./$(INTEOUT) < source.asm
+
+allall:
+	yacc -v -d $(YSOURCE)
+	flex $(FSOURCE)
+	gcc $(CSRC) $(INCSRC) $(OPTIONS) -ll -o $(OUTPUT)
+	yacc -v -d $(YINTESRC)
+	flex $(FINTESRC)
+	gcc $(CINTESRC) $(INCINTE) -ll -o $(INTEOUT)
+	cat test.pr | ./$(OUTPUT)
+	./$(INTEOUT) < source.asm
