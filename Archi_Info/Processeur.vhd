@@ -296,6 +296,10 @@ SB <= QB;
 		if CLK'event and CLK = '1' then
 		
 			-- si on trouve un aléas
+			-- si on veut faire une opération qui lit un registre(ADD, MUL, SUB, DIV, COP)
+				-- et si on fait une opération écrit dans un registre (ADD, MUL, SUB, DIV, COP, AFC)
+					-- si on lit dans ce qu'on va écrire
+						-- si on lit dans ce qu'on va écrire si on va lire dans le deuxième paramètre
 			if ((x"01" <= LIDIIn(31 downto 24) and LIDIIn(31 downto 24) <= x"05")
 				and ((x"01" <= LIDIOut(31 downto 24) and LIDIOut(31 downto 24) <= x"06"))
 					and ((LIDIIn(15 downto 8) = LIDIOut(23 downto 16))
