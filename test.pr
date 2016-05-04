@@ -13,6 +13,14 @@ int fact(int i){
     }
 }
 
+int tructructruc(int a){
+	printf(a);
+}
+
+int lala(int aaammm){
+	return aaammm;
+}
+
 int main(){
 	int a = 65, b = 85;
 	printf(b);

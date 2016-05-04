@@ -128,7 +128,8 @@ DFct:       TType
             } 
 			tID 
             { 
-                tmpFctSymbol.name = $3;
+                tmpFctSymbol.name = (char*) malloc(sizeof(char) * getLength($3));
+                strncat(tmpFctSymbol.name, $3, getLength($3));
                 // on teste si c'est la fonction main
                 if (strcmp("main", $3) == 0){
                     if (!mainPresent){
@@ -152,10 +153,8 @@ DFct:       TType
             {
                 tmpFctSymbol.params = (char*) malloc(sizeof(char) * paramNum);
                 strncat(tmpFctSymbol.params, paramName, paramNum);
-                printf("%d\n",(int) strlen(paramName));
                 tmpFctSymbol.startIndex = tableInstruct.size;
                 addSymbFct(&tableFct, tmpFctSymbol);
-                printFctTable(&tableFct);
 				free(paramName);
             } 
 			tPF 
@@ -343,8 +342,10 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
 
                     }
 					| tFOIS tID { symbIndex = containsSymbol(&tableVar, $2); 
-                        if (symbIndex == -1) 
+                        if (symbIndex == -1) {
                             printf("le pointeur n'existe pas dans ce contexte\n");
+                            compilationError = true;
+                        }
                         else {
                             tmpSymbol = getSymbol(&tableVar, symbIndex);
                             symbIndex = addTmp(&tableVar, 'p'); 
@@ -352,8 +353,10 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
                             $$ = symbIndex; 
                         } }
 					| tESP tID { symbIndex = containsSymbol(&tableVar, $2); 
-                        if (symbIndex == -1) 
+                        if (symbIndex == -1) {
                             printf("la variable n'existe pas dans ce contexte\n");
+                            compilationError = true;
+                        }
                         else {
                             tmpSymbol = getSymbol(&tableVar, symbIndex);
                             symbIndex = addTmp(&tableVar, 'i'); 

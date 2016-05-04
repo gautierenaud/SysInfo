@@ -73,3 +73,10 @@ const char * intToCode(int i){
             break;
     }
 }
+
+int getLength(char* word){
+    int length;
+    for (length = 0; word[length]; length++){
+    }
+    return length;
+}
