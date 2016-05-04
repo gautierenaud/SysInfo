@@ -150,7 +150,9 @@ DFct:       TType
 			}  
             Params 
             {
-                tmpFctSymbol.params = paramName;
+                tmpFctSymbol.params = (char*) malloc(sizeof(char) * paramNum);
+                strncat(tmpFctSymbol.params, paramName, paramNum);
+                printf("%d\n",(int) strlen(paramName));
                 tmpFctSymbol.startIndex = tableInstruct.size;
                 addSymbFct(&tableFct, tmpFctSymbol);
                 printFctTable(&tableFct);
@@ -522,8 +524,10 @@ int main (void) {
     printInstructionTable(&tableInstruct);
 	if (!mainPresent){
         printf("main function not present\n");
+        exit(-1);
     }else if (compilationError){
         printf("compilation error, no assembly file\n");
+        exit(-1);
     }else{
         output = fopen("source.asm", "w");
 	    printInstructsToFile(&tableInstruct, output);
