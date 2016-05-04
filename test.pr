@@ -5,11 +5,22 @@ int f(int lolo, int lulu){
 	return lala;
 }
 
+int fact(int i) {
+	if (i==0) {
+		return 1;
+	}
+	else {
+		return i*fact(i-1);
+	}
+
+}
+
 int main(){
 	int a = 65, b = 85;
 	printf(b);
 	int i = f(b, a ) + 2;
 	printf(i);
+	printf(fact(5));
 }
 
 
