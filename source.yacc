@@ -362,8 +362,9 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
                         } }
 
 					| IFct {  /* on fait un saut dans la fonction, qui est sensé avoir mis le résultat dans une var temporaire */
-              addInstructParams2(&tableInstruct, 16, $1, 1); 
-              $$ = $1; 
+              tmpIndex = addTmp(&tableVar, 'i');
+              addInstructParams2(&tableInstruct, 16, tmpIndex, 1); 
+              $$ = tmpIndex; 
              } 
 					| ExpAri tPLUS ExpAri { addInstructParams3(&tableInstruct, 1, $1, $1, $3); $$ = $1; popTmp(&tableVar);}
 					| ExpAri tMOINS ExpAri { addInstructParams3(&tableInstruct, 3, $1, $1, $3); $$ = $1; popTmp(&tableVar); }

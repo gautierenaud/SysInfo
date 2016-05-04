@@ -5,19 +5,27 @@ int f(int lolo, int lulu){
 	return lala;
 }
 
-int fact(int i){
-    if (i == 0){
+int fact(int to){
+    if (to == 0){
         return 1;
     }else{
-        return i * fact(i - 1);
+        return to * fact(to - 1);
     }
+}
+
+void salut() {
+ return 1;
+}
+
+int toto(int a) {
+ return 1;
 }
 
 int main(){
 	int a = 65, b = 85;
 	printf(b);
-	int i = f(b, a ) + 2;
-	printf(i);
+	int yo = f(b, a ) + 2;
+	printf(yo);
 	printf(fact(5));
 }
 

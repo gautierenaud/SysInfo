@@ -2,6 +2,10 @@
 	#include "y.tab.h" 
 %}
 
+%{
+	int line = 0; 
+%}
+
 NAME [a-z|_|A-Z][a-z|_|A-Z|0-9]*
 SEP [\t| |,]
 EOL \n
@@ -41,5 +45,5 @@ printf {return tPRINTF;}
 {NAME} {strcpy(yylval.str, yytext);return tID;}
 {STRING} {return tSTRING;}
 " "
-"\n"
+"\n" {line = line + 1; printf("line number : %d\n",line);}
 "\t"
