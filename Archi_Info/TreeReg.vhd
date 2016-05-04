@@ -16,18 +16,18 @@ architecture Behavioral of ThreeReg is
 
 begin
 	
-	process (CLK)
+	--process (CLK)
+	process
 	begin
-		if CLK = '1' then
-			if RST = '1' then
-				OA <= x"00";
-				OB <= x"00";
-				OOP <= x"00";
-			else
-				OA <= IA;
-				OOP <= IOP;
-				OB <= IB;
-			end if;
+		wait until CLK'event and CLK = '1';
+		if RST = '1' then
+			OA <= x"00";
+			OB <= x"00";
+			OOP <= x"00";
+		else
+			OA <= IA;
+			OOP <= IOP;
+			OB <= IB;
 		end if;
 	end process;
 

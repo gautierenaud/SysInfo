@@ -52,6 +52,7 @@ begin
 				else A * B when Ctrl_Alu = "010"
 				else x"00" & (B - A) when Ctrl_Alu = "011" and A < B
 				else x"00" & (A - B) when Ctrl_Alu = "011";
+				--else x"0000";
 				
 	Z <= '1' when calcul(7 downto 0) = x"00" else '0';
 	C <= calcul(8) when Ctrl_Alu = "001" else '0';
