@@ -16,13 +16,13 @@ void initFctTableCapacity(tableSymbFcts *table, int capacity){
 }
 
 int addSymbFct(tableSymbFcts *table, symbFct symb){
-
     if (table->sizeData < table->capacity){
         // append the symbol at the end of the array
         table->symbFctArray[table->sizeData++] = symb;
     }else{
         printf("no more place in the array to insert element");
     }
+
     return table->sizeData - 1;
 
 }
@@ -47,7 +47,6 @@ int containsFctName(tableSymbFcts *table, char *name){
     int index = 0;
     bool found = false;
     symbFct tmpSymb;
-
     while (index < table->sizeData && !found){
         tmpSymb = table->symbFctArray[index];
         if (strcmp(tmpSymb.name, name) != 0)
@@ -55,7 +54,6 @@ int containsFctName(tableSymbFcts *table, char *name){
         else
             found = true;
     }
-
     return found ? index : -1;
 }
 

@@ -13,12 +13,12 @@ int fact(int to){
     }
 }
 
-void salut() {
- return 1;
+int tructructruc(int a){
+	printf(a);
 }
 
-int toto(int a) {
- return 1;
+int lala(int aaammm){
+	return aaammm;
 }
 
 int main(){
