@@ -510,9 +510,8 @@ Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); po
 
 %%
 
-yyerror(char *s){
-  printf("line %d : ",getLine());
-	fprintf(stderr,"%s\n", s);
+yyerror(char *s){;
+	fprintf(stderr,"line %d : %s\n", getLine(), s);
 	//exit(0);
 }
 
