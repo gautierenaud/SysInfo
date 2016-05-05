@@ -1,9 +1,6 @@
 %{
 	#include "y.tab.h" 
-%}
-
-%{
-	int line = 0; 
+	#include "lineCounter.h"
 %}
 
 NAME [a-z|_|A-Z][a-z|_|A-Z|0-9]*
@@ -45,5 +42,5 @@ printf {return tPRINTF;}
 {NAME} {strcpy(yylval.str, yytext);return tID;}
 {STRING} {return tSTRING;}
 " "
-"\n" {line = line + 1; printf("line number : %d\n",line);}
+"\n" {nextLine(); }
 "\t"

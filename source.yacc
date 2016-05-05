@@ -8,7 +8,7 @@
     #include "tableInstructions.h" 
     #include "tableFonctions.h"
     #include "tableParams.h"
-
+		#include "lineCounter.h"
 %}
 
 
@@ -511,6 +511,7 @@ Print: 		tPRINTF tPO ExpAri tPF { addInstructParams1(&tableInstruct, 12, $3); po
 %%
 
 yyerror(char *s){
+  printf("line %d : ",getLine());
 	fprintf(stderr,"%s\n", s);
 	//exit(0);
 }
