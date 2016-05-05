@@ -18,20 +18,19 @@ architecture Behavioral of FourReg is
 
 begin
 	
-	process (CLK)
+	process 
 	begin
-		if CLK = '1' then
-			if RST = '1' then
-				OA <= x"00";
-				OB <= x"00";
-				OC <= x"00";
-				OOP <= x"00";
-			else
-				OA <= IA;
-				OOP <= IOP;
-				OB <= IB;
-				OC <= IC;
-			end if;
+		wait until clk'event and clk='1'; 
+		if RST = '1' then
+			OA <= x"00";
+			OB <= x"00";
+			OC <= x"00";
+			OOP <= x"00";
+		else
+			OA <= IA;
+			OOP <= IOP;
+			OB <= IB;
+			OC <= IC;
 		end if;
 	end process;
 

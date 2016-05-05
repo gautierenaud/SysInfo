@@ -45,24 +45,24 @@ BEGIN
         );
 
 --   -- Clock process definitions
---   Clk_process :process
---   begin
---		Clk <= '0';
---		wait for Clk_period/2;
---		Clk <= '1';
---		wait for Clk_period/2;
---   end process;
+   Clk_process :process
+   begin
+		Clk <= '0';
+		wait for Clk_period/2;
+		Clk <= '1';
+		wait for Clk_period/2;
+   end process;
  
 
    -- Stimulus process
    stim_proc: process
    begin		
       -- hold reset state for 100 ns.
-		RST <= '1', '0' after 100 ns;
+		RST <= '1';
+		wait for 100 ns;
+		RST <= '0';
 
-      -- insert stimulus here 
-		CLK <= not CLK after Clk_period/2;
-
+		wait;
    end process;
 
 END;
