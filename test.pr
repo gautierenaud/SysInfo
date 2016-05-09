@@ -7,7 +7,7 @@ int f(int lolo, int lulu){
 
 int fact(int to){
     if (to == 0){
-        return ;
+        return 1;
     }else{
         return to * fact(to - 1);
     }
@@ -23,7 +23,9 @@ int lala(int aaammm){
 
 int main(){
 	int a = 65, b = 85;
+	int *c = &a;
 	printf(b);
+	printf(*c);
 	int yo = f(b, a ) + 2;
 	printf(yo);
 	printf(fact(5));

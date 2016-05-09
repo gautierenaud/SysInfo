@@ -76,10 +76,10 @@ void execLine(int * line){
             mem[mem[line[1]]] = mem[reg[0] + line[2]];
             break;
         case 14: // CPB
-            mem[line[1]] = line[2];
+            mem[reg[0] + line[1]] = line[2] + reg[0];
             break;
         case 15: // CPC
-            mem[reg[0] + line[1]] = mem[mem[line[2]]];
+            mem[reg[0] + line[1]] = mem[mem[reg[0] + line[2]]];
             break;
         case 16: // RCP
             mem[reg[0] + line[1]] = reg[line[2]];
