@@ -203,22 +203,32 @@ Ligne: 		Return tPOINTVIR
      
 Decla:      TType tID TTab
             {
-                // copy the name of the variable to a local representation
-                strncpy(varSymbol.name, $2, strlen($2));
-                
-                varSymbol.initialized = false;
-
-                // if it is an array
-                if ($3 != -1){
-                    varSymbol.type = 't';
-                    $3 = addSymbolSize(&tableVar, varSymbol, $3);
+                int containsSymb = containsSymbol(&tableVar, $2);
+                if (containsSymb == -1){
+                    printf("line %d: variable %s already defined\n", getLine(), $2);
+                    compilationError = true;
                 }else{
-                    varSymbol.type = $1;
-                    $3 = addSymbol(&tableVar, varSymbol);
-                }
 
-                // erase the name of the varSymbol
-                memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
+                    // copy the name of the variable to a local representation
+                    symbol *pVarSymbol = malloc(sizeof(symbol));
+
+                    strncpy(pVarSymbol->name, $2, strlen($2));
+
+                    pVarSymbol->initialized = false;
+
+                    // if it is an array
+                    if ($3 != -1){
+                        pVarSymbol->type = 't';
+                        $3 = addSymbolSize(&tableVar, *pVarSymbol, $3);
+                    }else{
+                        pVarSymbol->type = $1;
+                        $3 = addSymbol(&tableVar, *pVarSymbol);
+
+                    }
+
+                    // erase the name of the varSymbol
+                    //memset(&(varSymbol.name), 0, sizeof(varSymbol.name));
+                }
             }
             InitVar
             {
@@ -264,7 +274,7 @@ Affect: 	 tID  SAffect
                         addInstructParams2(&tableInstruct, 5, tableVar.symbolArray[symbIndex].symb.address, $2); 
                         popTmp(&tableVar); 
                     } else {
-                        printf("undef variable\n");
+                        printf("line %d: undef variable %s\n", getLine(), $1);
                         compilationError = true;
                         popTmp(&tableVar);
                     } 
@@ -276,7 +286,7 @@ Affect: 	 tID  SAffect
                         addInstructParams2(&tableInstruct, 13, tableVar.symbolArray[symbIndex].symb.address, $3); 
                         popTmp(&tableVar); 
                     } else {
-                        printf("undef pointer\n");
+                        printf("line %d: undef pointer\n", getLine());
                         compilationError = true;
                         popTmp(&tableVar);
                     } 
@@ -291,7 +301,7 @@ Affect: 	 tID  SAffect
                         popTmp(&tableVar);
                         addInstructParams2(&tableInstruct, 13, $3, $5);
                     }else{
-                        printf("undef array\n");
+                        printf("line %d: undef array\n", getLine());
                         compilationError = true;
                     }
                     popTmp(&tableVar);  // ExprAri
@@ -318,7 +328,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
 
                   if (!found){
                       compilationError = true;
-                      printf("la variable %s n'existe pas dans ce contexte\n", $1);
+                      printf("line %d: la variable %s n'existe pas dans ce contexte\n", getLine(), $1);
                   }else { 
                       symbIndex = addTmp(&tableVar, tmpSymbol.type); 
                       addInstructParams2(&tableInstruct, 5, symbIndex, tmpSymbol.address);
@@ -329,7 +339,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
                     { 
                         symbIndex = containsSymbol(&tableVar, $1); 
                         if (symbIndex == -1) {
-                            printf("la variable %s n'existe pas dans ce contexte\n", $1);
+                            printf("line %d: la variable %s n'existe pas dans ce contexte\n", getLine(), $1);
                             compilationError = true;
                         }else { 
                             tmpIndex = addTmp(&tableVar, 'i');
@@ -343,7 +353,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
                     }
 					| tFOIS tID { symbIndex = containsSymbol(&tableVar, $2); 
                         if (symbIndex == -1) {
-                            printf("le pointeur n'existe pas dans ce contexte\n");
+                            printf("line %d: le pointeur n'existe pas dans ce contexte\n", getLine());
                             compilationError = true;
                         }
                         else {
@@ -354,7 +364,7 @@ ExpAri: 	tINTVAL { symbIndex = addTmp(&tableVar, 'i'); addInstructParams2(&table
                         } }
 					| tESP tID { symbIndex = containsSymbol(&tableVar, $2); 
                         if (symbIndex == -1) {
-                            printf("la variable n'existe pas dans ce contexte\n");
+                            printf("line %d: la variable n'existe pas dans ce contexte\n", getLine());
                             compilationError = true;
                         }
                         else {
@@ -435,7 +445,7 @@ IFct: 		tID tPO IParam tPF
                     addInstructParams1(&tableInstruct, 7, tableFct.symbFctArray[funcIndex].startIndex - 1);
                 else {
                     // printf("function %s missing. params: %s\n", $1, $3);
-                    printf("function %s missing\n", $1);
+                    printf("line %d: function %s missing\n", getLine(), $1);
                     compilationError = true;
                 }
                 popTmp(&tableVar);
@@ -528,8 +538,10 @@ int main (void) {
     printInstructionTable(&tableInstruct);
 	if (!mainPresent){
         printf("main function not present\n");
-        exit(-1);
-    }else if (compilationError){
+        compilationError = true;
+    }
+    
+    if (compilationError){
         printf("compilation error, no assembly file\n");
         exit(-1);
     }else{

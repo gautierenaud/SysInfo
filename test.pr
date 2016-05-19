@@ -22,11 +22,12 @@ int lala(int aaammm){
 }
 
 int main(){
-	int a = 65, b = 85;
+	int a = 65, b = 85, c5;
 	int *c = &a;
 	printf(b);
 	printf(*c);
 	int yo = f(b, a ) + 2;
+	a = 3;
 	printf(yo);
 	printf(fact(5));
 }

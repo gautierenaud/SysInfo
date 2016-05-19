@@ -1,0 +1,6 @@
+int test(){
+    int var1 = 9;
+    printf(var2);
+    direBonjour();
+    int var1;
+}
