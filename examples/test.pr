@@ -1,0 +1,35 @@
+int f(int lolo, int lulu){
+	int lala = lolo + 6;
+	printf(lala);
+	printf(lulu);
+	return lala;
+}
+
+int fact(int to){
+    if (to == 0){
+        return 1;
+    }else{
+        return to * fact(to - 1);
+    }
+}
+
+int tructructruc(int a){
+	printf(a);
+}
+
+int lala(int aaammm){
+	return aaammm;
+}
+
+int main(){
+	int a = 65, b = 85, c5;
+	int *c = &a;
+	printf(b);
+	printf(*c);
+	int yo = f(b, a ) + 2;
+	a = 3;
+	printf(yo);
+	printf(fact(5));
+}
+
+

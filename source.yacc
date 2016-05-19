@@ -204,7 +204,7 @@ Ligne: 		Return tPOINTVIR
 Decla:      TType tID TTab
             {
                 int containsSymb = containsSymbol(&tableVar, $2);
-                if (containsSymb == -1){
+                if (containsSymb != -1){
                     printf("line %d: variable %s already defined\n", getLine(), $2);
                     compilationError = true;
                 }else{
